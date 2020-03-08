@@ -52,7 +52,8 @@ public class ProblemaContadores {
 	
 	
 	public double getLitrosCasilla(int i, int j) {
-		return 0;
+		double litros = 0;
+		return litros;
 	}
 	
 	
