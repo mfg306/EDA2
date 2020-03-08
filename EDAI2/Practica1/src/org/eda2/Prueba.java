@@ -20,6 +20,7 @@ public class Prueba {
 		ProblemaContadores pc = new ProblemaContadores(6, 6);
 		
 		pc.inicializarContadores();
+		System.out.println("hola");
 		
 		System.out.println("Los contadores pares son: " + "\n \n" + pc.toStringM());
 		
