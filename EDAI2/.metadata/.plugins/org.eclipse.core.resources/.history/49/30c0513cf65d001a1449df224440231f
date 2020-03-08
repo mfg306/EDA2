@@ -1,0 +1,20 @@
+package org.eda2;
+
+public class ParCalles {
+
+	private Contador cDerecha;
+	private Contador cIzquierda;
+	private Contador cVerde;
+	private Contador cMorado;
+	
+	
+	public ParCalles() {
+		
+	}
+	
+	public ParCalles() {
+		
+	}
+	
+	
+}

@@ -1,0 +1,23 @@
+package org.eda2;
+
+public class Damero {
+	private int filas;
+	private int columnas; 
+	private ParCalles parCalles;
+	
+	
+	public Damero(int filas, int columnas) {
+		this.filas = filas;
+		this.columnas = columnas;
+		
+		
+		
+	}
+	
+	
+	public void inicializarContadores() {
+		
+	}
+	
+	
+}

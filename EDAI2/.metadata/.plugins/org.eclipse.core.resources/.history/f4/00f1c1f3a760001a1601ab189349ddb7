@@ -1,0 +1,29 @@
+package org.eda2;
+
+public class Damero { //Representación de la ciudad
+	private int filas;
+	private int columnas; 
+	private Manzana[][] manzanas = new Manzana[][];
+	
+	public Damero() {
+		
+	}
+	
+	public Damero(int filas, int columnas) {
+		this.filas = filas;
+		this.columnas = columnas;
+
+		for(int i=0; i<filas; i++) {
+			for(int j=0; j<columnas; j++) {
+				
+			}
+		}
+	}
+	
+	@Override
+	public String toString() {
+		return "Damero: ";
+		
+	}
+
+}

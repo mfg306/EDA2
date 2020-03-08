@@ -1,0 +1,15 @@
+package org.eda2;
+import java.util.ArrayList;
+
+public class Manzana {
+	
+	private int volumen; //entre 300000 y 500000 m3
+	
+	public Manzana(ArrayList<Medidores> medidores) {
+		
+	}
+	
+	public String toString() {
+		return "Hola";
+	}
+}

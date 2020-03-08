@@ -1,0 +1,9 @@
+package org.eda2;
+
+public class Damero {
+	private int filas;
+	private int columnas; 
+	private ParCalles;
+	
+	
+}

@@ -1,0 +1,16 @@
+package org.eda2;
+import java.util.ArrayList;
+
+public class Manzana {
+	
+	private ArrayList<Medidores> manzanas;
+	
+	
+	public Manzana(ArrayList<Medidores> medidores) {
+
+	}
+	
+	public String toString() {
+
+	}
+}

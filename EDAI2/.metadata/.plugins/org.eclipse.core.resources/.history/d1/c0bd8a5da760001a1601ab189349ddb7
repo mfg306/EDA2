@@ -1,0 +1,29 @@
+package org.eda2;
+import java.util.ArrayList;
+
+public class Manzana {
+	
+	private ArrayList<Medidores> manzanas;
+	
+	
+	public Manzana(ArrayList<Medidores> medidores) {
+		manzanas = new ArrayList<>();
+		for(Medidores med : medidores) {
+			if (med instanceof Contador) {
+				Contador c = (Contador) med;
+				manzanas.add(c);
+			} else if(med instanceof Manometro) {
+				Manometro m = (Manometro) med;
+				manzanas.add(m);
+			}
+		}
+	}
+	
+	public String toString() {
+		String resultado = "";
+		for(Medidores m : manzanas) {
+			resultado += m + ", ";
+		}
+		return resultado;
+	}
+}
