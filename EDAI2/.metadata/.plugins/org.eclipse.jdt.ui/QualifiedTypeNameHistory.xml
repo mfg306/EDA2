@@ -9,4 +9,8 @@
     <fullyQualifiedTypeName name="org.eda2.ProblemaContadores"/>
     <fullyQualifiedTypeName name="org.eda2.ParCalles"/>
     <fullyQualifiedTypeName name="org.eda2.Manzana"/>
+    <fullyQualifiedTypeName name="org.junit.jupiter.api.Test"/>
+    <fullyQualifiedTypeName name="java.util.TreeMap"/>
+    <fullyQualifiedTypeName name="java.lang.RuntimeException"/>
+    <fullyQualifiedTypeName name="com.sun.tools.javac.util.Assert"/>
 </qualifiedTypeNameHistroy>

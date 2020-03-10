@@ -1,0 +1,20 @@
+package org.eda2;
+
+import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+
+
+public class DameroTest {
+	
+	@Test
+	public void TestInicializarContadores() {
+		Damero damero = new Damero(4,4);
+		
+		damero.inicializarContadores();
+		
+		
+		assertTrue(damero.getLitrosEdificio(4, 4) > damero.getLitrosEdificio(0, 1));
+	}
+
+}
