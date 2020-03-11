@@ -1,5 +1,4 @@
 package org.eda2.practica01;
-import java.util.ArrayList;
 
 public class Prueba {
 
@@ -17,12 +16,13 @@ public class Prueba {
 //		System.out.println();
 
 		
+		
 		ProblemaContadores pc = new ProblemaContadores(6, 6);
 		
 		pc.inicializarContadores();
 		System.out.println("hola");
 		
-		System.out.println("Los contadores pares son: " + "\n \n" + pc.toStringM());
+		System.out.println("Los contadores pares son: " + "\n \n" + pc.toString());
 		
 //		ProblemaContadores p2 = new ProblemaContadores(5, 5);
 //		
