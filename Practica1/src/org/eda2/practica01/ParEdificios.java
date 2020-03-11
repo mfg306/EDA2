@@ -1,6 +1,6 @@
-package org.eda2;
+package org.eda2.practica01;
 
-public class ParCalles {
+public class ParEdificios {
 
 	private Contador cDerecha;
 	private Contador cIzquierda;
@@ -50,11 +50,11 @@ public class ParCalles {
 	}
 	
 	//Constructor vacío
-	public ParCalles() {
+	public ParEdificios() {
 		
 	}
 	
-	public ParCalles(Contador cDerecha, Contador cIzquierda, Contador cVerde, Contador cMorado, Manometro man) {
+	public ParEdificios(Contador cDerecha, Contador cIzquierda, Contador cVerde, Contador cMorado, Manometro man) {
 		this.cDerecha = cDerecha;
 		this.cIzquierda = cIzquierda;
 		this.cMorado = cMorado;
