@@ -19,7 +19,7 @@ public class Prueba {
 		
 		ProblemaContadores pc = new ProblemaContadores(6, 6);
 		
-		pc.inicializarContadores();
+		pc.inicializarMedidores();
 		System.out.println("hola");
 		
 		System.out.println("Los contadores pares son: " + "\n \n" + pc.toString());
@@ -30,7 +30,7 @@ public class Prueba {
 //		
 //		System.out.println("Los contadores impares son: " + "\n \n" + p2.toString());
 
-		pc.resolverManometros();
+		System.out.println(pc.resolverMedidores());
 		
 	}
 
