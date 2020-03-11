@@ -1,6 +1,8 @@
-package org.eda2;
+package org.eda2.practica01;
 
-public class Contador extends Medidor{
+import java.util.Locale;
+
+public class Contador {
 
 	private double consumo;
 
@@ -17,7 +19,7 @@ public class Contador extends Medidor{
 
 	@Override
 	public String toString() {
-		return "" + this.consumo+"jaja";
+		return "" + String.format(Locale.US, "%.2f", this.consumo);
 	}
 
 }
