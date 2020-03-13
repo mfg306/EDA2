@@ -7,14 +7,15 @@ public class Contador {
 	private double consumo;
 
 	public Contador(double consume) { // Consumo diario
-		this.consumo = (Math.random() * (108 - 162 + 1) + 162);
+		this.consumo = consume;//(Math.random() * (108 - 162 + 1) + 162);
 	}
 
 	public double getConsumo() {
 		return this.consumo;
 	}
 
-	public void setConsumo() {
+	public void setConsumo(double consumo) {
+		this.consumo=consumo;
 	}
 
 	@Override

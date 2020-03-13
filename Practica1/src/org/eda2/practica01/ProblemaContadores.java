@@ -2,24 +2,31 @@ package org.eda2.practica01;
 
 import java.util.ArrayList;
 
-public class ProblemaContadores { //Inicializar medidores
+public class ProblemaContadores {
 	
 	private ParEdificios[][] pEdificios;
+	private ParEdificios[][] matrizMedias;
 	private boolean par; //Lo necesito para diferenciar a la hora de inicializar los medidores
 
-	//filas, columnas
 	//Constructor
 	public ProblemaContadores(int i, int j) {
 		if (i%2==0) {
 			pEdificios = new ParEdificios[i/2][j]; //i vale la mitad porque unimos dos columnas
-			this.par=true;
+			matrizMedias = new ParEdificios[i/2][j];
+			this.par = true;
 		} else {
 			pEdificios = new ParEdificios[(i+1)/2][j];
-			this.par=false;
+			matrizMedias = new ParEdificios[(i+1)/2][j];
+			this.par = false;
 		}
-		for(int a=0; a<pEdificios.length; a++) 
-			for(int b=0; b<pEdificios[a].length; b++) 
+		
+		for(int a=0; a<pEdificios.length; a++) { 
+			for(int b=0; b<pEdificios[a].length; b++) {
 				pEdificios[a][b] = new ParEdificios();
+				matrizMedias[a][b] = new ParEdificios();
+			}
+		}
+		generarMatrizMedias();
 	}
 		
 	public void inicializarMedidores() {
@@ -35,12 +42,13 @@ public class ProblemaContadores { //Inicializar medidores
 				//Ancho y largo de nuestra matriz de ParEdificios
 				int ancho = pEdificios.length-1;
 				int largo = pEdificios[0].length-1;
-				this.pEdificios[i][j].setcDerecha(new Contador(0)); //Todas las casillas tienen contadores a la derecha y a la izquierda
-				this.pEdificios[i][j].setcIzquierda(new Contador(0));
-				if (j == largo && i != ancho) this.pEdificios[i][j].setcMorado(new Contador(0)); //Inicializa los contadores morados
-				if (j != 0 && j != largo) this.pEdificios[i][j].setcVerde(new Contador(0)); //Inicializa los contadores verdes
-				
-				if (j != 0) { //Inicializacion de los manometros
+				//Inicializa los contadores
+				this.pEdificios[i][j].setcDerecha(new Contador(Math.random() * (100 - 1000 + 1) + 1000)); //Todas las casillas tienen contadores a la derecha y a la izquierda
+				this.pEdificios[i][j].setcIzquierda(new Contador(Math.random() * (100 - 800 + 1) + 800));
+				if (j == largo && i != ancho) this.pEdificios[i][j].setcMorado(new Contador(Math.random() * (100 - 800 + 1) + 800)); //Inicializa los contadores morados
+				if (j != 0 && j != largo) this.pEdificios[i][j].setcVerde(new Contador(Math.random() * (100 - 800 + 1) + 800)); //Inicializa los contadores verdes
+				//Inicializacion de los manometros
+				if (j != 0) { 
 					this.pEdificios[i][j].setMan(new Manometro()); //Crea los manometros
 					if (i==ancho && j==largo) this.pEdificios[i][j].getMan().setPresion(Math.random()*(110-150+1)+150);
 					else {
@@ -105,23 +113,16 @@ public class ProblemaContadores { //Inicializar medidores
 	
 	private ArrayList<String> resolverContadores() { //Para esto tendriamos que generar la matriz de medias y comparar casilla por casilla
 		ArrayList<String> resultado = new ArrayList<>();
-		resultado.addAll(resolverContadoresGeneral());
-		for (int i = 0;i<pEdificios.length;i++) {
-			resultado.addAll(resolverContadoresDistribucion(i));
+		//sresultado.addAll(resolverContadoresGeneral());
+		for (int i = 0;i<matrizMedias.length;i++) {
+			for (int j = 0; j<matrizMedias[0].length;j++) {
+				if (pEdificios[i][j].getcDerecha().getConsumo() > (matrizMedias[i][j].getcDerecha().getConsumo()*7)) resultado.add(i + " " + j);
+				if (pEdificios[i][j].getcIzquierda().getConsumo() > (matrizMedias[i][j].getcIzquierda().getConsumo()*7)) resultado.add(i + " " + j);
+				if (pEdificios[i][j].getcMorado()!= null && (pEdificios[i][j].getcMorado().getConsumo() > (matrizMedias[i][j].getcMorado().getConsumo()*7))) resultado.add(i + " " + j);
+				if (pEdificios[i][j].getcVerde()!= null && (pEdificios[i][j].getcDerecha().getConsumo() > (matrizMedias[i][j].getcDerecha().getConsumo()*7))) resultado.add(i + " " + j);
+			}
 		}
 		return resultado;
-	}
-	
-	private ArrayList<String> resolverContadoresGeneral() {
-		ArrayList<String> resultadoGeneral = new ArrayList<>();
-		
-		return resultadoGeneral;
-	}
-	
-	private ArrayList<String> resolverContadoresDistribucion(int i) {
-		ArrayList<String> resultadoDistribucion = new ArrayList<>();
-		
-		return resultadoDistribucion;
 	}
 	
 	//toString
@@ -152,7 +153,26 @@ public class ProblemaContadores { //Inicializar medidores
 		return resultado;
 	}
 	
+	public String toStringMmedias() {
+		String resultado = "";
+		for (int i = 0;i<matrizMedias.length;i++) {
+			for (int j = 0;j<this.matrizMedias[0].length;j++) {
+				resultado += this.matrizMedias[i][j].toStringContadores();
+				resultado += "\n";
+			}
+		}
+		return resultado;
+	}
 	
-	
-
+	public void generarMatrizMedias() {
+		int ancho = pEdificios.length-1;
+		int largo = pEdificios[0].length-1;
+		for(int i=0; i<matrizMedias.length; i++) 
+			for(int j=0; j<matrizMedias[0].length; j++) {
+				this.matrizMedias[i][j].setcDerecha(new Contador(Math.random() * (108 - 162 + 1) + 162)); //Todas las casillas tienen contadores a la derecha y a la izquierda
+				this.matrizMedias[i][j].setcIzquierda(new Contador(Math.random() * (108 - 162 + 1) + 162));
+				if (j == largo && i != ancho) this.matrizMedias[i][j].setcMorado(new Contador(Math.random() * (108 - 162 + 1) + 162)); //Inicializa los contadores morados
+				if (j != 0 && j != largo) this.matrizMedias[i][j].setcVerde(new Contador(Math.random() * (108 - 162 + 1) + 162)); //Inicializa los contadores verdes
+			}
+	}
 }
