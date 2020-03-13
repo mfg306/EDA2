@@ -116,10 +116,10 @@ public class ProblemaContadores {
 		//sresultado.addAll(resolverContadoresGeneral());
 		for (int i = 0;i<matrizMedias.length;i++) {
 			for (int j = 0; j<matrizMedias[0].length;j++) {
-				if (pEdificios[i][j].getcDerecha().getConsumo() > (matrizMedias[i][j].getcDerecha().getConsumo()*7)) resultado.add(i + " " + j);
-				if (pEdificios[i][j].getcIzquierda().getConsumo() > (matrizMedias[i][j].getcIzquierda().getConsumo()*7)) resultado.add(i + " " + j);
-				if (pEdificios[i][j].getcMorado()!= null && (pEdificios[i][j].getcMorado().getConsumo() > (matrizMedias[i][j].getcMorado().getConsumo()*7))) resultado.add(i + " " + j);
-				if (pEdificios[i][j].getcVerde()!= null && (pEdificios[i][j].getcDerecha().getConsumo() > (matrizMedias[i][j].getcDerecha().getConsumo()*7))) resultado.add(i + " " + j);
+				if (pEdificios[i][j].getcDerecha().getConsumo() > (matrizMedias[i][j].getcDerecha().getConsumo()*7)) resultado.add("D: " + i + " " + j);
+				if (pEdificios[i][j].getcIzquierda().getConsumo() > (matrizMedias[i][j].getcIzquierda().getConsumo()*7)) resultado.add("I: " + i + " " + j);
+				if (pEdificios[i][j].getcMorado()!= null && (pEdificios[i][j].getcMorado().getConsumo() > (matrizMedias[i][j].getcMorado().getConsumo()*7))) resultado.add("M: " + i + " " + j);
+				if (pEdificios[i][j].getcVerde()!= null && (pEdificios[i][j].getcDerecha().getConsumo() > (matrizMedias[i][j].getcVerde().getConsumo()*7))) resultado.add("V: " + i + " " + j);
 			}
 		}
 		return resultado;
@@ -157,7 +157,7 @@ public class ProblemaContadores {
 		String resultado = "";
 		for (int i = 0;i<matrizMedias.length;i++) {
 			for (int j = 0;j<this.matrizMedias[0].length;j++) {
-				resultado += this.matrizMedias[i][j].toStringContadores();
+				resultado += this.matrizMedias[i][j].toStringContadores() + "\t" + i + " " + j;
 				resultado += "\n";
 			}
 		}

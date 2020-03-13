@@ -28,7 +28,7 @@ public class Prueba {
 //		p2.inicializarContadores();
 //		
 //		System.out.println("Los contadores impares son: " + "\n \n" + p2.toString());
-
+		System.out.println(pc.toStringMmedias());
 		System.out.println(pc.resolverMedidores());
 		
 	}
