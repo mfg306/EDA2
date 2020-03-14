@@ -12,7 +12,8 @@ public class Contador extends Medidor{
 		return this.consumo;
 	}
 
-	public void setConsumo() {
+	public void setConsumo(double consumo) {
+		this.consumo = consumo;
 	}
 
 	@Override

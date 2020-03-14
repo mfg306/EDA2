@@ -1,5 +1,4 @@
 package org.eda2;
-import java.util.TreeMap;
 
 /**
  * @author marta
@@ -12,7 +11,6 @@ public class ParEdificios {
 	private Contador cVerde;
 	private Contador cMorado;
 	private Manometro man;
-	private TreeMap<String, Medidor> edificios;
 	
 	
 	//Constructor vacío
@@ -26,23 +24,7 @@ public class ParEdificios {
 		this.cMorado = cMorado;
 		this.cVerde = cVerde;
 		this.man = man;
-		
-		//Esto es para despues poder acceder al contador de cada edificio de forma rápida
-		//Si luego tenemos que meter tambien los manometros podemos hacer un TreeSet de Medidores
-		edificios.put("Izquierda", cIzquierda);
-		edificios.put("Derecha", cDerecha);
 	}
-	
-	public double getConsumoContadorIzquierda() {
-		Contador contador = (Contador) edificios.get("Izquierda");
-		return contador.getConsumo();
-	}
-	
-	public double getConsumoContadorDerecha() {
-		Contador contador = (Contador) edificios.get("Derecha");
-		return contador.getConsumo();	
-	}
-	
 	
 	public Contador getcDerecha() {
 		return cDerecha;
