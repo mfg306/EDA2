@@ -1,0 +1,27 @@
+package org.eda2;
+
+public class Prueba {
+
+	public static void main(String[] args) {
+		
+		
+		ProblemaManometros pm = new ProblemaManometros(4, 5); 
+		
+		pm.inicializarManometro();
+		
+		System.out.println(pm.toString());
+
+		
+//		ProblemaContadores pc = new ProblemaContadores(4, 4);
+//		
+//		pc.inicializarContadores();
+//		
+//		System.out.println(pc.toString());
+		
+		
+//		Damero d = new Damero(4,4);
+//		
+//		System.out.println(d.toString());
+	}
+
+}
