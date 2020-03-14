@@ -15,7 +15,7 @@ public class Prueba {
 //		System.out.println();
 //		System.out.println();
 		
-		ProblemaContadores pc = new ProblemaContadores(6, 6);
+		Damero pc = new Damero(6, 6);
 		
 		System.out.println("Array de Medias: \n \n" + pc.toStringMmedias());
 		

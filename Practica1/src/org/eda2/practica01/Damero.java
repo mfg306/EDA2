@@ -2,14 +2,14 @@ package org.eda2.practica01;
 
 import java.util.ArrayList;
 
-public class ProblemaContadores {
+public class Damero {
 	
 	private ParEdificios[][] pEdificios;
 	private ParEdificios[][] matrizMedias;
 	private boolean par; //Lo necesito para diferenciar a la hora de inicializar los medidores
 
 	//Constructor
-	public ProblemaContadores(int i, int j) {
+	public Damero(int i, int j) {
 		if (i%2==0) {
 			pEdificios = new ParEdificios[i/2][j]; //i vale la mitad porque unimos dos columnas
 			matrizMedias = new ParEdificios[i/2][j];
