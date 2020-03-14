@@ -66,6 +66,9 @@ public class ParEdificios {
 		this.man = man;
 	}
 	
+	public String toString() {
+		return this.getcIzquierda() + " | " + this.getcDerecha();
+	}
 	
 	public String toStringManometros() {
 		return "Man: " + this.getMan();

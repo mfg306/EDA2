@@ -7,6 +7,10 @@ public class Contador extends Medidor{
 	public Contador() { // Consumo diario
 		this.consumo = (Math.random() * (108 - 162 + 1) + 162);
 	}
+	
+	public Contador(double consumo) {
+		this.consumo = consumo;
+	}
 
 	public double getConsumo() {
 		return this.consumo;

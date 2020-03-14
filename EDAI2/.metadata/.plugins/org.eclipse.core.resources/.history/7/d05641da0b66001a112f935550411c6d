@@ -1,0 +1,11 @@
+package org.eda2;
+
+public class Prubea {
+
+	public void main(String[] args) {
+		double prueba = Math.round(Math.random());
+		
+		System.out.println(prueba);
+
+	}
+}
