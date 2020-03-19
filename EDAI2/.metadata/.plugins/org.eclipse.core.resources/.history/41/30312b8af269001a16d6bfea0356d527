@@ -55,8 +55,9 @@ public class Damero {
 	public ParEdificios[] lineaTroncal() {
 		int i = this.pEdificios.length - 1;
 		
-		ParEdificios[] pE = new ParEdificios[this.pEdificios[0].length];
-			for(int j=0; j<this.pEdificios[0].length; j++) {
+		System.out.println(this.pEdificios.length);
+		ParEdificios[] pE = new ParEdificios[this.pEdificios.length];
+			for(int j=0; j<this.pEdificios.length; j++) {
 				pE[j] = this.pEdificios[i][j];
 			}
 		

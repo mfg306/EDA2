@@ -8,13 +8,15 @@ public class Prubea {
 		
 		System.out.println(d.toString());
 		
-		ParEdificios[] pE = d.lineaTroncal();
+
+		System.out.println(d.lineaTroncal().toString());
+		
+		
+		
 		
 		for(int i=0; i<pE.length; i++) {
-			System.out.println(pE[i].toString() + " ,");
+			System.out.println(pE);
 		}
-		
 
-		
-		}
+	}
 }

@@ -9,9 +9,9 @@ public class Prubea {
 		System.out.println(d.toString());
 		
 		ParEdificios[] pE = d.lineaTroncal();
-		
+		,
 		for(int i=0; i<pE.length; i++) {
-			System.out.println(pE[i].toString() + " ,");
+			System.out.println(pE[i].toString() + " ");
 		}
 		
 

@@ -53,11 +53,12 @@ public class Damero {
 	 * @return la línea troncal de nuestro damero
 	 */
 	public ParEdificios[] lineaTroncal() {
-		int i = this.pEdificios.length - 1;
+		int j = this.pEdificios[0].length - 1;
+		System.out.println(j);
 		
-		ParEdificios[] pE = new ParEdificios[this.pEdificios[0].length];
-			for(int j=0; j<this.pEdificios[0].length; j++) {
-				pE[j] = this.pEdificios[i][j];
+		ParEdificios[] pE = new ParEdificios[this.pEdificios.length];
+			for(int i=0; i<this.pEdificios.length; i++) {
+				pE[i] = this.pEdificios[i][j];
 			}
 		
 		return pE;
