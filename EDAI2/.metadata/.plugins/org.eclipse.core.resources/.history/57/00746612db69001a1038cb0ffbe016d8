@@ -283,6 +283,11 @@ public class Damero {
 	
 	private ArrayList<Contador> consumoExcesivoRec(Contador[] troncal, int i, int j) {
 		ArrayList<Contador> resultado = new ArrayList<>();
+		Contador cI;
+		Contador cD;
+		
+		ArrayList<Contador> izq = new ArrayList<>();
+		ArrayList<Contador> der = new ArrayList<>();
 		
 		int inicio = 0;
 		int fin = this.filas-1;
@@ -293,8 +298,8 @@ public class Damero {
 			return resultado;
 		} else { //Casos recursivos
 			mitad = (inicio + fin)/2;
-			 this.consumoExcesivoRec(troncal, inicio, mitad);
-			 this.consumoExcesivoRec(troncal, mitad+1, fin);
+			 izq = this.consumoExcesivoRec(troncal, inicio, mitad);
+			 der = this.consumoExcesivoRec(troncal, mitad+1, fin);
 			 
 		}
 	}

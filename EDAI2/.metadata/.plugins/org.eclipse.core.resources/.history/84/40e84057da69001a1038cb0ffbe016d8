@@ -274,27 +274,33 @@ public class Damero {
 	
 	public ArrayList<Contador> consumoExcesivoTroncal(){
 		ArrayList<Contador> resultado = new ArrayList<>();
-		Contador[] contadoresTroncal = this.traducirMatrizParEdificiosAArrayContadores(this.lineaTroncal);
 
-		resultado = this.consumoExcesivoRec(contadoresTroncal, this.filas/2, this.columnas);
+		resultado = this.consumoExcesivoRec(this.lineaTroncal, this.filas/2, this.columnas);
 		
 		return resultado;
 	}
 	
-	private ArrayList<Contador> consumoExcesivoRec(Contador[] troncal, int i, int j) {
+	private ArrayList<Contador> consumoExcesivoRec(ParEdificios[] troncal, int i, int j) {
 		ArrayList<Contador> resultado = new ArrayList<>();
+		Contador cI;
+		Contador cD;
+		
+		ArrayList<Contador> izq = new ArrayList<>();
+		ArrayList<Contador> der = new ArrayList<>();
 		
 		int inicio = 0;
 		int fin = this.filas-1;
 		int mitad;
 		
 		if(inicio >= fin) {
+			cI = izq.get(0);
+			cD = der.get(0);
 			
 			return resultado;
 		} else { //Casos recursivos
 			mitad = (inicio + fin)/2;
-			 this.consumoExcesivoRec(troncal, inicio, mitad);
-			 this.consumoExcesivoRec(troncal, mitad+1, fin);
+			 izq = this.consumoExcesivoRec(troncal, inicio, mitad);
+			 der = this.consumoExcesivoRec(troncal, mitad+1, fin);
 			 
 		}
 	}
@@ -303,12 +309,9 @@ public class Damero {
 	private Contador[] traducirMatrizParEdificiosAArrayContadores(ParEdificios[] pE) {
 		Contador[] contadores = new Contador[pE.length*2];
 		
-		for(int i=0; i<contadores.length; i++) {
-			contadores[i] = pE[i].getcDerecha();
-			contadores[i+1] = pE[i].getcIzquierda();
+		for(int i=0; i<pE.length; i++) {
+			contadores[i] = pE[i]
 		}
-		
-		return contadores;
 	}
 	
 	
