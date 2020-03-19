@@ -1,0 +1,14 @@
+package org.eda2;
+
+public class Prueba {
+	
+	public static int select(int[] t, int k) {
+		return selectRec(t, 0, t.length-1, k);
+	}
+	
+	private static int selectRec(int[] t, int ini, int fin, int k) {
+		
+	}
+
+
+}

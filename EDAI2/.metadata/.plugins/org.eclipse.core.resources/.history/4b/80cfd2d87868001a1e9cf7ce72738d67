@@ -1,0 +1,18 @@
+package org.eda2;
+
+public class Prueba {
+	
+	public static int MaxMin(int[] a, int i, int j) {
+		int max, min;
+		if(i >= j-1) {
+			max  = min = a[i];
+		}
+	}
+	
+
+	public static void main(String[] args) {
+		
+		
+	}
+
+}

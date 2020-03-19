@@ -1,0 +1,27 @@
+package org.eda2;
+
+public class Prueba {
+	
+	public static int select(int[] t, int k) {
+		return selectRec(t, 0, t.length-1, k);
+	}
+	
+	private static int selectRec(int[] t, int ini, int fin, int k) {
+		
+		if(ini == fin) return t[ini];
+		
+		int p = reorgniza(t, ini, fin);
+		int k1 = p - ini +1;
+		
+		if(k <= k1) {
+			return selectRec(t, ini, p, k);
+		} else return selectRec(t, p+1, fin, k-k1);
+	}
+
+	
+	private static int reorgniza(int[] t, int ini, int fin) {
+		
+		int
+	}
+
+}

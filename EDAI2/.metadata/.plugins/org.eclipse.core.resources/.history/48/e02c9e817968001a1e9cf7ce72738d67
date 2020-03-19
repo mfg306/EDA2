@@ -1,0 +1,34 @@
+package org.eda2;
+
+public class Prueba {
+	
+	public int MaxMin(int[] a, int i, int j) { //Solo voy a devolver el max
+		int max, min;
+		if(i >= j-1) {//CASO BASE
+			if(j == i) max  = min = a[i];
+		 else {
+			if(a[i] > a[j]) {
+				max = a[i];
+				min = a[j];
+			} else {
+				max = a[j];
+				min = a[i];
+			}
+		 }
+		} else { //CASOS RECURSIVOS
+			int mitad = (i+j)/2;
+			int max1 = MaxMin(a, i, mitad);
+			int max2 = MaxMin(a, mitad+1, j);
+			
+			//Ahora combinamos los resultados
+			
+		}
+	}
+	
+
+	public static void main(String[] args) {
+		
+		
+	}
+
+}

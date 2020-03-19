@@ -10,6 +10,8 @@ public class Damero {
 	private int columnas;
 	private ParEdificios[][] pEdificios;
 	private ParEdificios[][] matrizMedias;
+	private ParEdificios[] lineaTroncal = this.lineaTroncal();
+
 
 	public final static double CONSUMO_MINIMO = 108;
 	public final static double CONSUMO_MAXIMO = 162;
@@ -44,32 +46,50 @@ public class Damero {
 
 		inicializarContadores();
 	}
+	
+	
+	/**
+	 * @return la línea troncal de nuestro damero
+	 */
+	public ParEdificios[] lineaTroncal() {
+		int i = 1;
+		ParEdificios[] pE = new ParEdificios[this.pEdificios[i].length];
+		
+			for(int j=0; j<this.pEdificios[i].length; j++) {
+				pE[j] = this.pEdificios[i][j];
+			}
+		
+		return pE;
+	}
+	
 
 	// CONTADORES
 
-	private void inicializarContadores() {
-		for (int i = 0; i < this.columnas / 2; i++) {
-			for (int j = 0; j < this.filas; j++) {
-				if( i == this.columnas-1) {
-					
-				}
+	private void inicializarContadores() { 
+		for (int i = 0; i < this.pEdificios[0].length; i++) {
+			for (int j = 0; j < this.pEdificios.length; j++) {
 				
-				// Inicializamos los datos actuales
-				this.pEdificios[i][j].setcDerecha(new Contador());
-				this.pEdificios[i][j].setcIzquierda(new Contador());
-				if (j == pEdificios[0].length - 1 && i != pEdificios.length - 1)
-					this.pEdificios[i][j].setcMorado(new Contador());
-				if (j != 0 && j != pEdificios[0].length - 1)
-					this.pEdificios[i][j].setcVerde(new Contador());
+				
+				//En todas las casillas vamos a tener un cIzquierda y un cDerecha
+				//Solo va a haber cMorado en la primera fila
+				//Los verdes van a estar en todas las filas menos la primera y la ultima
 
+				//Inicializamos los datos actuales
+				this.pEdificios[j][i].setcDerecha(new Contador());
+				this.pEdificios[j][i].setcIzquierda(new Contador());
+				if(i == 0) this.pEdificios[j][i].setcMorado(new Contador());
+				if(i != 0 || i == this.pEdificios[0].length - 1) this.pEdificios[j][i].setcVerde(new Contador());
+
+				if(this.filas % 2 != 0) {
+					if(i == this.pEdificios[0].length - 1) this.pEdificios[j][i].setcIzquierda(null);
+				} 
+				
 				// Inicializamos los datos de las medias
-				this.matrizMedias[i][j].setcDerecha(new Contador());
-				this.matrizMedias[i][j].setcIzquierda(new Contador());
-
-				if (j == this.matrizMedias[0].length - 1 && i != this.matrizMedias.length - 1)
-					this.matrizMedias[i][j].setcMorado(new Contador());
-				if (j != 0 && j != this.matrizMedias[0].length - 1)
-					this.matrizMedias[i][j].setcVerde(new Contador());
+				this.matrizMedias[j][i].setcDerecha(new Contador());
+				this.matrizMedias[j][i].setcIzquierda(new Contador());
+				if(i == 0) this.pEdificios[j][i].setcMorado(new Contador());
+				if(i != 0 || i == this.pEdificios[0].length - 1) this.pEdificios[j][i].setcVerde(new Contador());
+			
 			}
 		}
 	}
@@ -250,6 +270,46 @@ public class Damero {
 	public double getSuministroAgua() {
 		return suministroAgua;
 	}
+	
+	
+	public ArrayList<Contador> consumoExcesivoTroncal(){
+		ArrayList<Contador> resultado = new ArrayList<>();
+
+		resultado = this.consumoExcesivoRec(this.lineaTroncal, this.filas/2, this.columnas);
+		
+		return resultado;
+	}
+	
+	private ArrayList<Contador> consumoExcesivoRec(ParEdificios[] troncal, int i, int j) {
+		ArrayList<Contador> resultado = new ArrayList<>();
+		Contador c1;
+
+
+		int inicio = 0;
+		int fin = this.filas-1;
+		int mitad;
+		
+		if(inicio >= fin) {
+			System.out.println("Aqui ya termina");
+		} else { //Casos recursivos
+			mitad = (inicio + fin)/2;
+			
+			
+			this.consumoExcesivoRec(troncal, inicio, mitad);
+			this.consumoExcesivoRec(troncal, mitad+1, fin);
+
+			
+	
+			
+		}
+		
+		return resultado;
+	}
+	
+	
+	
+	
+	
 
 	// MANOMETROS
 
