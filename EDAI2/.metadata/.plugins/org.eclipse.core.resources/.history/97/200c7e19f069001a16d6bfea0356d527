@@ -10,7 +10,7 @@ public class Damero {
 	private int columnas;
 	private ParEdificios[][] pEdificios;
 	private ParEdificios[][] matrizMedias;
-	private ParEdificios[] lineaTroncal;
+	private ParEdificios[] lineaTroncal = this.lineaTroncal();
 
 
 	public final static double CONSUMO_MINIMO = 108;
@@ -45,7 +45,6 @@ public class Damero {
 		}
 
 		inicializarContadores();
-		this.lineaTroncal = this.lineaTroncal(); 
 	}
 	
 	

@@ -45,7 +45,6 @@ public class Damero {
 		}
 
 		inicializarContadores();
-		this.lineaTroncal = this.lineaTroncal(); 
 	}
 	
 	

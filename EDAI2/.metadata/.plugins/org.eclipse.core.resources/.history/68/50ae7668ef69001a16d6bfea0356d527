@@ -10,7 +10,7 @@ public class Damero {
 	private int columnas;
 	private ParEdificios[][] pEdificios;
 	private ParEdificios[][] matrizMedias;
-	private ParEdificios[] lineaTroncal;
+	private ParEdificios[] lineaTroncal = this.lineaTroncal();
 
 
 	public final static double CONSUMO_MINIMO = 108;
@@ -45,7 +45,6 @@ public class Damero {
 		}
 
 		inicializarContadores();
-		this.lineaTroncal = this.lineaTroncal(); 
 	}
 	
 	
@@ -53,11 +52,11 @@ public class Damero {
 	 * @return la línea troncal de nuestro damero
 	 */
 	public ParEdificios[] lineaTroncal() {
-		int j = this.pEdificios[0].length - 1;
-		ParEdificios[] pE = new ParEdificios[this.pEdificios.length];
+		int i = 1;
+		ParEdificios[] pE = new ParEdificios[this.pEdificios[i].length];
 		
-			for(int i=0; i<this.pEdificios.length; i++) {
-				pE[i] = this.pEdificios[i][j];
+			for(int j=0; j<this.pEdificios[i].length; j++) {
+				pE[j] = this.pEdificios[i][j];
 			}
 		
 		return pE;
@@ -72,13 +71,13 @@ public class Damero {
 				
 				
 				//En todas las casillas vamos a tener un cIzquierda y un cDerecha
-				//Solo va a haber cMorado en la última fila
+				//Solo va a haber cMorado en la primera fila
 				//Los verdes van a estar en todas las filas menos la primera y la ultima
 
 				//Inicializamos los datos actuales
 				this.pEdificios[j][i].setcDerecha(new Contador());
 				this.pEdificios[j][i].setcIzquierda(new Contador());
-				if(i == this.pEdificios.length - 1) this.pEdificios[j][i].setcMorado(new Contador());
+				if(i == 0) this.pEdificios[j][i].setcMorado(new Contador());
 				if(i != 0 || i == this.pEdificios[0].length - 1) this.pEdificios[j][i].setcVerde(new Contador());
 
 				if(this.filas % 2 != 0) {

@@ -10,7 +10,7 @@ public class Damero {
 	private int columnas;
 	private ParEdificios[][] pEdificios;
 	private ParEdificios[][] matrizMedias;
-	private ParEdificios[] lineaTroncal;
+	private ParEdificios[] lineaTroncal = this.lineaTroncal();
 
 
 	public final static double CONSUMO_MINIMO = 108;
@@ -45,7 +45,6 @@ public class Damero {
 		}
 
 		inicializarContadores();
-		this.lineaTroncal = this.lineaTroncal(); 
 	}
 	
 	
@@ -54,7 +53,7 @@ public class Damero {
 	 */
 	public ParEdificios[] lineaTroncal() {
 		int j = this.pEdificios[0].length - 1;
-		ParEdificios[] pE = new ParEdificios[this.pEdificios.length];
+		ParEdificios[] pE = new ParEdificios[this.pEdificios[0].length];
 		
 			for(int i=0; i<this.pEdificios.length; i++) {
 				pE[i] = this.pEdificios[i][j];
