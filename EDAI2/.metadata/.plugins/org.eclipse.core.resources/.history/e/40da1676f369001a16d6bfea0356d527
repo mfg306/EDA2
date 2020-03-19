@@ -295,7 +295,7 @@ public class Damero {
 		int fin = this.filas-1;
 		int mitad;
 		
-		if(inicio >= fin) { //Caso base
+		if(inicio >= fin) {
 			
 			return resultado;
 		} else { //Casos recursivos

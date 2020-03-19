@@ -295,12 +295,12 @@ public class Damero {
 		int fin = this.filas-1;
 		int mitad;
 		
-		if(inicio >= fin) { //Caso base
+		if(inicio >= fin) {
 			
 			return resultado;
 		} else { //Casos recursivos
 			mitad = (inicio + fin)/2;
-			this.consumoExcesivoRec(troncal, inicio, mitad).toString();
+			System.out.println(this.consumoExcesivoRec(troncal, inicio, mitad).toString());
 			this.consumoExcesivoRec(troncal, mitad+1, fin);
 		}
 		

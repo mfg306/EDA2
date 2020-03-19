@@ -6,7 +6,7 @@ public class Prubea {
 
 		Damero d = new Damero(4,4);
 
-		d.consumoExcesivoTroncal();
+		
 		
 
 		
