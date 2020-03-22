@@ -3,13 +3,16 @@ package org.eda2;
 public class Contador extends Medidor{
 
 	private double consumo;
+	private static int id = 0;
 
 	public Contador() { // Consumo diario
 		this.consumo = (Math.random() * (108 - 162 + 1) + 162);
+		id++;
 	}
 	
 	public Contador(double consumo) {
 		this.consumo = consumo;
+		id++;
 	}
 
 	public double getConsumo() {
@@ -18,6 +21,10 @@ public class Contador extends Medidor{
 
 	public void setConsumo(double consumo) {
 		this.consumo = consumo;
+	}
+	
+	public static int getId() {
+		return id;
 	}
 
 	@Override

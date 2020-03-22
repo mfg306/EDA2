@@ -60,11 +60,20 @@ public class Damero {
 		return pE;
 	}
 	
+	public ParEdificios[] lineaTroncalMedia() {
+		ParEdificios[] pE = new ParEdificios[pEdificios.length];
+		for (int i = 0;i<pE.length;i++) {
+			pE[i] = matrizMedias[i][pEdificios[0].length-1];
+		}
+		return pE;
+	}
+	
 
 	// CONTADORES
 
 	private void inicializarContadores() { 
 		if(this.filas % 2 == 0) this.inicializarContadoresPar();
+		//Y si no es par?
 		
 	}
 	
@@ -295,31 +304,38 @@ public class Damero {
 		ArrayList<Contador> resultado = new ArrayList<>();
 		Contador[] contadoresTroncal = this.traducirMatrizParEdificiosAArrayContadores(this.lineaTroncal);
 
-		resultado = this.consumoExcesivoRec(contadoresTroncal, this.columnas/2, this.filas);
+		int i=0;
+		int j=contadoresTroncal.length-1;
+		
+		resultado = this.consumoExcesivoRec(contadoresTroncal, j, i);
 		
 		return resultado;
 	}
 	
 	/**
 	 * @param troncal es un array con cada contador de cada casilla
-	 * @param i
-	 * @param j
+	 * @param i inicio del array
+	 * @param j final del array
 	 * @return
 	 */
 	private ArrayList<Contador> consumoExcesivoRec(Contador[] troncal, int i, int j) {
 		ArrayList<Contador> resultado = new ArrayList<>();
-		
-		int inicio = 0;
-		int fin = this.columnas-1;
+		Contador[] media = this.traducirMatrizParEdificiosAArrayContadores(this.lineaTroncalMedia());
+
 		int mitad;
 		
-		if(inicio >= fin) { //Caso base
-			
-			return resultado;
+		if(i == j-1) { //Caso base -> Si solo nos quedan dos elementos
+			if(troncal[i].getConsumo() > 700*media[i].getConsumo()) {
+				resultado.add(troncal[i]);
+			}
+			if(troncal[j].getConsumo() > 700*media[j].getConsumo()) {
+				resultado.add(troncal[j]);
+			}
 		} else { //Casos recursivos
-			mitad = (inicio + fin)/2;
-			this.consumoExcesivoRec(troncal, inicio, mitad);
-			this.consumoExcesivoRec(troncal, mitad+1, fin);
+			mitad = (i + j)/2;
+			this.consumoExcesivoRec(troncal, i, mitad);
+			this.consumoExcesivoRec(troncal, mitad+1, j);
+				
 		}
 		
 		return resultado;

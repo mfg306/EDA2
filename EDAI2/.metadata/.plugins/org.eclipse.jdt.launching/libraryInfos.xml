@@ -20,4 +20,5 @@
         </endorsedDirs>
     </libraryInfo>
     <libraryInfo home="/usr/lib/jvm/java-11-openjdk-amd64" version="11.0.6"/>
+    <libraryInfo home="/usr/lib/jvm/java-11-openjdk-i386" version="11.0.6"/>
 </libraryInfos>

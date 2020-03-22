@@ -1,0 +1,19 @@
+package org.eda2;
+
+
+public class Prubea {
+
+	public static void main(String[] args) {
+
+		Damero d = new Damero(3,3);
+		
+		d.generarMatrizMedias();
+	
+//		System.out.println(d.toString());
+		
+		d.consumoExcesivoTroncal();
+		
+
+		
+	}
+}
