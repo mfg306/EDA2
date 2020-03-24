@@ -5,13 +5,13 @@ public class Prubea {
 
 	public static void main(String[] args) {
 
-		Damero d = new Damero(3,3); //Con 2x2 da fallo
+		Damero d = new Damero(4,4); //Con 2x2 da fallo
 		
-		d.generarMatrizMedias();
+		
 	
-//		System.out.println(d.toString());
+		System.out.println(d.toString());
 		
-		System.out.println(d.consumoExcesivoTroncal().toString());
+//		System.out.println(d.consumoExcesivoTroncal().toString());
 		
 
 		

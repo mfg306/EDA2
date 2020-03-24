@@ -116,6 +116,20 @@ public class Damero {
 				}
 			}
 		}
+		
+		//Arreglar la casilla i,j. Tiene que ser igual a la suma de todas
+		
+		for(int i = 0 ; i<this.columnas / 2; i++) {
+			for(int j = 0 ; j<this.filas; j++) {
+				if(i == (this.columnas/2)-1 && j == this.filas-1) break; //La general no
+				con += this.pEdificios[i][j].getcDerecha().getConsumo() + this.pEdificios[i][j].getcIzquierda().getConsumo();
+			}
+		}
+		
+		
+		
+		pEdificios[(this.columnas/2)-1][this.filas-1].getcIzquierda().setConsumo(con);
+		
 
 	}
 	
@@ -258,25 +272,20 @@ public class Damero {
 	}
 
 	/**
-	 * Para resolver el problema del contador, vamos a necesitar ir viendo cuánto ha
-	 * consumido cada edificio
-	 * 
+	 * Dada una casilla, saber cuánto ha consumido
 	 * @param i
 	 * @param j
 	 * @return
 	 */
-	public double getLitrosEdificio(int i, int j) {
-
-		if (i > this.columnas || j > this.filas)
-			throw new RuntimeException("Introduzca una ciudad válida");
-
-		ArrayList<Object> traduccion = this.traducirIndices(i);
-
-		double nuevoIndice = (double) traduccion.get(0);
-		Boolean esPar = (Boolean) traduccion.get(1);
-
-		if (esPar) return pEdificios[(int) nuevoIndice][j].getcIzquierda().getConsumo();
-		else return pEdificios[(int) nuevoIndice][j].getcDerecha().getConsumo();
+	public double getLitrosEdificio(int i, int j) { //columnas, filas
+		double filas = (double)this.traducirIndices(i).get(0);
+		boolean par = (boolean)this.traducirIndices(i).get(1);
+		
+		if(filas > this.filas/2 || i > this.columnas) {
+			throw new IndexOutOfBoundsException("Debe introducir un edificio válido. Compruebe que los índices son correctos.");
+		}
+		return (par == true) ?  this.pEdificios[(int)filas-1][columnas-1].getcIzquierda().getConsumo() : this.pEdificios[(int)filas-1][columnas-1].getcDerecha().getConsumo()  ;
+	
 
 	}
 
@@ -285,13 +294,16 @@ public class Damero {
 	 *         capacidad de la casilla general generadora
 	 */
 	public double getLitrosCasillasSalvoCasillaGeneral() {
+		
 		double resultado = 0;
-		for (int i = 0; i < columnas / 2; i++) {
-			for (int j = 0; j < filas; j++) {
-				resultado += this.pEdificios[i][j].getcIzquierda().getConsumo()
-						+ this.pEdificios[i][j].getcDerecha().getConsumo();
+	
+		for(int i = 0 ; i<this.columnas / 2; i++) {
+			for(int j = 0 ; j<this.filas; j++) {
+				if(i == (this.columnas/2)-1 && j == this.filas-1) break; //La general no
+				resultado += this.pEdificios[i][j].getcDerecha().getConsumo() + this.pEdificios[i][j].getcIzquierda().getConsumo();
 			}
 		}
+		
 		return resultado;
 	}
 
@@ -304,10 +316,10 @@ public class Damero {
 		ArrayList<Contador> resultado = new ArrayList<>();
 		Contador[] contadoresTroncal = this.traducirMatrizParEdificiosAArrayContadores(this.lineaTroncal);
 
-		int i=0;
+		int i=0;		
 		int j=contadoresTroncal.length-1;
-		
-		resultado = this.consumoExcesivoRec(contadoresTroncal, j, i);
+				
+		resultado = this.consumoExcesivoRec(contadoresTroncal, i, j);
 		
 		return resultado;
 	}
@@ -321,21 +333,15 @@ public class Damero {
 	private ArrayList<Contador> consumoExcesivoRec(Contador[] troncal, int i, int j) {
 		ArrayList<Contador> resultado = new ArrayList<>();
 		Contador[] media = this.traducirMatrizParEdificiosAArrayContadores(this.lineaTroncalMedia());
-
 		int mitad;
-		
-		if(i == j-1) { //Caso base -> Si solo nos quedan dos elementos
-			if(troncal[i].getConsumo() > 700*media[i].getConsumo()) {
-				resultado.add(troncal[i]);
-			}
-			if(troncal[j].getConsumo() > 700*media[j].getConsumo()) {
-				resultado.add(troncal[j]);
-			}
+
+		if(i >= j-1) { //Caso base -> Si solo nos quedan dos elementos
+			
+			
 		} else { //Casos recursivos
 			mitad = (i + j)/2;
-			this.consumoExcesivoRec(troncal, i, mitad);
-			this.consumoExcesivoRec(troncal, mitad+1, j);
-				
+			this.consumoExcesivoRec(troncal, i, mitad-1);
+			this.consumoExcesivoRec(troncal, mitad, j);
 		}
 		
 		return resultado;
@@ -350,11 +356,13 @@ public class Damero {
 	 */
 	private Contador[] traducirMatrizParEdificiosAArrayContadores(ParEdificios[] pE) {
 		Contador[] contadores = new Contador[pE.length*2];
+		int contador = 0;
 		
 		for(int i=0; i<pE.length; i++) {
-			contadores[i] = pE[i].getcDerecha();
-			contadores[i+1] = pE[i].getcIzquierda();
-			System.out.println(i);
+			contadores[contador] = pE[i].getcIzquierda();
+			contador++;
+			contadores[contador] = pE[i].getcDerecha();
+			contador++;
 		}
 		
 		return contadores;
