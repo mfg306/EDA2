@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class DameroTest {
 	
 	@Test
-	public void TestInicializarDameroPar() {
+	public void TestInicializarContadoresDameroPar() {
 		Damero damero = new Damero(4,4,500000);
 		//Si es par de 4x4, no puede haber ninguna manzana que sea nula
 		
@@ -26,7 +26,7 @@ public class DameroTest {
 	}
 	
 	@Test
-	public void TestInicializarDameroImpar() {
+	public void TestInicializarContadoresDameroImpar() {
 		Damero damero = new Damero(3,3,500000);
 		//Si es impar de 3x3, los contadores de la derecha de la ultima columna tienen que ser null
 				
