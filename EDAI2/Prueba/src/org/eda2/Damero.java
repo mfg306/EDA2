@@ -11,10 +11,9 @@ public class Damero {
 	private ParEdificios[][] pEdificios;
 	private ParEdificios[][] matrizMedias;
 	private ParEdificios[] lineaTroncal;
+	public final static double CONSUMO_MINIMO = 300000; //m3
+	public final static double CONSUMO_MAXIMO = 500000; //m3
 
-
-	public final static double CONSUMO_MINIMO = 108;
-	public final static double CONSUMO_MAXIMO = 162;
 
 	/**
 	 * Cantidad de agua que suministramos en la casilla general
@@ -27,7 +26,7 @@ public class Damero {
 	 * @param filas    el número de avenidas de nuestra ciudad
 	 * @param columnas el número de calles de nuestra ciudad
 	 */
-	public Damero(int filas, int columnas) {
+	public Damero(int filas, int columnas, double cauceInicial) {
 		this.filas = filas;
 		this.columnas = columnas;
 		if (filas % 2 == 0) {
@@ -43,8 +42,9 @@ public class Damero {
 				matrizMedias[a][b] = new ParEdificios();
 			}
 		}
-
-		inicializarContadores();
+	
+		setSuministroAgua(cauceInicial);
+		
 		this.lineaTroncal = this.lineaTroncal(); 
 	}
 	
@@ -66,6 +66,20 @@ public class Damero {
 			pE[i] = matrizMedias[i][pEdificios[0].length-1];
 		}
 		return pE;
+	}
+	
+	
+	public ParEdificios[][] getDamero(){
+		ParEdificios[][] resultado = new ParEdificios[this.pEdificios.length][this.pEdificios[0].length];
+		
+		for(int i=0; i<resultado.length; i++) {
+			for(int j=0; j<resultado[i].length; j++) {
+				resultado[i][j] = new ParEdificios();
+				resultado[i][j] = this.pEdificios[i][j];
+			}
+		}
+		
+		return resultado;
 	}
 	
 
@@ -220,57 +234,47 @@ public class Damero {
 	/**
 	 * @param cauce cantidad de agua que el usuario quiere introducir
 	 */
-	public void setSuministroAgua(double cauce) {
+	private void setSuministroAgua(double cauce) {
 		if (cauce > CONSUMO_MAXIMO)
 			throw new RuntimeException("Ha introducido demasiada agua y se han roto las tuberías.");
 		if (cauce < CONSUMO_MINIMO)
 			throw new RuntimeException("El sistema no puede funcionar con tan poco cauce.");
 		this.suministroAgua = cauce;
 
-		setLitrosEdificio();
+		setLitrosEdificio(cauce);
 	}
-
+	
+	
+	
 	/**
-	 * Cada contador indica lo que cada manzana consume. Para invocar el caso en el
-	 * que haya una rotura, vamos a suponer que con un 0,1 de probabilidad aparece
-	 * una manzana que consume de forma excesiva.
+	 * @param cauce cantidad de agua que se desea suministrar a través de la casilla general
 	 */
-	private void setLitrosEdificio() {
-
-		// Si nuestro rotura > 0.7, entonces generaremos target roturas
-		double rotura = Math.round(Math.random() * 100.0) / 100.0;
+	private void setLitrosEdificio(double cauce) {
+		//Para ser justos, vamos a darle a todas las manzanas la misma cantidad de agua. Luego ya veremos si ese agua que hemos generado
+		//es mayor que la media
 		
-		// Si targetSide es par, irá en la casilla derecha
-		double targetSide;
+		
+		int numTotalManzanas = (this.filas*this.columnas)-1; //quitamos la general
+		double porcionIndividual = cauce/numTotalManzanas;
+		double porcentajeAVariar; //Esto es para que no todas las manzanas consuman exactamente lo mismo.
+		
+		
+		for(int i=0; i<this.columnas/2; i++) {
+			for(int j=0; j<this.filas; j++) {
+				if(i==(this.columnas/2)-1 && j == this.filas-1) {
+					// this.pEdificios[(int)filas-1][columnas-1].getcIzquierda().getConsumo() : this.pEdificios[(int)filas-1][columnas-1].getcDerecha().getConsumo()  ;
+					this.pEdificios[i][j].setcDerecha(new Contador(cauce));
+				} else {
+					porcentajeAVariar = (Math.random()*(0 - 0.5 + 1) + 0.5);
+					this.pEdificios[i][j].setcDerecha(new Contador(porcionIndividual-(porcionIndividual*porcentajeAVariar)));
+					porcentajeAVariar = (Math.random()*(0 - 0.5 + 1) + 0.5);
+					this.pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual-(porcionIndividual*porcentajeAVariar)));
+				}
 
-		if (rotura < 0.7) {
-			for (int i = 0; i < this.columnas / 2; i++) {
-				for (int j = 0; j < this.filas; j++) {
-					this.pEdificios[i][j].setcDerecha(
-							new Contador(Math.random() * (CONSUMO_MINIMO - CONSUMO_MAXIMO + 1) + CONSUMO_MAXIMO));
-					this.pEdificios[i][j].setcIzquierda(
-							new Contador(Math.random() * (CONSUMO_MINIMO - CONSUMO_MAXIMO + 1) + CONSUMO_MAXIMO));
-				}
-			}
-		} else {
-			System.out.println("!!");
-			for (int i = 0; i < this.columnas / 2; i++) {
-				for (int j = 0; j < this.filas; j++) {
-					targetSide = Math.round(Math.random() * 1000.0) / 10.0;
-					if (Math.round(Math.random() * 1000.0) / 10.0 > 0.5) {
-						if (targetSide % 2 == 0) {
-							this.pEdificios[i][j].setcDerecha(new Contador((Math.random() * (CONSUMO_MINIMO - CONSUMO_MAXIMO + 1) + CONSUMO_MAXIMO) * rotura * 100));
-							this.pEdificios[i][j].setcIzquierda(new Contador(Math.random() * (CONSUMO_MINIMO - CONSUMO_MAXIMO + 1) + CONSUMO_MAXIMO));
-						} else {
-							this.pEdificios[i][j].setcDerecha(new Contador(Math.random() * (CONSUMO_MINIMO - CONSUMO_MAXIMO + 1) + CONSUMO_MAXIMO));
-							this.pEdificios[i][j].setcIzquierda(new Contador((Math.random() * (CONSUMO_MINIMO - CONSUMO_MAXIMO + 1) + CONSUMO_MAXIMO) * rotura * 100));
-						}
-					}
-				}
 			}
 		}
 	}
-
+	
 	/**
 	 * Dada una casilla, saber cuánto ha consumido
 	 * @param i
@@ -278,15 +282,16 @@ public class Damero {
 	 * @return
 	 */
 	public double getLitrosEdificio(int i, int j) { //columnas, filas
+		i--;
+		j--;
 		double filas = (double)this.traducirIndices(i).get(0);
 		boolean par = (boolean)this.traducirIndices(i).get(1);
 		
 		if(filas > this.filas/2 || i > this.columnas) {
 			throw new IndexOutOfBoundsException("Debe introducir un edificio válido. Compruebe que los índices son correctos.");
 		}
-		return (par == true) ?  this.pEdificios[(int)filas-1][columnas-1].getcIzquierda().getConsumo() : this.pEdificios[(int)filas-1][columnas-1].getcDerecha().getConsumo()  ;
+		return (par == true) ?  this.pEdificios[(int)filas][j].getcIzquierda().getConsumo() : this.pEdificios[(int)filas][j].getcDerecha().getConsumo()  ;
 	
-
 	}
 
 	/**
@@ -369,7 +374,9 @@ public class Damero {
 	}
 	
 
-	
+	//NOTA -> PRIMERO TENEMOS QUE GENERAR LA CASILLA GENERAL (QUE TIENE QUE ESTAR ENTRE EL MAX Y EL MINIMO) 
+	//Y LUEGO A PARTIR DE ESO IR DISTRIBUYENDO, PERO QUE LA SUMA NUNCA SEA MAYOR QUE EL MAXIMO
+	//ES DECIR, GENERAMOS UNA CANTIDAD FIJA DE AGUA
 	
 	
 
