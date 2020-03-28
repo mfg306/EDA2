@@ -27,7 +27,7 @@ public class DameroTest {
 	}
 	
 	@Test
-	public void TestInicializarContadoresDameroImpar() { //Me he liado con la implementacion 
+	public void TestInicializarContadoresDameroImpar() {
 		Damero damero = new Damero(3,3,500000);
 		//Si es impar de 3x3, los contadores de la derecha de la ultima columna tienen que ser null
 				

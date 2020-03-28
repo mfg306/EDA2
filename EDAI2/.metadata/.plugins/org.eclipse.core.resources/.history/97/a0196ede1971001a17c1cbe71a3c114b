@@ -69,7 +69,7 @@ public class ParEdificios {
 	}
 	
 	public String toString() {
-		return "I" + this.getcIzquierda() + " | D" + this.getcDerecha() + " | M" + this.getcMorado() + " | V" + this.getcVerde() ;
+		return this.getcIzquierda() + " | " + this.getcDerecha() + " | " + this.getcMorado() + " | " + this.getcVerde() ;
 	}
 	
 	public String toStringManometros() {

@@ -8,10 +8,11 @@ import java.util.ArrayList;
 public class DameroTest {
 	
 	@Test
-	public void TestInicializarContadoresDameroPar() { //Me he liado con la implementacion 
+	public void TestInicializarContadoresDameroPar() {
 		Damero damero = new Damero(4,4,500000);
 		//Si es par de 4x4, no puede haber ninguna manzana que sea nula
-				
+		
+		
 		boolean resultado = true;
 		ParEdificios[][] pE = damero.getDamero();
 		
@@ -27,7 +28,7 @@ public class DameroTest {
 	}
 	
 	@Test
-	public void TestInicializarContadoresDameroImpar() { //Me he liado con la implementacion 
+	public void TestInicializarContadoresDameroImpar() {
 		Damero damero = new Damero(3,3,500000);
 		//Si es impar de 3x3, los contadores de la derecha de la ultima columna tienen que ser null
 				

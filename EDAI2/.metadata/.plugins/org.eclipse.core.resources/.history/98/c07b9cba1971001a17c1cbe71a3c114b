@@ -415,9 +415,9 @@ public class Damero {
 		Contador[] contadores = new Contador[pE.length*2];
 		int contador = 0;
 		
-//		for(int i=0; i<pE.length; i++) {
-//			System.out.println(pE[i].getcDerecha() + " -> " +  pE[i].getcIzquierda());
-//		}
+		for(int i=0; i<pE.length; i++) {
+			System.out.println(pE[i].getcDerecha() + " -> " +  pE[i].getcIzquierda());
+		}
 		
 		for(int i=0; i<pE.length; i++) {
 			contadores[contador] = pE[i].getcIzquierda();
