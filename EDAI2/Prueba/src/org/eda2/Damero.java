@@ -262,8 +262,7 @@ public class Damero {
 		for(int i=0; i<this.columnas/2; i++) {
 			for(int j=0; j<this.filas; j++) {
 				if(i==(this.columnas/2)-1 && j == this.filas-1) {
-					// this.pEdificios[(int)filas-1][columnas-1].getcIzquierda().getConsumo() : this.pEdificios[(int)filas-1][columnas-1].getcDerecha().getConsumo()  ;
-					this.pEdificios[i][j].setcDerecha(new Contador(cauce));
+					this.pEdificios[i][j].setcDerecha(new Contador(cauce)); //Esto está mal porq la casilla general no debería tener izq/der no???
 				} else {
 					porcentajeAVariar = (Math.random()*(0 - 0.5 + 1) + 0.5);
 					this.pEdificios[i][j].setcDerecha(new Contador(porcionIndividual-(porcionIndividual*porcentajeAVariar)));
@@ -339,8 +338,11 @@ public class Damero {
 		ArrayList<Contador> resultado = new ArrayList<>();
 		Contador[] media = this.traducirMatrizParEdificiosAArrayContadores(this.lineaTroncalMedia());
 		int mitad;
+		
 
 		if(i >= j-1) { //Caso base -> Si solo nos quedan dos elementos
+			
+			
 			
 			
 		} else { //Casos recursivos
@@ -359,9 +361,13 @@ public class Damero {
 	 * @param pE
 	 * @return
 	 */
-	private Contador[] traducirMatrizParEdificiosAArrayContadores(ParEdificios[] pE) {
+	private Contador[] traducirMatrizParEdificiosAArrayContadores(ParEdificios[] pE) { //mal
 		Contador[] contadores = new Contador[pE.length*2];
 		int contador = 0;
+		
+		for(int i=0; i<pE.length; i++) {
+			System.out.println(pE[i].getcDerecha() + " -> " +  pE[i].getcIzquierda());
+		}
 		
 		for(int i=0; i<pE.length; i++) {
 			contadores[contador] = pE[i].getcIzquierda();

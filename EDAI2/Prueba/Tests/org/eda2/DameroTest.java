@@ -3,6 +3,7 @@ package org.eda2;
 import static org.junit.Assert.*;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
 
 public class DameroTest {
 	
@@ -73,17 +74,17 @@ public class DameroTest {
 		
 	}
 	
-//	@Test
-//	public void TestAlgoritmoRecursivo() {
-//		Damero damero = new Damero(4,4,300000);
-//		
-//		ArrayList<Contador> contadores = new ArrayList<>();
-//		
-//		contadores = damero.consumoExcesivoTroncal();
-//				
-//	}
-//	
-//
+	@Test
+	public void TestAlgoritmoRecursivo() {
+		Damero damero = new Damero(4,4,300000);
+		
+		ArrayList<Contador> contadores = new ArrayList<>();
+		
+		contadores = damero.consumoExcesivoTroncal();
+				
+	}
+	
+
 //	@Test
 //	public void TestInicializarDameros() {
 //		
