@@ -77,12 +77,12 @@ public class DameroTest {
 	@Test
 	public void TestAlgoritmoRecursivo() {
 		Damero damero = new Damero(4,4,300000);
-		
 		ArrayList<Contador> contadores = new ArrayList<>();
 		
 		contadores = damero.consumoExcesivoTroncal();
-				
 	}
+	
+	
 	
 
 //	@Test

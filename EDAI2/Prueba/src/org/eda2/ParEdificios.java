@@ -10,6 +10,8 @@ public class ParEdificios {
 	private Contador cIzquierda;
 	private Contador cVerde;
 	private Contador cMorado;
+
+
 	private Manometro man;
 	
 	
@@ -25,7 +27,7 @@ public class ParEdificios {
 		this.cVerde = cVerde;
 		this.man = man;
 	}
-	
+		
 	public Contador getcDerecha() {
 		return cDerecha;
 	}
