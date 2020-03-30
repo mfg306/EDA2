@@ -67,29 +67,46 @@ public class Damero {
 	}
 	
 	private void inicializarContadoresPar() { //Deberiamos inicializar primero los de cada edificio y a partir de ese
+		
+		int y = pEdificios.length;
+		int jota = pEdificios[0].length;
+		
 		//RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
 		for (int i = 0;i<pEdificios.length;i++) {
 			for (int j = 0; j<pEdificios[0].length;j++) {
-				this.pEdificios[i][j].setcDerecha(new Contador(Math.random() * (100 - 1000 + 1) + 1000));
+				if (i!=pEdificios.length-1 || j!=pEdificios[0].length-1) 
+					this.pEdificios[i][j].setcDerecha(new Contador(Math.random() * (100 - 1000 + 1) + 1000));
 				this.pEdificios[i][j].setcIzquierda(new Contador(Math.random() * (100 - 1000 + 1) + 1000));
 			}
 		}
 		
-		//INICIALIZAMOS LO CONTADORES VERDES Y MORADOS
+		//INICIALIZAMOS LO CONTADORES VERDES Y MORADOS Y EL GENERAL
 		double con = 0;
-		for (int i = 0;i<pEdificios.length;i++) {
-			for (int j = 1; j<pEdificios[0].length;j++) {
-				con += pEdificios[i][j].getcDerecha().getConsumo();
-				con += pEdificios[i][j].getcIzquierda().getConsumo();
-				if (j==pEdificios[0].length-1) { //linea de distribucion
+		for (int i = 0;i < pEdificios.length;i++) {
+			for (int j = 1; j < pEdificios[0].length;j++) {
+				
+				if (i==pEdificios.length-1 && j==pEdificios[0].length-1) {
+					con += pEdificios[i][j].getcIzquierda().getConsumo();
 					con += pEdificios[i][j-1].getcVerde().getConsumo();
+					con += pEdificios[i-1][j].getcMorado().getConsumo();
+					this.pEdificios[i][j].setcDerecha(new Contador(con));
+					continue;
+				}
+				if (j==pEdificios[0].length-1 && i != pEdificios.length-1) { //linea de distribucion
+					con += pEdificios[i][j-1].getcVerde().getConsumo();
+					con += pEdificios[i][j].getcDerecha().getConsumo();
+					con += pEdificios[i][j].getcIzquierda().getConsumo();
 					if (i!=0) con += pEdificios[i-1][j].getcMorado().getConsumo();
 					pEdificios[i][j].setcMorado(new Contador(con));
-				} else if (pEdificios[i][j-1].getcVerde()==null) {
+				} else if (pEdificios[i][j-1].getcVerde()==null) { //final de la linea de distribucion por abajo
+					con += pEdificios[i][j].getcDerecha().getConsumo();
+					con += pEdificios[i][j].getcIzquierda().getConsumo();
 					con += pEdificios[i][j-1].getcDerecha().getConsumo();
 					con += pEdificios[i][j-1].getcIzquierda().getConsumo();
 					pEdificios[i][j].setcVerde(new Contador(con));
-				} else {
+				} else { //caso base
+					con += pEdificios[i][j].getcDerecha().getConsumo();
+					con += pEdificios[i][j].getcIzquierda().getConsumo();
 					con += pEdificios[i][j-1].getcVerde().getConsumo();
 					pEdificios[i][j].setcVerde(new Contador(con));
 				}
@@ -190,7 +207,6 @@ public class Damero {
 						con += matrizMedias[i][j].getcIzquierda().getConsumo();
 						if (j==matrizMedias[0].length-1) { //linea de distribucion
 							con += matrizMedias[i][j-1].getcVerde().getConsumo();
-							
 							if (i!=0) con += matrizMedias[i-1][j].getcMorado().getConsumo();
 							matrizMedias[i][j].setcMorado(new Contador(con));
 						} else if (matrizMedias[i][j-1].getcVerde()==null) {
@@ -204,6 +220,9 @@ public class Damero {
 						con = 0;
 					}
 				}
+				
+				//CONTADOR GENERAL
+				matrizMedias[matrizMedias.length-1][matrizMedias[0].length-1].setcDerecha(new Contador(Math.random() * (CONSUMO_MINIMO*7 - CONSUMO_MAXIMO*7 + 1) + CONSUMO_MAXIMO*7));
 	}
 	
 	public void setSuministroAgua(double cauce) {
@@ -345,6 +364,7 @@ public class Damero {
 		ArrayList<String> roturas = new ArrayList<String>();
 		roturas.add("Manometros: ");
 		roturas.addAll(resolverManometros());
+		roturas.add("");
 		roturas.add("Contadores: ");
 		roturas.addAll(resolverContadores());
 		this.roturas = roturas;
@@ -356,20 +376,25 @@ public class Damero {
 		for (int i = 0;i<matrizMedias.length;i++) {
 			for (int j = 0; j<matrizMedias[0].length;j++) {
 				if (pEdificios[i][j].getcDerecha().getConsumo() > (matrizMedias[i][j].getcDerecha().getConsumo()*7)) {
-					resultado.add("D: " + i + " " + j);
+					//resultado.add("D: " + i + " " + j);
+					if (i == matrizMedias.length-1 && j==matrizMedias[0].length-1) resultado.add("Contador general");
+					else resultado.add("Edificio " + ((i*2)+2) + " de la calle " + (j+1));
 				}
 				if (pEdificios[i][j].getcIzquierda() != null && 
 						(pEdificios[i][j].getcIzquierda().getConsumo() > (matrizMedias[i][j].getcIzquierda().getConsumo()*7))) {
-					resultado.add("I: " + i + " " + j);
+					//resultado.add("I: " + i + " " + j);
+					resultado.add("Edificio " + ((i*2)+1) + " de la calle " + (j+1));
 				}
 				if (pEdificios[i][j].getcMorado() != null && 
 						(pEdificios[i][j].getcMorado().getConsumo() > 
 						(matrizMedias[i][j].getcMorado().getConsumo()*7))) {
-					resultado.add("M: " + i + " " + j);
+					//resultado.add("M: " + i + " " + j);
+					resultado.add("Contador troncal entre las manzanas " + ((i*2)+1) + " y " + ((i*2)+2) + " de la calle " + (j+1));
 				}
 				if (pEdificios[i][j].getcVerde() != null && 
 						(pEdificios[i][j].getcDerecha().getConsumo() > (matrizMedias[i][j].getcVerde().getConsumo()*7))) {
-					resultado.add("V: " + i + " " + j);
+					//resultado.add("V: " + i + " " + j);
+					resultado.add("Contador de distribucion de las manzanas " + ((i*2)+1) + " y " + ((i*2)+2) + " de la calle " + (j+1));
 				}
 			}
 		}
@@ -437,7 +462,7 @@ public class Damero {
 			aux = pEdificios[i][j-1].getMan().getPresion();
 			if (aux<(current-current*10/100)) {
 				//resultadoDistribucion.add("["+ i + ", " + j + "]" + " - " + "["+ i + ", " + (j+1) + "]");
-				resultadoDistribucion.add(((2*i)+1) + " - " + ((2*i)+2));
+				resultadoDistribucion.add(((2*i)+1) + " - " + ((2*i)+2) + "\t De la calle " + j+1);
 			}
 				
 				
