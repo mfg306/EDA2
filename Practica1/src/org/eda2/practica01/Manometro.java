@@ -10,10 +10,14 @@ public class Manometro {
 		this.presion = 0;
 	}
 	
+	public Manometro (double presion) {
+		this.presion = presion;
+	}
 	
 	public double getPresion() {
 		return this.presion;
 	}
+	
 	public void setPresion(double presion) {
 		this.presion = presion;
 	}

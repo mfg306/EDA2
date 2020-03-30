@@ -8,6 +8,18 @@ public class ParEdificios {
 	private Contador cMorado;
 	private Manometro man;
 	
+	//Constructor vacío
+	public ParEdificios() {
+			
+	}
+		
+	public ParEdificios(Contador cDerecha, Contador cIzquierda, Contador cVerde, Contador cMorado, Manometro man) {
+		this.cDerecha = cDerecha;
+		this.cIzquierda = cIzquierda;
+		this.cMorado = cMorado;
+		this.cVerde = cVerde;
+		this.man = man;
+	}
 	
 	public Contador getcDerecha() {
 		return cDerecha;
@@ -46,19 +58,6 @@ public class ParEdificios {
 	}
 
 	public void setMan(Manometro man) {
-		this.man = man;
-	}
-	
-	//Constructor vacío
-	public ParEdificios() {
-		
-	}
-	
-	public ParEdificios(Contador cDerecha, Contador cIzquierda, Contador cVerde, Contador cMorado, Manometro man) {
-		this.cDerecha = cDerecha;
-		this.cIzquierda = cIzquierda;
-		this.cMorado = cMorado;
-		this.cVerde = cVerde;
 		this.man = man;
 	}
 	
