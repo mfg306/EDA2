@@ -23,7 +23,6 @@ public class DameroTest {
 		}
 		
 		Assert.assertTrue(resultado);
-		
 	}
 	
 	@Test
@@ -33,13 +32,18 @@ public class DameroTest {
 				
 		boolean resultado = true;
 		ParEdificios[][] pE = damero.getDamero();
-		int i = pE.length-1;
-
-		for(int j=0; j<pE[i].length; j++) {
-			if(pE[i][j].getcDerecha() != null) resultado = false;
+		int columnas = pE.length-1;
+		int contador = 0;
+		
+		for(int i=0; i<pE[0].length; i++) {
+			if(pE[columnas][i].getcDerecha() == null) { //Los contadores derechos de la ultima columna tienen que estar todos a null
+				resultado = false;
+				contador++;
+			}
 		}
 
-		Assert.assertTrue(resultado);
+		Assert.assertFalse(resultado);
+		Assert.assertEquals(contador, pE[0].length);
 	}
 	
 	
@@ -53,7 +57,45 @@ public class DameroTest {
 		//Puede que de todo lo que les estemos dando, no lo consuman todo
 		//Lo que sí que no puede pasar es que consuman más de lo que hay
 		Assert.assertTrue(resultadoEsperado >= resultadoSuma);
+	}
+	
+	@Test
+	public void TestSoloHayContadoresMoradosEnUltimaFila() {
+		Damero damero = new Damero(4,4,300000);
+		ParEdificios[][] pE = damero.getDamero();
+		boolean resultado = true;
+		int contador = 0;
+				
+		for(int i=0; i<pE.length; i++) {
+			for(int j=0; j<pE[i].length; j++) {
+				if(pE[i][j].getcMorado() != null) contador++;
+				else {
+					if(pE[i][j].getcMorado() != null) {
+						resultado = false;
+						break;
+					}
+				}
+			}
+		}
+		Assert.assertEquals(resultado, true);
+		Assert.assertEquals(contador, pE.length);
+	}
+	
+	@Test
+	public void TestNoHayContadoresVerdesEnLaUltimaFila() {
+		Damero damero = new Damero(4,4,300000);
+		ParEdificios[][] pE = damero.getDamero();
+		boolean resultado = true;
+		int j = pE[0].length-1;
 		
+		for(int i=0; i<pE.length; i++) {
+			if(pE[i][j].getcVerde() != null) {
+				resultado = false;
+				break;
+			}
+		}
+		
+		Assert.assertEquals(resultado, true);
 	}
 	
 	@Test
@@ -64,7 +106,6 @@ public class DameroTest {
 		}catch(Exception e) {
 			assertEquals(e.getMessage(), "Ha introducido demasiada agua y se han roto las tuberías.");
 		}
-		
 		
 		try {
 			Damero damero = new Damero(4,4,10000);
