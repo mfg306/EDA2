@@ -2,6 +2,7 @@ package org.eda2;
 
 import java.util.ArrayList;
 
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 
 /**
  * @author marta
@@ -15,12 +16,6 @@ public class Damero {
 	public final static double CONSUMO_MINIMO = 300000; //m3 Son medidas que se dan en el enunciado
 	public final static double CONSUMO_MAXIMO = 500000; //m3
 
-
-	/**
-	 * Cantidad de agua que suministramos en la casilla general
-	 */
-	private double suministroAgua;
-
 	/**
 	 * Nuestro Damero viene representado por pares de calles.
 	 * 
@@ -32,7 +27,7 @@ public class Damero {
 		this.columnas = columnas;
 		if (filas % 2 == 0) {
 			pEdificios = new ParEdificios[columnas / 2][filas]; // i vale la mitad porque unimos dos columnas
-			matrizMedias = new ParEdificios[columnas / 2][columnas];
+			matrizMedias = new ParEdificios[columnas / 2][filas];
 		} else {
 			pEdificios = new ParEdificios[(columnas + 1) / 2][filas];
 			matrizMedias = new ParEdificios[(columnas + 1) / 2][filas];
@@ -44,8 +39,10 @@ public class Damero {
 			}
 		}
 	
-		this.inicializarContadores(); 
-		setSuministroAgua(cauceInicial);
+		this.inicializarContadores(this.pEdificios); 
+		setSuministroAgua(cauceInicial, this.pEdificios);
+		this.inicializarContadores(this.matrizMedias);
+		this.setSuministroAgua(400000, this.matrizMedias); //Datos dados por la empresa
 	}
 	
 	
@@ -65,8 +62,6 @@ public class Damero {
 		for (int i = 0;i<pE.length;i++) {
 			pE[i] = matrizMedias[i][pEdificios[0].length-1];
 		}
-		
-		
 		return pE;
 	}
 	
@@ -85,42 +80,42 @@ public class Damero {
 	
 
 	// CONTADORES
-	private void inicializarContadores() { //***
+	private void inicializarContadores(ParEdificios[][] pEdificios) { //***
 		
 		//La primera fila tiene solo contadores morados, izq y der
 		//El resto tiene verdes, izq y der
 		//Lo inicializo todo a cero y cuando sepamos la cantidad inicial ya se la asignamos a todos
 
 		
-		for(int i=0; i<pEdificios.length; i++) {
-			for(int j=0; j<pEdificios[0].length; j++) {
-				this.pEdificios[i][j] = new ParEdificios();
-				this.pEdificios[i][j].setcDerecha(new Contador(0.0));
-				this.pEdificios[i][j].setcIzquierda(new Contador(0.0));
+		for(int i=0; i<this.pEdificios.length; i++) {
+			for(int j=0; j<this.pEdificios[0].length; j++) {
+				pEdificios[i][j] = new ParEdificios();
+				pEdificios[i][j].setcDerecha(new Contador(0.0));
+				pEdificios[i][j].setcIzquierda(new Contador(0.0));
 				
 				if(j==this.pEdificios[0].length-1) {
-					this.pEdificios[i][j].setcMorado(new Contador(0.0));
+					pEdificios[i][j].setcMorado(new Contador(0.0));
 				} else {
-					this.pEdificios[i][j].setcVerde(new Contador(0.0));
+					pEdificios[i][j].setcVerde(new Contador(0.0));
 				}
 			}
 		}
 		
-		if(this.filas % 2 == 0) this.inicializarContadoresPar(); 
-		else this.inicializarContadoresImpar();
+		if(this.filas % 2 == 0) this.inicializarContadoresPar(pEdificios); 
+		else this.inicializarContadoresImpar(pEdificios);
 	}
 	
 	/**
 	 * Terminamos de rellenar la última columna
 	 */
-	private void inicializarContadoresPar() { //***
+	private void inicializarContadoresPar(ParEdificios[][] pEdificios) { //***
 		int columnas = this.pEdificios.length-1;
 		for(int i=0; i<this.pEdificios[0].length; i++) {
-			this.pEdificios[columnas][i] = new ParEdificios();
-			this.pEdificios[columnas][i].setcDerecha(new Contador(0.0));
-			this.pEdificios[columnas][i].setcIzquierda(new Contador(0.0));
-			if(i==this.pEdificios[0].length-1) this.pEdificios[columnas][i].setcMorado(new Contador(0.0));
-			if(i!=this.pEdificios[0].length-1) this.pEdificios[columnas][i].setcVerde(new Contador(0.0));
+			pEdificios[columnas][i] = new ParEdificios();
+			pEdificios[columnas][i].setcDerecha(new Contador(0.0));
+			pEdificios[columnas][i].setcIzquierda(new Contador(0.0));
+			if(i==this.pEdificios[0].length-1) pEdificios[columnas][i].setcMorado(new Contador(0.0));
+			if(i!=this.pEdificios[0].length-1) pEdificios[columnas][i].setcVerde(new Contador(0.0));
 		}		
 	}
 	
@@ -128,7 +123,7 @@ public class Damero {
 	/**
 	 *  La ultima columna la ponemos a null
 	 */
-	private void inicializarContadoresImpar() { //***
+	private void inicializarContadoresImpar(ParEdificios[][] pEdificios) { //***
 		int columnas = this.pEdificios.length-1;
 		for(int i=0; i<this.pEdificios[0].length; i++) {
 			this.pEdificios[columnas][i] = new ParEdificios();
@@ -140,43 +135,6 @@ public class Damero {
 		}
 	}
 	
-	public void generarMatrizMedias() { //??
-		//RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
-				for (int i = 0;i<matrizMedias.length;i++) {
-					for (int j = 0; j<matrizMedias[0].length;j++) {
-						this.matrizMedias[i][j].setcDerecha(new Contador(Math.random() * (CONSUMO_MINIMO - CONSUMO_MAXIMO + 1) + CONSUMO_MAXIMO));
-						this.matrizMedias[i][j].setcIzquierda(new Contador(Math.random() * (CONSUMO_MINIMO - CONSUMO_MAXIMO + 1) + CONSUMO_MAXIMO));
-					}
-				}
-				
-				//INICIALIZAMOS LO CONTADORES VERDES Y MORADOS
-				double con = 0;
-				for (int i = 0;i<matrizMedias.length;i++) {
-					for (int j = 1; j<matrizMedias[0].length;j++) {
-						if (j==matrizMedias[0].length-1) { //linea de distribucion
-							con += matrizMedias[i][j-1].getcVerde().getConsumo();
-							con += matrizMedias[i][j].getcDerecha().getConsumo();
-							con += matrizMedias[i][j].getcIzquierda().getConsumo();
-							if (i!=0) con += matrizMedias[i-1][j].getcMorado().getConsumo();
-							matrizMedias[i][j].setcMorado(new Contador(con));
-						} else if (matrizMedias[i][j-1].getcVerde()==null) {
-							con += matrizMedias[i][j-1].getcDerecha().getConsumo();
-							con += matrizMedias[i][j-1].getcIzquierda().getConsumo();
-							con += matrizMedias[i][j].getcDerecha().getConsumo();
-							con += matrizMedias[i][j].getcIzquierda().getConsumo();
-							matrizMedias[i][j].setcVerde(new Contador(con));
-						} else {
-							con += matrizMedias[i][j-1].getcVerde().getConsumo();
-							con += matrizMedias[i][j].getcDerecha().getConsumo();
-							con += matrizMedias[i][j].getcIzquierda().getConsumo();
-							matrizMedias[i][j].setcVerde(new Contador(con));
-						}
-						con = 0;
-					}
-				}
-	}
-	
-
 	public String toString() {
 		String resultado = "";
 
@@ -191,11 +149,12 @@ public class Damero {
 
 	public String toStringMedias() {
 		String resultado = "";
-		for (int i = 0; i < this.columnas / 2; i++) {
-			for (int j = 0; j < this.filas; j++) {
-				resultado += this.matrizMedias[i][j] + "\t\t";
+
+		for(int j=0; j<this.matrizMedias[0].length; j++) {
+			for(int i=0; i<this.matrizMedias.length; i++) {
+				resultado +=  this.matrizMedias[i][j].toString() + "(" + i+" ,"+j + ")" + "\t" + " --> ";
 			}
-			resultado += "\n";
+			resultado += "\n";			
 		}
 		return resultado;
 	}
@@ -226,14 +185,13 @@ public class Damero {
 	/**
 	 * @param cauce cantidad de agua que el usuario quiere introducir
 	 */
-	private void setSuministroAgua(double cauce) {
+	private void setSuministroAgua(double cauce, ParEdificios[][] pEdificios) {
 		if (cauce > CONSUMO_MAXIMO)
 			throw new RuntimeException("Ha introducido demasiada agua y se han roto las tuberías.");
 		if (cauce < CONSUMO_MINIMO)
 			throw new RuntimeException("El sistema no puede funcionar con tan poco cauce.");
-		this.suministroAgua = cauce;
 
-		setLitrosEdificio(cauce);
+		setLitrosEdificio(cauce, pEdificios);
 	}
 	
 	
@@ -252,8 +210,7 @@ public class Damero {
 		2. Le quitamos a la parte que le corresponde a la manzana i,j esa cantidad aleatoria. De esta forma obtenemos datos más reales
 	 * @param cauce cantidad de agua que se desea suministrar a través de la casilla general
 	 */
-	private void setLitrosEdificio(double cauce) { //***
-			
+	private void setLitrosEdificio(double cauce, ParEdificios[][] pEdificios) { //***
 		int numTotalManzanas = (this.filas*this.columnas)-1; //quitamos la general
 		double porcionIndividual = cauce/numTotalManzanas;
 		double porcentajeAVariar; //Esto es para que no todas las manzanas consuman exactamente lo mismo.
@@ -262,21 +219,20 @@ public class Damero {
 			for(int j=0; j<this.filas; j++) {
 				if(i==(this.columnas/2)-1 && j == this.filas-1) {
 					if(this.columnas%2 == 0) {
-						this.pEdificios[i][j].setcDerecha(new Contador(cauce)); //CASILLA GENERAL SITUACIÓN PAR
+						pEdificios[i][j].setcDerecha(new Contador(cauce)); //CASILLA GENERAL SITUACIÓN PAR
 						porcentajeAVariar = (Math.random()*(0 - 0.5 + 1) + 0.5);
-						this.pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual-(porcionIndividual*porcentajeAVariar)));
+						pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual-(porcionIndividual*porcentajeAVariar)));
 					}
 					else {
-						this.pEdificios[i][j].setcIzquierda(new Contador(cauce)); //CASILLA GENERAL SITUACIÓN IMPAR
+						pEdificios[i][j].setcIzquierda(new Contador(cauce)); //CASILLA GENERAL SITUACIÓN IMPAR
 						porcentajeAVariar = (Math.random()*(0 - 0.5 + 1) + 0.5);
-						this.pEdificios[i][j].setcDerecha(new Contador(porcionIndividual-(porcionIndividual*porcentajeAVariar)));
-
+						pEdificios[i][j].setcDerecha(new Contador(porcionIndividual-(porcionIndividual*porcentajeAVariar)));
 					}
 				} else {
 					porcentajeAVariar = (Math.random()*(0 - 0.5 + 1) + 0.5);
-					this.pEdificios[i][j].setcDerecha(new Contador(porcionIndividual-(porcionIndividual*porcentajeAVariar)));
+					pEdificios[i][j].setcDerecha(new Contador(porcionIndividual-(porcionIndividual*porcentajeAVariar)));
 					porcentajeAVariar = (Math.random()*(0 - 0.5 + 1) + 0.5);
-					this.pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual-(porcionIndividual*porcentajeAVariar)));
+					pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual-(porcionIndividual*porcentajeAVariar)));
 				}
 			}
 		}
@@ -314,15 +270,12 @@ public class Damero {
 				resultado += this.pEdificios[i][j].getcDerecha().getConsumo() + this.pEdificios[i][j].getcIzquierda().getConsumo();
 			}
 		}
-		
 		return resultado;
 	}
-
 	
 	public ArrayList<Contador> consumoExcesivoTroncal(){
 		ArrayList<Contador> resultado = new ArrayList<>();
 		Contador[] contadoresTroncal = this.traducirMatrizParEdificiosAArrayContadores(this.lineaTroncal());
-		
 		int i=0;		
 		int j=contadoresTroncal.length-1;
 				
@@ -341,14 +294,24 @@ public class Damero {
 		ArrayList<Contador> resultado = new ArrayList<>();
 		Contador[] media = this.traducirMatrizParEdificiosAArrayContadores(this.lineaTroncalMedia());		
 		int mitad;
+		Pair<Integer, Integer> coordenadas;
+		int fila;
+		int columna;
 		
-		System.out.println(this.toStringMedias());
+		//Solo lo estoy haciendo de cIzquierda y cDerecha porq nos falta darle valores 
+		//coherentes a los cMorados y cVerdes
 		
-//		for(int a=0; a<media.length; a++) {
-//			System.out.println(media[a]);
-//		}
-
-		if(i >= j-1) { //Caso base -> Si solo nos quedan dos elementos
+	
+		if(i >= j-1) { //Caso base -> Si solo nos quedan dos elementos			
+			if(i==j-1) { //Solo hay un elemento
+				coordenadas = this.coordenadasDelContadorPorId(troncal[i].getId());
+				fila = coordenadas.getKey();
+				columna = coordenadas.getValue();
+				if(pEdificios[fila][columna].get) //Como se ahora si es izq o derecha??
+				
+			} else {
+				
+			}
 			
 		} else { //Casos recursivos
 			mitad = (i + j)/2;
@@ -377,8 +340,23 @@ public class Damero {
 				contador++;
 			}
 		}
-		
 		return contadores;
+	}
+	
+	
+	private Pair<Integer, Integer> coordenadasDelContadorPorId(int id) {
+		Pair<Integer, Integer> coordenadas;
+		for(int i=0; i<this.pEdificios.length; i++) {
+			for(int j=0; j<this.pEdificios[i].length; j++) {
+				if(this.pEdificios[i][j].getcIzquierda().getId() == id || this.pEdificios[i][j].getcDerecha().getId() == id) {
+					coordenadas = new Pair<Integer, Integer>(i,j);
+					break;
+				}
+			}
+		}
+				
+		return coordenadas;
+		
 	}
 	
 

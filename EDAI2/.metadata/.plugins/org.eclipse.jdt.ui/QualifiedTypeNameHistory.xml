@@ -15,4 +15,5 @@
     <fullyQualifiedTypeName name="com.sun.tools.javac.util.Assert"/>
     <fullyQualifiedTypeName name="org.eda2.ParEdificios"/>
     <fullyQualifiedTypeName name="org.graalvm.compiler.graph.Graph.SourcePositionTracking"/>
+    <fullyQualifiedTypeName name="com.sun.org.apache.bcel.internal.generic.INSTANCEOF"/>
 </qualifiedTypeNameHistroy>
