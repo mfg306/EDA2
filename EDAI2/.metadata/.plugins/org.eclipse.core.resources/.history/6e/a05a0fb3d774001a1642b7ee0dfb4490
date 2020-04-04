@@ -1,0 +1,26 @@
+package org.eda2;
+
+
+public class Prubea {
+	
+	public static void mostrarMatriz(int[][] a){
+		//Elemento a elemento		
+		mostrarMatrizRec(a, 0, a.length-1);
+	}
+	
+	private static void mostrarMatrizRec(int[][] a, int i, int j){
+		if(i==j) //Caso base --> solo queda un elemento, lo muestro
+		{
+			System.out.println(a[i]);
+		} else {
+			mostrarMatrizRec(a, i, j--);
+		}
+	}
+
+	public static void main(String[] args) {
+
+		//Dado un array bidimensional, que se muestren todos sus elementos de forma recursiva
+		
+		
+	}
+}

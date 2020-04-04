@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="DameroTest" project="Prueba" tests="7" started="7" failures="0" errors="0" ignored="0">
+  <testsuite name="org.eda2.DameroTest" time="0.161" displayname="DameroTest" uniqueid="[engine:junit-jupiter]/[class:org.eda2.DameroTest]">
+    <testcase name="TestSoloHayContadoresMoradosEnUltimaFila" classname="org.eda2.DameroTest" time="0.106" displayname="TestSoloHayContadoresMoradosEnUltimaFila()" uniqueid="[engine:junit-jupiter]/[class:org.eda2.DameroTest]/[method:TestSoloHayContadoresMoradosEnUltimaFila()]"/>
+    <testcase name="TestAlgoritmoRecursivo" classname="org.eda2.DameroTest" time="0.022" displayname="TestAlgoritmoRecursivo()" uniqueid="[engine:junit-jupiter]/[class:org.eda2.DameroTest]/[method:TestAlgoritmoRecursivo()]"/>
+    <testcase name="TestInicializarContadores" classname="org.eda2.DameroTest" time="0.004" displayname="TestInicializarContadores()" uniqueid="[engine:junit-jupiter]/[class:org.eda2.DameroTest]/[method:TestInicializarContadores()]"/>
+    <testcase name="TestNoHayContadoresVerdesEnLaUltimaFila" classname="org.eda2.DameroTest" time="0.008" displayname="TestNoHayContadoresVerdesEnLaUltimaFila()" uniqueid="[engine:junit-jupiter]/[class:org.eda2.DameroTest]/[method:TestNoHayContadoresVerdesEnLaUltimaFila()]"/>
+    <testcase name="TestDatosFueraDeRango" classname="org.eda2.DameroTest" time="0.005" displayname="TestDatosFueraDeRango()" uniqueid="[engine:junit-jupiter]/[class:org.eda2.DameroTest]/[method:TestDatosFueraDeRango()]"/>
+    <testcase name="TestInicializarContadoresDameroPar" classname="org.eda2.DameroTest" time="0.004" displayname="TestInicializarContadoresDameroPar()" uniqueid="[engine:junit-jupiter]/[class:org.eda2.DameroTest]/[method:TestInicializarContadoresDameroPar()]"/>
+    <testcase name="TestInicializarContadoresDameroImpar" classname="org.eda2.DameroTest" time="0.012" displayname="TestInicializarContadoresDameroImpar()" uniqueid="[engine:junit-jupiter]/[class:org.eda2.DameroTest]/[method:TestInicializarContadoresDameroImpar()]"/>
+  </testsuite>
+</testrun>
