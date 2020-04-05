@@ -1,6 +1,8 @@
 package org.eda2;
 
-public class Manometro extends Medidor{
+import java.util.Locale;
+
+public class Manometro {
 
 	private double presion;
 	
@@ -8,16 +10,21 @@ public class Manometro extends Medidor{
 		this.presion = 0;
 	}
 	
+	public Manometro (double presion) {
+		this.presion = presion;
+	}
+	
 	public double getPresion() {
 		return this.presion;
 	}
+	
 	public void setPresion(double presion) {
 		this.presion = presion;
 	}
 	
 	@Override
 	public String toString() {
-		return "" +this.presion;
+		return "" + String.format(Locale.US, "%.2f", this.presion);
 	}
 	
 }

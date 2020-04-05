@@ -12,6 +12,10 @@ public class Damero {
 	private ParEdificios[][] matrizMedias;
 	public final static double CONSUMO_MINIMO = 300000; // m3 Son medidas que se dan en el enunciado
 	public final static double CONSUMO_MAXIMO = 500000; // m3
+	
+	//Estas presiones solo para la casilla general
+	public final static double PRESION_MAXIMA = 150;
+	public final static double PRESION_MINIMA = 110;
 
 	/**
 	 * Nuestro Damero viene representado por pares de calles.
@@ -36,11 +40,15 @@ public class Damero {
 			}
 		}
 
+		
 		this.inicializarContadores(this.pEdificios);
 		setSuministroAgua(cauceInicial, this.pEdificios);
 		this.inicializarContadores(this.matrizMedias);
 		this.setSuministroAgua(400000, this.matrizMedias); // Datos dados por la empresa
+		this.inicializarManometros();
 	}
+	
+	
 
 	/**
 	 * @return la línea troncal de nuestro damero
@@ -305,11 +313,6 @@ public class Damero {
 		if (filas > this.filas / 2 || i > this.columnas) {
 			throw new IndexOutOfBoundsException( "Debe introducir un edificio válido. Compruebe que los índices son correctos.");
 		}
-
-//		System.out.println("Posicion introducida por el usuario: [" + i + ", " + j + "]" );
-//		System.out.println("Posicion a la que vamos a acceder: [" + (int)filas + ", " + j +"]" );
-//		System.out.println("Rango maximo: [" + (this.pEdificios.length-1) + ", " + (this.pEdificios[0].length-1) + "]");
-		
 		
 		//Si el tablero es par
 		if(this.columnas % 2 == 0) { //par es si la columna a la que accedemos es par
@@ -322,7 +325,6 @@ public class Damero {
 			} else {
 				return (par == true) ? pEdificios[(int) filas][j].getcIzquierda().getConsumo() : pEdificios[(int) filas][j].getcDerecha().getConsumo();
 			}
-			
 			}
 		}
 
@@ -366,9 +368,6 @@ public class Damero {
 		ArrayList<Contador> resultado = new ArrayList<>();
 		Contador[] media = this.traducirMatrizParEdificiosAArrayContadores(this.lineaTroncalMedia());
 		int mitad;
-		Pair<Integer, Integer> coordenadas;
-		int fila;
-		int columna;
 
 		// Solo lo estoy haciendo de cIzquierda y cDerecha porq nos falta darle valores
 		// coherentes a los cMorados y cVerdes
@@ -407,27 +406,26 @@ public class Damero {
 		return contadores;
 	}
 
-	private Pair<Integer, Integer> coordenadasDelContadorPorId(int id) {
-		Pair<Integer, Integer> coordenadas;
-		for (int i = 0; i < this.pEdificios.length; i++) {
-			for (int j = 0; j < this.pEdificios[i].length; j++) {
-				if (this.pEdificios[i][j].getcIzquierda().getId() == id
-						|| this.pEdificios[i][j].getcDerecha().getId() == id) {
-					coordenadas = new Pair<Integer, Integer>(i, j);
-					break;
+
+	// MANOMETROS
+	private void inicializarManometros() {
+			int ancho = pEdificios.length-1;
+			int alto = pEdificios[0].length-1;
+			double pAnterior, error;
+			for(int j=pEdificios[0].length-1; j>=1; j--) {
+				for(int i=pEdificios.length-1; i>=0; i--) {				
+					if (i==ancho && j==alto) { //Manómetro general
+						this.pEdificios[i][j].setMan(new Manometro(Math.random()*(PRESION_MINIMA-PRESION_MAXIMA+1)+PRESION_MAXIMA));
+						continue;
+					}
+					//Obtenemos el valor de la presion del manometro anterior para obtener el siguiente a partir de él
+					if (j==alto) pAnterior = this.pEdificios[i+1][j].getMan().getPresion();
+					else pAnterior = this.pEdificios[i][j+1].getMan().getPresion();
+					
+					error = pAnterior - (pAnterior*13/100); //Margen de error del manometro
+					this.pEdificios[i][j].setMan(new Manometro((Math.random()*(error-pAnterior+1)+pAnterior))); //Establecemos la presion del manómetro
 				}
 			}
 		}
-		return coordenadas;
-
-	}
-
-	// NOTA -> PRIMERO TENEMOS QUE GENERAR LA CASILLA GENERAL (QUE TIENE QUE ESTAR
-	// ENTRE EL MAX Y EL MINIMO)
-	// Y LUEGO A PARTIR DE ESO IR DISTRIBUYENDO, PERO QUE LA SUMA NUNCA SEA MAYOR
-	// QUE EL MAXIMO
-	// ES DECIR, GENERAMOS UNA CANTIDAD FIJA DE AGUA
-
-	// MANOMETROS
 
 }

@@ -15,8 +15,6 @@ public class DameroTest {
 		boolean resultado = true;
 		ParEdificios[][] pE = damero.getDamero();
 		
-		double cantidadCasillaGeneral = damero.getLitrosEdificio(3, 3, damero.getDamero());
-		
 		for(int i=0; i<pE.length; i++) {
 			for(int j=0; j<pE[i].length; j++) {
 				//Esto no debería de pasar
@@ -67,7 +65,6 @@ public class DameroTest {
 		double resultadoObtenido = damero.getLitrosEdificio(3, 3, damero.getDamero());
 		
 		Assert.assertTrue(resultado - resultadoObtenido == 0.0);
-
 	}
 	
 	
@@ -80,8 +77,6 @@ public class DameroTest {
 		
 		//Puede que de todo lo que les estemos dando, no lo consuman todo
 		//Lo que sí que no puede pasar es que consuman más de lo que hay
-		
-		
 		Assert.assertTrue(resultadoEsperado >= resultadoSuma);
 	}
 	
@@ -120,9 +115,30 @@ public class DameroTest {
 				break;
 			}
 		}
-
 		Assert.assertEquals(resultado, true);
 	}
+	
+	@Test
+	public void TestContadorVerdeSumaIzquierdaYDerechaSituacionPar() {
+		Damero damero = new Damero(4,4,300000);
+		ParEdificios[][] pE = damero.getDamero();
+		boolean resultado = true;
+		
+		for(int i=0; i<pE.length; i++) {
+			if(!resultado) break;
+			for(int j=0; j<pE[i].length; j++) {
+				if(pE[i][j].getcVerde() == null) continue; //Si no hay verde no nos interesa
+				else {
+					if(pE[i][j].getcVerde().getConsumo() != pE[i][j].getcDerecha().getConsumo() + pE[i][j].getcIzquierda().getConsumo()) {
+						resultado = false;
+						break;
+					}
+				}
+			}
+		}
+		Assert.assertTrue(resultado);
+	}
+	
 	
 	@Test
 	public void TestDatosFueraDeRango() {
@@ -149,12 +165,18 @@ public class DameroTest {
 		contadores = damero.consumoExcesivoTroncal();
 	}
 	
+	@Test
+	public void TestIntervaloPresionCasillaGeneral() {
+		Damero damero = new Damero(4,4,300000);
+		
+		double presionCasillaGeneral = damero.getDamero()[0][3].getMan().getPresion();
+		boolean condicion = (presionCasillaGeneral > Damero.PRESION_MINIMA && presionCasillaGeneral < Damero.PRESION_MAXIMA);
+		
+		Assert.assertTrue(condicion);
+	}
+	
 	
 	
 
-//	@Test
-//	public void TestInicializarDameros() {
-//		
-//	}
 
 }

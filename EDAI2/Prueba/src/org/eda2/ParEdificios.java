@@ -10,8 +10,6 @@ public class ParEdificios {
 	private Contador cIzquierda;
 	private Contador cVerde;
 	private Contador cMorado;
-
-
 	private Manometro man;
 	
 	
