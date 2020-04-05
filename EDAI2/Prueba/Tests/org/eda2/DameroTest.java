@@ -15,8 +15,7 @@ public class DameroTest {
 		boolean resultado = true;
 		ParEdificios[][] pE = damero.getDamero();
 		
-		double cantidadCasillaGeneral = damero.getLitrosEdificio(3, 3);
-		System.out.println(cantidadCasillaGeneral);
+		double cantidadCasillaGeneral = damero.getLitrosEdificio(3, 3, damero.getDamero());
 		
 		for(int i=0; i<pE.length; i++) {
 			for(int j=0; j<pE[i].length; j++) {
@@ -46,9 +45,6 @@ public class DameroTest {
 			}
 		}
 		
-		System.out.println(damero.toString());
-
-
 		Assert.assertFalse(resultado);
 		Assert.assertEquals(contador, pE[0].length);
 	}
@@ -57,32 +53,35 @@ public class DameroTest {
 	public void TestCasillaGeneralPar() {
 		Damero damero = new Damero(4,4,300000);
 		
-		double resultado = 300000;
-		double resultadoObtenido = damero.getLitrosEdificio(4, 4);
+		double resultado = 300000.0;
+		double resultadoObtenido = damero.getLitrosEdificio(4, 4, damero.getDamero());
 		
-		Assert.assertEquals(resultado, resultadoObtenido);
-	}
+		Assert.assertTrue(resultado - resultadoObtenido == 0.0);
+	} 
 	
 	@Test
 	public void TestCasillaGeneralImpar() {
 		Damero damero = new Damero(3,3,300000);
 		
 		double resultado = 300000;
-		double resultadoObtenido = damero.getLitrosEdificio(3, 3);
+		double resultadoObtenido = damero.getLitrosEdificio(3, 3, damero.getDamero());
 		
-		Assert.assertEquals(resultado, resultadoObtenido);
+		Assert.assertTrue(resultado - resultadoObtenido == 0.0);
+
 	}
 	
 	
 	@Test
 	public void TestInicializarContadores() {
-		Damero damero = new Damero(4,4,300000);
-	
-		double resultadoEsperado = damero.getLitrosEdificio(4, 4);
+		Damero damero = new Damero(3,3,300000);
+			
+		double resultadoEsperado = damero.getLitrosEdificio(3, 3, damero.getDamero());
 		double resultadoSuma = damero.getLitrosCasillasSalvoCasillaGeneral();			
 		
 		//Puede que de todo lo que les estemos dando, no lo consuman todo
 		//Lo que sí que no puede pasar es que consuman más de lo que hay
+		
+		
 		Assert.assertTrue(resultadoEsperado >= resultadoSuma);
 	}
 	
@@ -121,7 +120,7 @@ public class DameroTest {
 				break;
 			}
 		}
-		
+
 		Assert.assertEquals(resultado, true);
 	}
 	

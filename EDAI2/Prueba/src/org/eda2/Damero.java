@@ -74,6 +74,10 @@ public class Damero {
 	}
 
 	// CONTADORES
+	/**
+	 * @param pEdificios la estructura que queremos inicializar. Así, nos sirve
+	 *                   tanto para los datos actuales como para las medias
+	 */
 	private void inicializarContadores(ParEdificios[][] pEdificios) {
 		// La primera fila tiene solo contadores morados, izq y der
 		// El resto tiene verdes, izq y der
@@ -104,14 +108,14 @@ public class Damero {
 	 * Terminamos de rellenar la última columna
 	 */
 	private void inicializarContadoresPar(ParEdificios[][] pEdificios) {
-		int columnas = this.pEdificios.length - 1;
-		for (int i = 0; i < this.pEdificios[0].length; i++) {
+		int columnas = pEdificios.length - 1;
+		for (int i = 0; i < pEdificios[0].length; i++) {
 			pEdificios[columnas][i] = new ParEdificios();
 			pEdificios[columnas][i].setcDerecha(new Contador(0.0));
 			pEdificios[columnas][i].setcIzquierda(new Contador(0.0));
-			if (i == this.pEdificios[0].length - 1)
+			if (i == pEdificios[0].length - 1)
 				pEdificios[columnas][i].setcMorado(new Contador(0.0));
-			if (i != this.pEdificios[0].length - 1)
+			if (i != pEdificios[0].length - 1)
 				pEdificios[columnas][i].setcVerde(new Contador(0.0));
 		}
 	}
@@ -120,16 +124,15 @@ public class Damero {
 	 * La ultima columna la ponemos a null
 	 */
 	private void inicializarContadoresImpar(ParEdificios[][] pEdificios) {
-		int columnas = this.pEdificios.length - 1;
-		for (int i = 0; i < this.pEdificios[0].length; i++) {
-			this.pEdificios[columnas][i] = new ParEdificios();
-			this.pEdificios[columnas][i].setcIzquierda(new Contador(0.0));
-			this.pEdificios[columnas][i].setcDerecha(null);
-			if (i == this.pEdificios[0].length - 1)
-				this.pEdificios[columnas][i].setcMorado(new Contador(0.0));
-			if (i != this.pEdificios[0].length - 1)
-				this.pEdificios[columnas][i].setcVerde(new Contador(0.0));
-
+		int columnas = pEdificios.length - 1;
+		for (int i = 0; i < pEdificios[0].length; i++) {
+			pEdificios[columnas][i] = new ParEdificios();
+			pEdificios[columnas][i].setcIzquierda(new Contador(0.0));
+			pEdificios[columnas][i].setcDerecha(null);
+			if (i == pEdificios[0].length - 1)
+				pEdificios[columnas][i].setcMorado(new Contador(0.0));
+			if (i != pEdificios[0].length - 1)
+				pEdificios[columnas][i].setcVerde(new Contador(0.0));
 		}
 	}
 
@@ -218,30 +221,71 @@ public class Damero {
 		double porcentajeAVariar; // Esto es para que no todas las manzanas consuman exactamente lo mismo.
 		double cantidadVerde;
 
-		for (int i = 0; i < this.pEdificios.length; i++) { //ESTA MAL, LA CASILLA GENERAL NO SE QUEDA CON EL CAUCE QUE METEMOS
-			for (int j = 0; j < this.pEdificios[i].length; j++) {
-				if (i == this.pEdificios.length - 1 && j == this.pEdificios[i].length - 1) {
-					if (this.filas % 2 == 0) { // Si estamos en la ultima columna
-						pEdificios[i][j].setcDerecha(new Contador(cauce)); // CASILLA GENERAL SITUACIÓN PAR
+		// A la casilla general hay que meterle el cauce.
+		// * Si es par, la casilla general sera la ultima derecha (La ultima derecha hay
+		// que ponerla a null porque
+		// realmente no hay nada)
+		// * Si es impar, la casilla general sera la ultima izquierda
+
+		// En el resto de casos, inicializamos cada casilla, si no está inicializada a
+		// null. Es decir, si contadorVerde es null,
+		// es porque antes hemos decidido que hay no tiene que haber uno, por lo que no
+		// le metemos nada y seguimos. Lo mismo con el morado
+
+		// Si estamos en un damero impar, entonces la ultima columna derecha tenemos que
+		// dejarla a null
+
+		if (this.columnas % 2 != 0) {
+			for (int i = 0; i < pEdificios.length; i++) {
+				for (int j = 0; j < pEdificios[i].length; j++) {
+					if (i == pEdificios.length - 1) { // En la ultima columna solo inicializamos izquierda y verde
+						if (j == pEdificios[i].length - 1) pEdificios[i][j].setcIzquierda(new Contador(cauce)); // CASILLA GENERAL
+						else {
+							porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
+							pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
+							// El contador verde en este caso tendra el consumo del edificio izquierdo
+							pEdificios[i][j].setcVerde(pEdificios[i][j].getcVerde());
+						}
+					} else { //Para el resto de columnas, se da valor de forma normal
 						porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
 						pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
-					} else { // Aqui la derecha hay que ponerla a null
-						pEdificios[i][j].setcIzquierda(new Contador(cauce)); // CASILLA GENERAL SITUACIÓN IMPAR
 						porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
-						pEdificios[i][j].setcDerecha(new Contador(porcentajeAVariar));
-					}
-				} else {
-					porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
-					pEdificios[i][j].setcDerecha(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
-					porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
-					pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
-					if (pEdificios[i][j].getcVerde() != null) { //Cuando haya un contador verde metele la suma del izquierda y derecha
-						cantidadVerde = pEdificios[i][j].getcDerecha().getConsumo() + pEdificios[i][j].getcIzquierda().getConsumo();
-						pEdificios[i][j].setcVerde(new Contador(cantidadVerde)); 
-					}
+						pEdificios[i][j].setcDerecha(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
+						if (pEdificios[i][j].getcVerde() != null) {
+							cantidadVerde = pEdificios[i][j].getcDerecha().getConsumo() + pEdificios[i][j].getcDerecha().getConsumo();
+							pEdificios[i][j].setcVerde(new Contador(cantidadVerde));
+						}
+						if (pEdificios[i][j].getcMorado() != null) {
+							//Aqui hay que dar valor el morado , no se si es mejor hacer un metodo aparte cuando ya lo tengamos todo
 
+						}
+					}
 				}
 			}
+		} else { // Si es par, se da valor a todo lo que no esté a null
+			for (int i = 0; i < pEdificios.length; i++) {
+				for (int j = 0; j < pEdificios[i].length; j++) {
+					//Aqui la casilla general es la ultima derecha
+					if(i == pEdificios.length -1 && j == pEdificios[i].length -1) {
+						pEdificios[i][j].setcDerecha(new Contador(cauce));
+						porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
+						pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
+					} else {
+						porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
+						pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
+						porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
+						pEdificios[i][j].setcDerecha(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
+						if (pEdificios[i][j].getcVerde() != null) {
+							cantidadVerde = pEdificios[i][j].getcDerecha().getConsumo() + pEdificios[i][j].getcDerecha().getConsumo();
+							pEdificios[i][j].setcVerde(new Contador(cantidadVerde));
+						}
+						if (pEdificios[i][j].getcMorado() != null) {
+							//Aqui hay que dar valor el morado , no se si es mejor hacer un metodo aparte cuando ya lo tengamos todo
+						}
+					}
+				}
+			}
+
 		}
 	}
 
@@ -252,25 +296,36 @@ public class Damero {
 	 * @param j
 	 * @return lo que ha connsumido la manzana i,j
 	 */
-	public double getLitrosEdificio(int i, int j) { // columnas, filas
+	public double getLitrosEdificio(int i, int j, ParEdificios[][] pEdificios) { // columnas, filas
 		i--;
 		j--;
 		double filas = (double) this.traducirIndices(i).get(0);
 		boolean par = (boolean) this.traducirIndices(i).get(1);
 
 		if (filas > this.filas / 2 || i > this.columnas) {
-			throw new IndexOutOfBoundsException(
-					"Debe introducir un edificio válido. Compruebe que los índices son correctos.");
+			throw new IndexOutOfBoundsException( "Debe introducir un edificio válido. Compruebe que los índices son correctos.");
 		}
-		
-		if((int)filas == this.pEdificios.length -1 && j == this.pEdificios[0].length -1 && this.pEdificios[0].length % 2 != 0) {
-			return this.pEdificios[(int)filas][j].getcIzquierda().getConsumo();
-		}
-		
-		return (par == true) ? this.pEdificios[(int) filas][j].getcIzquierda().getConsumo()
-				: this.pEdificios[(int) filas][j].getcDerecha().getConsumo();
 
-	}
+//		System.out.println("Posicion introducida por el usuario: [" + i + ", " + j + "]" );
+//		System.out.println("Posicion a la que vamos a acceder: [" + (int)filas + ", " + j +"]" );
+//		System.out.println("Rango maximo: [" + (this.pEdificios.length-1) + ", " + (this.pEdificios[0].length-1) + "]");
+		
+		
+		//Si el tablero es par
+		if(this.columnas % 2 == 0) { //par es si la columna a la que accedemos es par
+			return (par == true) ? pEdificios[(int) filas][j].getcIzquierda().getConsumo() : pEdificios[(int) filas][j].getcDerecha().getConsumo();
+		} else { // Si no estamos en un tablero par 
+			//Tenemos que ver si la posicion a la que queremos acceder es la ultima casilla, si es la ultima casilla 
+			//no es derecha, es izquierda, porq la derecha esta a null 
+			if((int) filas == this.pEdificios.length-1 && j == this.pEdificios[0].length-1) {
+				return pEdificios[(int)filas][j].getcIzquierda().getConsumo();
+			} else {
+				return (par == true) ? pEdificios[(int) filas][j].getcIzquierda().getConsumo() : pEdificios[(int) filas][j].getcDerecha().getConsumo();
+			}
+			
+			}
+		}
+
 
 	/**
 	 * @return la suma de los litros de todas las casillas sin tener en cuenta la
@@ -325,9 +380,7 @@ public class Damero {
 			this.consumoExcesivoRec(troncal, i, mitad - 1);
 			this.consumoExcesivoRec(troncal, mitad, j);
 		}
-
 		return resultado;
-
 	}
 
 	/**
