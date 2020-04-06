@@ -163,6 +163,8 @@ public class DameroTest {
 		ArrayList<Contador> contadores = new ArrayList<>();
 		
 		contadores = damero.consumoExcesivoTroncal();
+		
+		System.out.println(contadores.toString());
 	}
 	
 	@Test

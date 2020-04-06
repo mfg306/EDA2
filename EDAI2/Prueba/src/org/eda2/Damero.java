@@ -16,6 +16,9 @@ public class Damero {
 	//Estas presiones solo para la casilla general
 	public final static double PRESION_MAXIMA = 150;
 	public final static double PRESION_MINIMA = 110;
+	private ArrayList<Contador> roturasContadorTroncal = new ArrayList<>(); 
+	private ArrayList<Contador> roturasContadorLineasD = new ArrayList<>(); 
+
 
 	/**
 	 * Nuestro Damero viene representado por pares de calles.
@@ -39,12 +42,11 @@ public class Damero {
 				matrizMedias[a][b] = new ParEdificios();
 			}
 		}
-
 		
 		this.inicializarContadores(this.pEdificios);
 		setSuministroAgua(cauceInicial, this.pEdificios);
 		this.inicializarContadores(this.matrizMedias);
-		this.setSuministroAgua(400000, this.matrizMedias); // Datos dados por la empresa
+		this.setSuministroAgua(500000, this.matrizMedias); // Datos dados por la empresa
 		this.inicializarManometros();
 	}
 	
@@ -53,7 +55,7 @@ public class Damero {
 	/**
 	 * @return la línea troncal de nuestro damero
 	 */
-	public ParEdificios[] lineaTroncal() {
+	public ParEdificios[] lineaTroncal() { //revisar
 		ParEdificios[] pE = new ParEdificios[pEdificios.length]; // Le quitamos la casilla general
 		for (int i = 0; i < pE.length; i++) {
 			pE[i] = pEdificios[i][pEdificios[0].length - 1];
@@ -68,6 +70,13 @@ public class Damero {
 		}
 		return pE;
 	}
+	
+	public ParEdificios[][] lineasDistribucion(){
+		ParEdificios[][] pE = new ParEdificios[pEdificios.length][]
+		for(int i=0; i<)
+		
+	}
+	
 
 	public ParEdificios[][] getDamero() {
 		ParEdificios[][] resultado = new ParEdificios[this.pEdificios.length][this.pEdificios[0].length];
@@ -293,7 +302,6 @@ public class Damero {
 					}
 				}
 			}
-
 		}
 	}
 
@@ -348,14 +356,10 @@ public class Damero {
 	}
 
 	public ArrayList<Contador> consumoExcesivoTroncal() {
-		ArrayList<Contador> resultado = new ArrayList<>();
-		Contador[] contadoresTroncal = this.traducirMatrizParEdificiosAArrayContadores(this.lineaTroncal());
 		int i = 0;
-		int j = contadoresTroncal.length - 1;
-
-		resultado = this.consumoExcesivoRec(contadoresTroncal, i, j);
-
-		return resultado;
+		int j = this.lineaTroncal().length - 1;
+		
+		return this.consumoExcesivoTroncalRec(this.lineaTroncal(), i, j);
 	}
 
 	/**
@@ -364,47 +368,48 @@ public class Damero {
 	 * @param j       final del array
 	 * @return
 	 */
-	private ArrayList<Contador> consumoExcesivoRec(Contador[] troncal, int i, int j) {
-		ArrayList<Contador> resultado = new ArrayList<>();
-		Contador[] media = this.traducirMatrizParEdificiosAArrayContadores(this.lineaTroncalMedia());
+	private ArrayList<Contador> consumoExcesivoTroncalRec(ParEdificios[] troncal, int i, int j) {
 		int mitad;
-
-		// Solo lo estoy haciendo de cIzquierda y cDerecha porq nos falta darle valores
-		// coherentes a los cMorados y cVerdes
-
+		ParEdificios[] media = this.lineaTroncalMedia();
+		
+		//Creo que tendriamos que ponerle un identificador o algo a cada casilla para poder recuperar 
+		//rapido su posicion en la matriz solo buscandolo por el identificador
+		//Si no, no se como acceder a las posiciones
+		
 		if (i >= j - 1) { // Caso base -> Si solo nos quedan dos elementos
-
+			if(troncal[i].getcDerecha().getConsumo() > 7*media[i].getcDerecha().getConsumo()) {
+				roturasContadorTroncal.add(troncal[i].getcDerecha());				
+			}
+			if(troncal[i].getcIzquierda().getConsumo() > 7*media[i].getcIzquierda().getConsumo()) {
+				roturasContadorTroncal.add(troncal[i].getcIzquierda());				
+			}
+			if(troncal[i].getcMorado() != null && troncal[i].getcMorado().getConsumo() > 7*media[i].getcMorado().getConsumo()) {
+				roturasContadorTroncal.add(troncal[i].getcMorado());				
+			}
 		} else { // Casos recursivos
 			mitad = (i + j) / 2;
-			this.consumoExcesivoRec(troncal, i, mitad - 1);
-			this.consumoExcesivoRec(troncal, mitad, j);
+			this.consumoExcesivoTroncalRec(troncal, i, mitad - 1);
+			this.consumoExcesivoTroncalRec(troncal, mitad, j);
 		}
-		return resultado;
+		return this.roturasContadorTroncal;
 	}
-
-	/**
-	 * Para resolver este problema habíamos juntado todo en una estructura que
-	 * habíamos llamado parEdificios. Para resolver el problema con el algoritmo
-	 * divide y vencerás, considero que es más sencillo tener a cada manzana en su
-	 * casilla.
-	 * 
-	 * @param pE
-	 * @return cualquier estructura ParEdificios en una Matriz de contadores
-	 */
-	private Contador[] traducirMatrizParEdificiosAArrayContadores(ParEdificios[] pE) {
-		Contador[] contadores = new Contador[(pE.length * 2) - 1]; // Quitamos la casilla general
-		int contador = 0;
-
-		for (int i = 0; i < pE.length; i++) {
-			contadores[contador] = pE[i].getcIzquierda();
-			contador++;
-			if (i != pE.length - 1) {
-				contadores[contador] = pE[i].getcDerecha();
-				contador++;
-			}
+	
+	
+	public ArrayList<Contador> consumoExcesivoLineasDistribucion(){
+		ParEdificios[][] lineasDistribuicion;
+		for(int i=0; i<lineasDistribuicion.length; i++) {
 		}
-		return contadores;
+		
+		return this.consumoExcesivoLineasDistribucionRec();
+				
 	}
+	
+	private ArrayList<Contador> consumoExcesivoLineasDistribucionRec(){
+		return this.roturasContadorLineasD;
+	}
+	
+	
+	
 
 
 	// MANOMETROS
