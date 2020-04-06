@@ -378,12 +378,13 @@ public class Damero {
 
 	
 	public ArrayList<Contador> consumoExcesivoLineasDistribucion(){
+		ArrayList<Contador> resultado = new ArrayList<>();
 		ParEdificios[][] lineasDistribuicion = lineasDistribucion();
 		for(int i=0; i<lineasDistribuicion.length; i++) { //Para cada fila llamamos al metodo consumoExcesivoRec 
-			roturasContadorLineasD.addAll(this.consumoExcesivoRec(lineasDistribuicion[i], 0, lineasDistribuicion.length-1));
+			resultado.addAll(this.consumoExcesivoRec(lineasDistribuicion[i], 0, lineasDistribuicion.length-1));
 		}
 		
-		return roturasContadorLineasD;
+		return resultado;
 	}
 	
 	/**

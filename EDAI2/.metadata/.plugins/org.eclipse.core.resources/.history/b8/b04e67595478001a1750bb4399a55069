@@ -383,7 +383,7 @@ public class Damero {
 			roturasContadorLineasD.addAll(this.consumoExcesivoRec(lineasDistribuicion[i], 0, lineasDistribuicion.length-1));
 		}
 		
-		return roturasContadorLineasD;
+		return resroturasContadorLineasDultado;
 	}
 	
 	/**

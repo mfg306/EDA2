@@ -363,7 +363,8 @@ public class Damero {
 			for (int j = 0; j < this.filas; j++) {
 				if (i == (this.columnas / 2) - 1 && j == this.filas - 1)
 					break; // La general no
-				resultado += this.pEdificios[i][j].getcDerecha().getConsumo() + this.pEdificios[i][j].getcIzquierda().getConsumo();
+				resultado += this.pEdificios[i][j].getcDerecha().getConsumo()
+						+ this.pEdificios[i][j].getcIzquierda().getConsumo();
 			}
 		}
 		return resultado;
@@ -376,23 +377,13 @@ public class Damero {
 		return this.consumoExcesivoRec(this.lineaTroncal(), i, j);
 	}
 
-	
-	public ArrayList<Contador> consumoExcesivoLineasDistribucion(){
-		ParEdificios[][] lineasDistribuicion = lineasDistribucion();
-		for(int i=0; i<lineasDistribuicion.length; i++) { //Para cada fila llamamos al metodo consumoExcesivoRec 
-			roturasContadorLineasD.addAll(this.consumoExcesivoRec(lineasDistribuicion[i], 0, lineasDistribuicion.length-1));
-		}
-		
-		return roturasContadorLineasD;
-	}
-	
 	/**
-	 * @param pE es la estructura a la que vamos a buscarle roturas de contadores
-	 * @param i posicion inicial a partir de la cual vamos a empzar a buscar
-	 * @param j posicion final de la búsqueda
-	 * @return un ArrayList con todos los contadores que han presentado una rotura
+	 * @param troncal es un array con cada contador de cada casilla
+	 * @param i       inicio del array
+	 * @param j       final del array
+	 * @return
 	 */
-	private ArrayList<Contador> consumoExcesivoRec(ParEdificios[] pE, int i, int j) {
+	private ArrayList<Contador> consumoExcesivoRec(ParEdificios[] troncal, int i, int j) {
 		int mitad;
 		ParEdificios[] media = this.lineaTroncalMedia();
 		
@@ -401,23 +392,40 @@ public class Damero {
 		//Si no, no se como acceder a las posiciones
 		
 		if (i >= j - 1) { // Caso base -> Si solo nos quedan dos elementos
-			if(pE[i].getcDerecha().getConsumo() > 7*media[i].getcDerecha().getConsumo()) {
-				roturasContadorTroncal.add(pE[i].getcDerecha());				
+			if(troncal[i].getcDerecha().getConsumo() > 7*media[i].getcDerecha().getConsumo()) {
+				roturasContadorTroncal.add(troncal[i].getcDerecha());				
 			}
-			if(pE[i].getcIzquierda().getConsumo() > 7*media[i].getcIzquierda().getConsumo()) {
-				roturasContadorTroncal.add(pE[i].getcIzquierda());				
+			if(troncal[i].getcIzquierda().getConsumo() > 7*media[i].getcIzquierda().getConsumo()) {
+				roturasContadorTroncal.add(troncal[i].getcIzquierda());				
 			}
-			if(pE[i].getcMorado() != null && pE[i].getcMorado().getConsumo() > 7*media[i].getcMorado().getConsumo()) {
-				roturasContadorTroncal.add(pE[i].getcMorado());				
+			if(troncal[i].getcMorado() != null && troncal[i].getcMorado().getConsumo() > 7*media[i].getcMorado().getConsumo()) {
+				roturasContadorTroncal.add(troncal[i].getcMorado());				
 			}
 		} else { // Casos recursivos
 			mitad = (i + j) / 2;
-			this.consumoExcesivoRec(pE, i, mitad - 1);
-			this.consumoExcesivoRec(pE, mitad, j);
+			this.consumoExcesivoRec(troncal, i, mitad - 1);
+			this.consumoExcesivoRec(troncal, mitad, j);
 		}
 		return this.roturasContadorTroncal;
 	}
 	
+	
+	public ArrayList<Contador> consumoExcesivoLineasDistribucion(){
+		ArrayList<Contador> resultado = new ArrayList<>();
+		ParEdificios[][] lineasDistribuicion = lineasDistribucion();
+		for(int i=0; i<lineasDistribuicion.length; i++) {
+			//Para cada fila llamamos al problema de arriba
+			resultado.addAll(c);
+		}
+		
+		return ;
+				
+	}
+	
+
+	
+	
+
 
 	// MANOMETROS
 	private void inicializarManometros() {

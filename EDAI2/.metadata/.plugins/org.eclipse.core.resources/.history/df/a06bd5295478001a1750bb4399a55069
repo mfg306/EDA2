@@ -363,7 +363,8 @@ public class Damero {
 			for (int j = 0; j < this.filas; j++) {
 				if (i == (this.columnas / 2) - 1 && j == this.filas - 1)
 					break; // La general no
-				resultado += this.pEdificios[i][j].getcDerecha().getConsumo() + this.pEdificios[i][j].getcIzquierda().getConsumo();
+				resultado += this.pEdificios[i][j].getcDerecha().getConsumo()
+						+ this.pEdificios[i][j].getcIzquierda().getConsumo();
 			}
 		}
 		return resultado;
@@ -378,12 +379,15 @@ public class Damero {
 
 	
 	public ArrayList<Contador> consumoExcesivoLineasDistribucion(){
+		ArrayList<Contador> resultado = new ArrayList<>();
 		ParEdificios[][] lineasDistribuicion = lineasDistribucion();
 		for(int i=0; i<lineasDistribuicion.length; i++) { //Para cada fila llamamos al metodo consumoExcesivoRec 
-			roturasContadorLineasD.addAll(this.consumoExcesivoRec(lineasDistribuicion[i], 0, lineasDistribuicion.length-1));
+
+			resultado.addAll(this.consumoExcesivoRec(lineasDistribuicion[i], 0, lineasDistribuicion.length-1));
 		}
 		
-		return roturasContadorLineasD;
+		return resultado;
+				
 	}
 	
 	/**
