@@ -2,20 +2,18 @@ package org.eda2;
 
 public class Contador extends Medidor{
 
-	private double consumo;
+	private double consumo;// Consumo diario
 	private static int numContador = 0;
-	private int id = numContador; //Creo que después va a ser útil para en el divide y venceras poder buscar rapidamente
-							// con el id a qué casilla pertenece para dar una solución
+	private int id = numContador; 
 
-	public Contador() { // Consumo diario
-		this.consumo = (Math.random() * (108 - 162 + 1) + 162);
-		numContador++;
+	public Contador() { 
+		this.consumo = (Math.random() * (108 - 162 + 1) + 162); 
+		this.id = numContador++;
 	}
 	
 	public Contador(double consumo) {
 		this.consumo = consumo;
-		id++;
-		numContador++;
+		this.id = numContador++;
 	}
 
 	public double getConsumo() {
@@ -38,5 +36,12 @@ public class Contador extends Medidor{
 	public String toString() {
 		return "" + this.consumo;
 	}
+	
+	public static void reiniciarId() {
+		Contador.numContador = 0;
+	}
+	
+	
+	
 
 }

@@ -1,34 +1,27 @@
 package org.eda2;
 
-
 public class Prubea {
-	
-	public static void mostrarMatriz(int[][] a){
-		//Elemento a elemento		
-		mostrarMatrizRec(a, 0, a.length-1);
-	}
-	
-	private static void mostrarMatrizRec(int[][] a, int i, int j){
-		if(i==j)
-		{
-			System.out.println(a[i]);
-		} else {
-			mostrarMatrizRec(a, i, j--);
-		}
-	}
 
 	public static void main(String[] args) {
-			
-		int[][] array = new int[2][2];
-		int contador = 0;
-		for(int i=0; i<array.length; i++) {
-			for(int j=0; j<array[i].length; j++) {
-				array[i][j] = contador++;
+//		Contador.reiniciarId();
+
+		Damero d = new Damero(4,4,300000);
+		ParEdificios[][] pE = d.getDamero();
+		
+		for(int i=0; i<pE.length; i++) {
+			for(int j=0; j<pE[i].length; j++) {
+				System.out.println(pE[i][j].getcDerecha().getId());
+				System.out.println(pE[i][j].getcIzquierda().getId());
+				if(pE[i][j].getcMorado()!= null) System.out.println(pE[i][j].getcMorado().getId());
+				if(pE[i][j].getcVerde()!= null) System.out.println(pE[i][j].getcVerde().getId());
+				
+				System.out.println("--------");
+
 			}
 		}
 		
-		mostrarMatriz(array);
 		
 		
+
 	}
 }

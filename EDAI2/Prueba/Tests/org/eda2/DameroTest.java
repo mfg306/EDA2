@@ -144,21 +144,67 @@ public class DameroTest {
 		}catch(Exception e) {
 			assertEquals(e.getMessage(), "El sistema no puede funcionar con tan poco cauce.");
 		}
-		
 	}
 	
 	@Test
-	public void TestAlgoritmoRecursivo() {
+	public void TestConsumoExcesivoTroncal() { 
 		Damero damero = new Damero(4,4,300000);
-		System.out.println("-- DATOS ACTUALES --");
-		System.out.println(damero.toString());
-		System.out.println("-- DATOS MEDIAS --");
-		System.out.println(damero.toStringMedias());
-		ArrayList<Contador> contadores = new ArrayList<>();
+		ArrayList<Object> contadores = new ArrayList<>();
+		boolean condicion = false;
 		
 		contadores = damero.consumoExcesivoTroncal();
 		
-		System.out.println(contadores.toString());
+		ParEdificios[] troncal = damero.lineaTroncal();
+		ParEdificios[] troncalMedia = damero.lineaTroncalMedia();
+		
+		//Vamos a buscar en el damero de forma bruta si hay algun caso en el que haya una rotura
+		for(int i=0; i<troncal.length; i++) {
+			if(troncal[i].getcDerecha().getConsumo() > 7*troncalMedia[i].getcDerecha().getConsumo()) {
+				condicion = true; 
+				break;
+			}
+			if(troncal[i].getcIzquierda().getConsumo() > 7*troncalMedia[i].getcIzquierda().getConsumo()) {
+				condicion = true; 
+				break;
+			}
+			if(troncal[i].getcMorado().getConsumo() > 7*troncalMedia[i].getcMorado().getConsumo()) {
+				condicion = true; 
+				break;
+			}
+		}
+		
+		//Si hemos encontrado una rotura, entonces contadores no puede estar vacio
+		if(!condicion) {
+			Assert.assertTrue(contadores.isEmpty());
+		} else {
+			Assert.assertTrue(!contadores.isEmpty());
+		}
+	}
+	
+	
+	@Test
+	public void TestConsumoExcesivoLineasDistribucion() {
+		Damero damero = new Damero(4,4,300000);
+		ArrayList<Object> contadores = new ArrayList<>();
+		
+		System.out.println(damero.toString());
+		
+		for(int i=0; i<damero.lineasDistribucion(0).length; i++) {
+			System.out.println(damero.lineasDistribucion(0)[i]);;
+		}
+		
+		System.out.println();
+		
+		for(int i=0; i<damero.lineasDistribucion(1).length; i++) {
+			System.out.println(damero.lineasDistribucion(1)[i]);;
+		}
+		
+
+		contadores = damero.consumoExcesivoLineasDistribucion();
+		
+		
+				
+		
 	}
 	
 	@Test
