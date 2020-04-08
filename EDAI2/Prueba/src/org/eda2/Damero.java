@@ -12,7 +12,6 @@ public class Damero {
 	private ParEdificios[][] matrizMedias;
 	public final static double CONSUMO_MINIMO = 300000; // m3 Son medidas que se dan en el enunciado
 	public final static double CONSUMO_MAXIMO = 500000; // m3
-	
 	//Estas presiones solo para la casilla general
 	public final static double PRESION_MAXIMA = 150;
 	public final static double PRESION_MINIMA = 110;
@@ -122,7 +121,7 @@ public class Damero {
 				pEdificios[i][j].setcDerecha(new Contador(0.0));
 				pEdificios[i][j].setcIzquierda(new Contador(0.0));
 
-				if (j == this.pEdificios[0].length - 1) {
+				if (j == this.pEdificios[0].length - 1) { //En la casilla general no hay nada, solo un contador general
 					pEdificios[i][j].setcMorado(new Contador(0.0));
 				} else {
 					pEdificios[i][j].setcVerde(new Contador(0.0));
@@ -145,8 +144,7 @@ public class Damero {
 			pEdificios[columnas][i] = new ParEdificios();
 			pEdificios[columnas][i].setcDerecha(new Contador(0.0));
 			pEdificios[columnas][i].setcIzquierda(new Contador(0.0));
-			if (i == pEdificios[0].length - 1)
-				pEdificios[columnas][i].setcMorado(new Contador(0.0));
+
 			if (i != pEdificios[0].length - 1)
 				pEdificios[columnas][i].setcVerde(new Contador(0.0));
 		}
@@ -161,8 +159,6 @@ public class Damero {
 			pEdificios[columnas][i] = new ParEdificios();
 			pEdificios[columnas][i].setcIzquierda(new Contador(0.0));
 			pEdificios[columnas][i].setcDerecha(null);
-			if (i == pEdificios[0].length - 1)
-				pEdificios[columnas][i].setcMorado(new Contador(0.0));
 			if (i != pEdificios[0].length - 1)
 				pEdificios[columnas][i].setcVerde(new Contador(0.0));
 		}
@@ -387,6 +383,9 @@ public class Damero {
 	}
 	
 	/**
+	 * Nuestro algoritmo recursivo va a dividir el problema hasta el máximo. Es decir, vamos a coger nuestro array de parEdificios 
+	 * y vamos a simplificarlo hasta quedarnos con un solo par. Sobre este par podemos ver si se dan las condiciones necesarias 
+	 * para que se produzca una rotura
 	 * @param pE es la estructura a la que vamos a buscarle roturas de contadores
 	 * @param i posicion inicial a partir de la cual vamos a empzar a buscar
 	 * @param j posicion final de la búsqueda
@@ -396,9 +395,11 @@ public class Damero {
 		int mitad;
 		ParEdificios[] media = this.lineaTroncalMedia();
 		
-		//Creo que tendriamos que ponerle un identificador o algo a cada casilla para poder recuperar 
-		//rapido su posicion en la matriz solo buscandolo por el identificador
-		//Si no, no se como acceder a las posiciones
+		//Ahora mismo lo que hace este algoritmo es decirte la cantidad de agua de nuestros datos de 
+		//pEdificios es 7*media
+		
+		//Necesitamos decir en qué casilla se encuentra esa rotura
+		
 		
 		if (i >= j - 1) { // Caso base -> Si solo nos quedan dos elementos
 			if(pE[i].getcDerecha().getConsumo() > 7*media[i].getcDerecha().getConsumo()) {

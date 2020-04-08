@@ -8,10 +8,8 @@ import java.util.ArrayList;
 public class DameroTest {
 	
 	@Test
-	public void TestInicializarContadoresDameroPar() { //Me he liado con la implementacion 
-		Damero damero = new Damero(4,4,500000);
-		//Si es par de 4x4, no puede haber ninguna manzana que sea nula
-				
+	public void TestInicializarContadoresDameroPar() {
+		Damero damero = new Damero(4,4,500000); 		//Si es par de 4x4, no puede haber ninguna manzana que sea nula
 		boolean resultado = true;
 		ParEdificios[][] pE = damero.getDamero();
 		
@@ -26,15 +24,12 @@ public class DameroTest {
 	}
 	
 	@Test
-	public void TestInicializarContadoresDameroImpar() { //Me he liado con la implementacion 
-		Damero damero = new Damero(3,3,500000);
-		//Si es impar de 3x3, los contadores de la derecha de la ultima columna tienen que ser null
-		
+	public void TestInicializarContadoresDameroImpar() {
+		Damero damero = new Damero(3,3,500000); //Si es impar de 3x3, los contadores de la derecha de la ultima columna tienen que ser null
 		boolean resultado = true;
 		ParEdificios[][] pE = damero.getDamero();
 		int columnas = pE.length-1;
 		int contador = 0;
-		
 		
 		for(int i=0; i<pE[0].length; i++) {
 			if(pE[columnas][i].getcDerecha() == null) { //Los contadores derechos de la ultima columna tienen que estar todos a null
@@ -50,7 +45,6 @@ public class DameroTest {
 	@Test
 	public void TestCasillaGeneralPar() {
 		Damero damero = new Damero(4,4,300000);
-		
 		double resultado = 300000.0;
 		double resultadoObtenido = damero.getLitrosEdificio(4, 4, damero.getDamero());
 		
@@ -60,7 +54,6 @@ public class DameroTest {
 	@Test
 	public void TestCasillaGeneralImpar() {
 		Damero damero = new Damero(3,3,300000);
-		
 		double resultado = 300000;
 		double resultadoObtenido = damero.getLitrosEdificio(3, 3, damero.getDamero());
 		
@@ -71,7 +64,6 @@ public class DameroTest {
 	@Test
 	public void TestInicializarContadores() {
 		Damero damero = new Damero(3,3,300000);
-			
 		double resultadoEsperado = damero.getLitrosEdificio(3, 3, damero.getDamero());
 		double resultadoSuma = damero.getLitrosCasillasSalvoCasillaGeneral();			
 		
@@ -89,6 +81,7 @@ public class DameroTest {
 				
 		for(int i=0; i<pE.length; i++) {
 			for(int j=0; j<pE[i].length; j++) {
+				if(i==pE.length-1 && j==pE[i].length-1) continue;
 				if(pE[i][j].getcMorado() != null) contador++;
 				else {
 					if(pE[i][j].getcMorado() != null) {
@@ -99,7 +92,7 @@ public class DameroTest {
 			}
 		}
 		Assert.assertEquals(resultado, true);
-		Assert.assertEquals(contador, pE.length);
+		Assert.assertEquals(contador, pE.length-1); //HAY QUE QUITAR LA CASILLA GENERAL, PORQUE AQUI NO HAY
 	}
 	
 	@Test
@@ -127,12 +120,9 @@ public class DameroTest {
 		for(int i=0; i<pE.length; i++) {
 			if(!resultado) break;
 			for(int j=0; j<pE[i].length; j++) {
-				if(pE[i][j].getcVerde() == null) continue; //Si no hay verde no nos interesa
-				else {
-					if(pE[i][j].getcVerde().getConsumo() != pE[i][j].getcDerecha().getConsumo() + pE[i][j].getcIzquierda().getConsumo()) {
-						resultado = false;
-						break;
-					}
+				if(pE[i][j].getcVerde() != null && pE[i][j].getcVerde().getConsumo() != pE[i][j].getcDerecha().getConsumo() + pE[i][j].getcIzquierda().getConsumo()) {
+					resultado = false;
+					break;
 				}
 			}
 		}
@@ -160,6 +150,10 @@ public class DameroTest {
 	@Test
 	public void TestAlgoritmoRecursivo() {
 		Damero damero = new Damero(4,4,300000);
+		System.out.println("-- DATOS ACTUALES --");
+		System.out.println(damero.toString());
+		System.out.println("-- DATOS MEDIAS --");
+		System.out.println(damero.toStringMedias());
 		ArrayList<Contador> contadores = new ArrayList<>();
 		
 		contadores = damero.consumoExcesivoTroncal();
