@@ -135,8 +135,15 @@ public class Damero {
 		return resultado;
 	}
 	
+	public ArrayList<Object> getRoturasContadorTroncal() {
+		return roturasContadorTroncal;
+	}
 	
-
+	
+	public ArrayList<Object> getRoturasContadorLineasD() {
+		return roturasContadorLineasD;
+	}
+	
 	// CONTADORES
 	
 	/**
@@ -421,7 +428,7 @@ public class Damero {
 		
 		for(int i=0; i<tamMax; i++) { //Para cada fila llamamos al metodo consumoExcesivoRec 
 			resultado = this.consumoExcesivoRec(lineasDistribucion(i),lineasDistribucionMedias(i), 0, lineasDistribucion(i).length-1);
-			if(roturasContadorLineasD.contains(resultado)) continue; //No añadimos duplicados
+//			if(roturasContadorLineasD.contains(resultado)) continue; //No añadimos duplicados
 			if(!resultado.isEmpty()) roturasContadorLineasD.add(resultado);
 		}
 		return roturasContadorLineasD;
@@ -477,9 +484,8 @@ public class Damero {
 	/**
 	 * @return una cadena con las casillas en las que se ha producido una rotura
 	 */
-	public String interpretarSolucionConsumoExcesivo() {
+	public String interpretarSolucionConsumoExcesivo(ArrayList<Object> consumo) {
 		String cadena = "";
-		ArrayList<Object> consumo = this.consumoExcesivoTroncal();
 		int contador = 0;
 		
 		//Obtenemos el ID del contador y lo buscamos en nuestra matriz
