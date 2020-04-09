@@ -64,7 +64,7 @@ public class Damero {
 	}
 
 	/**
-	 * @return la linea troncal de los datos de la media
+	 * @return la linea troncal de los datos de la media --> última fila, quitando la casilla general
 	 */
 	public ParEdificios[] lineaTroncalMedia() {
 		ParEdificios[] pE = new ParEdificios[pEdificios.length-1];//Le quitamos la ultima fila
@@ -75,6 +75,10 @@ public class Damero {
 	}
 	
 
+	/**
+	 * @param i la linea que queremos obtener (existen diversas lineas de distribucion)
+	 * @return dicha linea de distribucion
+	 */
 	public ParEdificios[] lineasDistribucion(int i){
 		ParEdificios[] pE = new ParEdificios[this.pEdificios[0].length-1]; //Le quitamos la ultima fila
 		
@@ -85,6 +89,10 @@ public class Damero {
 		return pE;
 	}
 	
+	/**
+	 * @param i la linea que queremos obtener (existen diversas lineas de distribucion)
+	 * @return dicha linea de distribucion
+	 */
 	public ParEdificios[] lineasDistribucionMedias(int i){
 		ParEdificios[] pE = new ParEdificios[this.matrizMedias[0].length-1]; //Le quitamos la ultima fila
 		
@@ -113,7 +121,7 @@ public class Damero {
 	
 	
 	/**
-	 * @return nuestro damero de la ciudad
+	 * @return las medias de la ciudad
 	 */
 	public ParEdificios[][] getMedias() {
 		ParEdificios[][] resultado = new ParEdificios[this.matrizMedias.length][this.matrizMedias[0].length];
@@ -126,8 +134,11 @@ public class Damero {
 		}
 		return resultado;
 	}
+	
+	
 
 	// CONTADORES
+	
 	/**
 	 * @param pEdificios la estructura que queremos inicializar. Así, nos sirve
 	 *                   tanto para los datos actuales como para las medias
@@ -387,6 +398,10 @@ public class Damero {
 		return resultado;
 	}
 
+	/**
+	 * @return un ArrayList de Object en el que guardaremos el contador que ha provocado una rotura de segundo grado en la linea troncal. 
+	 * (ID, Contador)
+	 */
 	public ArrayList<Object> consumoExcesivoTroncal() {
 		int i = 0;
 		int j = this.lineaTroncal().length - 1;
@@ -395,15 +410,20 @@ public class Damero {
 	}
 
 	
+	/**
+	 * @return un ArrayList de Object en el que guardaremos el contador que ha provocado una rotura de segundo grado en las lineas de distribucion.
+	 *  (ID, Contador)
+	 */
 	public ArrayList<Object> consumoExcesivoLineasDistribucion(){
 		ArrayList<Object> resultado = new ArrayList<>();
-		int tamMax =  lineasDistribucion(1).length; //Todas las lineas tienen el mismo tamaño puesto que son matrices cuadradas
+		int tamMax =  lineasDistribucion(1).length-1; //Todas las lineas tienen el mismo tamaño puesto que son matrices cuadradas. 
+													// Le quitamos la ultima fila
 		
 		for(int i=0; i<tamMax; i++) { //Para cada fila llamamos al metodo consumoExcesivoRec 
 			resultado = this.consumoExcesivoRec(lineasDistribucion(i),lineasDistribucionMedias(i), 0, lineasDistribucion(i).length-1);
-			roturasContadorLineasD.add(resultado);
+			if(roturasContadorLineasD.contains(resultado)) continue; //No añadimos duplicados
+			if(!resultado.isEmpty()) roturasContadorLineasD.add(resultado);
 		}
-		
 		return roturasContadorLineasD;
 	}
 	
@@ -419,6 +439,10 @@ public class Damero {
 	private ArrayList<Object> consumoExcesivoRec(ParEdificios[] pE, ParEdificios[] media, int i, int j) {
 		int mitad;
 
+		//Le voy a añadir un ID al Contador porque luego para buscarlo y decir en que casilla se encuentra creo que es lo mas 
+		//rapido para buscarlo en funcion de esto
+		
+		
 		//Lo que devuelve el ArrayList<Object>: 
 		//1º -> Su ID (Como despues tenemos que hacer un estudio algoritmico de este metodo solo le metemos el ID para que no 
 				//sea muy costoso. Luego hacemos un metodo que en función del ID nos diga donde se ubica el contador
@@ -434,9 +458,14 @@ public class Damero {
 				roturasContadorTroncal.add(pE[i].getcIzquierda());				
 			}
 			if(pE[i].getcMorado() != null && pE[i].getcMorado().getConsumo() > 7*media[i].getcMorado().getConsumo()) {
-				roturasContadorTroncal.add(pE[i].getcIzquierda().getId());
+				roturasContadorTroncal.add(pE[i].getcMorado().getId());
 				roturasContadorTroncal.add(pE[i].getcMorado());				
 			}
+			if(pE[i].getcVerde() != null && pE[i].getcVerde().getConsumo() > 7*media[i].getcVerde().getConsumo()) {
+				roturasContadorTroncal.add(pE[i].getcVerde().getId());
+				roturasContadorTroncal.add(pE[i].getcVerde());				
+			}
+			
 		} else { // Casos recursivos
 			mitad = (i + j) / 2;
 			this.consumoExcesivoRec(pE, media, i, mitad - 1);
@@ -471,6 +500,9 @@ public class Damero {
 
 							}
 							if(this.pEdificios[i][j].getcMorado() != null && Integer.compare(this.pEdificios[i][j].getcMorado().getId(), id) == 0) {
+								cadena += "* Casilla: [" + i+ ", " + j + "]\n";
+							}
+							if(this.pEdificios[i][j].getcVerde() != null && Integer.compare(this.pEdificios[i][j].getcVerde().getId(), id) == 0) {
 								cadena += "* Casilla: [" + i+ ", " + j + "]\n";
 							}
 						}

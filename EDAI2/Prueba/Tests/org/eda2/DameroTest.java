@@ -186,24 +186,41 @@ public class DameroTest {
 	public void TestConsumoExcesivoLineasDistribucion() {
 		Damero damero = new Damero(4,4,300000);
 		ArrayList<Object> contadores = new ArrayList<>();
-		
-		System.out.println(damero.toString());
-		
-		for(int i=0; i<damero.lineasDistribucion(0).length; i++) {
-			System.out.println(damero.lineasDistribucion(0)[i]);;
-		}
-		
-		System.out.println();
-		
-		for(int i=0; i<damero.lineasDistribucion(1).length; i++) {
-			System.out.println(damero.lineasDistribucion(1)[i]);;
-		}
-		
-
+		boolean condicion = false;
 		contadores = damero.consumoExcesivoLineasDistribucion();
+		int numeroLineas = 2;
+		ParEdificios[] dist;
+		ParEdificios[] media;
 		
+		//Vamos a hacer lo mismo que antes. Vamos a buscar las roturas de forma bruta. Si encontramos al menos una, 
+		//entonces nuetro algoritmo tiene que haber encontrado también al menos una.
 		
-				
+		for(int i=0; i<numeroLineas; i++) {
+			dist = damero.lineasDistribucion(i);
+			media = damero.lineasDistribucionMedias(i);	
+			for(int j=0; j<dist.length; j++) {
+				if(dist[j].getcDerecha().getConsumo() > 7*media[j].getcDerecha().getConsumo()) {
+					condicion = true;
+					break;
+				}
+				if(dist[j].getcIzquierda().getConsumo() > 7*media[j].getcIzquierda().getConsumo()) {
+					condicion = true;
+					break;
+				}
+				if(dist[j].getcMorado()!= null && dist[j].getcMorado().getConsumo() > 7*media[j].getcMorado().getConsumo()) {
+					condicion = true;
+					break;
+				}
+			}
+		}
+		
+		//Si hemos encontrado una rotura, entonces contadores no puede estar vacio
+		if(!condicion) {
+			Assert.assertTrue(contadores.isEmpty());
+		} else {
+			System.out.println("Si quito esta mierda no me pasa el test?? " + contadores.toString());
+			Assert.assertTrue(!contadores.isEmpty());
+		}
 		
 	}
 	
@@ -216,8 +233,6 @@ public class DameroTest {
 		
 		Assert.assertTrue(condicion);
 	}
-	
-	
 	
 
 

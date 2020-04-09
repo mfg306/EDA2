@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
     <fullyQualifiedTypeName name="org.eda2.ManometroLineaPrincipal"/>
-    <fullyQualifiedTypeName name="org.eda2.Contador"/>
     <fullyQualifiedTypeName name="org.eda2.Medidores"/>
     <fullyQualifiedTypeName name="org.eda2.ProblemaManometros"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
@@ -17,4 +16,5 @@
     <fullyQualifiedTypeName name="org.graalvm.compiler.graph.Graph.SourcePositionTracking"/>
     <fullyQualifiedTypeName name="com.sun.org.apache.bcel.internal.generic.INSTANCEOF"/>
     <fullyQualifiedTypeName name="org.junit.Assert"/>
+    <fullyQualifiedTypeName name="org.eda2.Contador"/>
 </qualifiedTypeNameHistroy>

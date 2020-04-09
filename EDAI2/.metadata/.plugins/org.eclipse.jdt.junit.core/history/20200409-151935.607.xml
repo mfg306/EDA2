@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="DameroTest.TestConsumoExcesivoLineasDistribucion" project="Prueba" tests="1" started="1" failures="0" errors="0" ignored="0">
+  <testsuite name="org.eda2.DameroTest" time="0.02" displayname="DameroTest" uniqueid="[engine:junit-jupiter]/[class:org.eda2.DameroTest]">
+    <testcase name="TestConsumoExcesivoLineasDistribucion" classname="org.eda2.DameroTest" time="0.02" displayname="TestConsumoExcesivoLineasDistribucion()" uniqueid="[engine:junit-jupiter]/[class:org.eda2.DameroTest]/[method:TestConsumoExcesivoLineasDistribucion()]"/>
+  </testsuite>
+</testrun>

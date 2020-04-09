@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testrun name="DameroTest.TestAlgoritmoRecursivo" project="Prueba" tests="1" started="1" failures="0" errors="0" ignored="0">
-  <testsuite name="org.eda2.DameroTest" time="0.029" displayname="DameroTest" uniqueid="[engine:junit-jupiter]/[class:org.eda2.DameroTest]">
-    <testcase name="TestAlgoritmoRecursivo" classname="org.eda2.DameroTest" time="0.029" displayname="TestAlgoritmoRecursivo()" uniqueid="[engine:junit-jupiter]/[class:org.eda2.DameroTest]/[method:TestAlgoritmoRecursivo()]"/>
-  </testsuite>
-</testrun>
