@@ -410,10 +410,15 @@ public class Damero {
 	 * (ID, Contador)
 	 */
 	public ArrayList<Object> consumoExcesivoTroncal() {
+		ArrayList<Object> resultado = new ArrayList<>();
 		int i = 0;
 		int j = this.lineaTroncal().length - 1;
 		
-		return this.consumoExcesivoRec(this.lineaTroncal(),this.lineaTroncalMedia(), i, j);
+		resultado = this.consumoExcesivoRec(this.lineaTroncal(),this.lineaTroncalMedia(), i, j);
+		
+		if(!resultado.isEmpty()) this.roturasContadorTroncal.addAll(resultado);
+		
+		return resultado;
 	}
 
 	
@@ -423,13 +428,12 @@ public class Damero {
 	 */
 	public ArrayList<Object> consumoExcesivoLineasDistribucion(){
 		ArrayList<Object> resultado = new ArrayList<>();
-		int tamMax =  lineasDistribucion(1).length-1; //Todas las lineas tienen el mismo tamaño puesto que son matrices cuadradas. 
-													// Le quitamos la ultima fila
-		
-		for(int i=0; i<tamMax; i++) { //Para cada fila llamamos al metodo consumoExcesivoRec 
+		int tamMax = this.pEdificios.length;
+				
+		for(int i=0; i<tamMax; i++) { //Para cada columna llamamos al metodo consumoExcesivoRec 
 			resultado = this.consumoExcesivoRec(lineasDistribucion(i),lineasDistribucionMedias(i), 0, lineasDistribucion(i).length-1);
 //			if(roturasContadorLineasD.contains(resultado)) continue; //No añadimos duplicados
-			if(!resultado.isEmpty()) roturasContadorLineasD.add(resultado);
+			if(!resultado.isEmpty()) roturasContadorLineasD.addAll(resultado);
 		}
 		return roturasContadorLineasD;
 	}
@@ -445,6 +449,7 @@ public class Damero {
 	 */
 	private ArrayList<Object> consumoExcesivoRec(ParEdificios[] pE, ParEdificios[] media, int i, int j) {
 		int mitad;
+		ArrayList<Object> resultado = new ArrayList<>();
 
 		//Le voy a añadir un ID al Contador porque luego para buscarlo y decir en que casilla se encuentra creo que es lo mas 
 		//rapido para buscarlo en funcion de esto
@@ -456,21 +461,21 @@ public class Damero {
 		//2º -> El contador que ha provocado una rotura
 		
 		if (i >= j - 1) { // Caso base
-			if(pE[i].getcDerecha().getConsumo() > 7*media[i].getcDerecha().getConsumo()) {
-				roturasContadorTroncal.add(pE[i].getcDerecha().getId());
-				roturasContadorTroncal.add(pE[i].getcDerecha());				
+			if(pE[i].getcDerecha() != null && pE[i].getcDerecha().getConsumo() > 7*media[i].getcDerecha().getConsumo()) {
+				resultado.add(pE[i].getcDerecha().getId());
+				resultado.add(pE[i].getcDerecha());				
 			}
-			if(pE[i].getcIzquierda().getConsumo() > 7*media[i].getcIzquierda().getConsumo()) {
-				roturasContadorTroncal.add(pE[i].getcIzquierda().getId());
-				roturasContadorTroncal.add(pE[i].getcIzquierda());				
+			if(pE[i].getcIzquierda() != null && pE[i].getcIzquierda().getConsumo() > 7*media[i].getcIzquierda().getConsumo()) {
+				resultado.add(pE[i].getcIzquierda().getId());
+				resultado.add(pE[i].getcIzquierda());				
 			}
 			if(pE[i].getcMorado() != null && pE[i].getcMorado().getConsumo() > 7*media[i].getcMorado().getConsumo()) {
-				roturasContadorTroncal.add(pE[i].getcMorado().getId());
-				roturasContadorTroncal.add(pE[i].getcMorado());				
+				resultado.add(pE[i].getcMorado().getId());
+				resultado.add(pE[i].getcMorado());				
 			}
 			if(pE[i].getcVerde() != null && pE[i].getcVerde().getConsumo() > 7*media[i].getcVerde().getConsumo()) {
-				roturasContadorTroncal.add(pE[i].getcVerde().getId());
-				roturasContadorTroncal.add(pE[i].getcVerde());				
+				resultado.add(pE[i].getcVerde().getId());
+				resultado.add(pE[i].getcVerde());				
 			}
 			
 		} else { // Casos recursivos
@@ -478,7 +483,7 @@ public class Damero {
 			this.consumoExcesivoRec(pE, media, i, mitad - 1);
 			this.consumoExcesivoRec(pE, media, mitad, j);
 		}
-		return this.roturasContadorTroncal;
+		return resultado;
 	}
 	
 	/**
@@ -487,11 +492,12 @@ public class Damero {
 	public String interpretarSolucionConsumoExcesivo(ArrayList<Object> consumo) {
 		String cadena = "";
 		int contador = 0;
+		int prueba = 0;
+		
 		
 		//Obtenemos el ID del contador y lo buscamos en nuestra matriz
 
 		if(!consumo.isEmpty()) {
-			System.out.println("Debe revisar las siguientes casillas: ");
 			for(Object o : consumo) {
 				if(contador % 2 == 0) { //Solo nos interesa las posiciones pares
 					Integer id = (Integer)o;
