@@ -15,8 +15,9 @@ public class Damero {
 	public final static double CONSUMO_MINIMO_GENERAL = 300000;
 	public final static double CONSUMO_MAXIMO_GENERAL = 500000;
 	
-	public final static double CONSUMO_MINIMO_MEDIO = 300000;
-	public final static double CONSUMO_MAXIMO_MEDIO = 500000;
+	//135
+	public final static double CONSUMO_MINIMO_MEDIO = 108;
+	public final static double CONSUMO_MAXIMO_MEDIO = 162;
 	//Presiones para la casilla general
 	public final static double PRESION_MAXIMA = 150;
 	public final static double PRESION_MINIMA = 110;
@@ -49,7 +50,7 @@ public class Damero {
 		//que hayan tenido los contadores, ya que estos son mas complejos
 		this.inicializarContadores();
 		this.inicializarManometros();
-		this.generarMatrizMedias();
+		this.inicializarMedias();
 	}
 	
 	//Obtener la linea troncal
@@ -102,7 +103,10 @@ public class Damero {
 		
 	public void inicializarContadores() {
 		if(columnas%2==0) inicializarContadoresPar();
-		else inicializarContadoresImpar();
+		else {
+			System.out.println("else");
+			inicializarContadoresImpar();
+		}
 	}
 	
 	private void inicializarContadoresPar() { //Deberiamos inicializar primero los de cada edificio y a partir de ese
@@ -190,39 +194,106 @@ public class Damero {
 		}
 		
 		//MATRIZ MEDIAS
-		public void generarMatrizMedias() {
+//		public void generarMatrizMedias() {
+//			//RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
+//					for (int i = 0;i<matrizMedias.length;i++) {
+//						for (int j = 0; j<matrizMedias[0].length;j++) {
+//							this.matrizMedias[i][j].setcDerecha(new Contador(Math.random() * (CONSUMO_MINIMO_MEDIO - CONSUMO_MAXIMO_MEDIO + 1) + CONSUMO_MAXIMO_MEDIO));
+//							this.matrizMedias[i][j].setcIzquierda(new Contador(Math.random() * (CONSUMO_MINIMO_MEDIO - CONSUMO_MAXIMO_MEDIO + 1) + CONSUMO_MAXIMO_MEDIO));
+//						}
+//					}
+//					
+//					//INICIALIZAMOS LO CONTADORES VERDES Y MORADOS
+//					double con = 0;
+//					for (int i = 0;i<matrizMedias.length;i++) {
+//						for (int j = 1; j<matrizMedias[0].length;j++) {
+//							con += matrizMedias[i][j].getcDerecha().getConsumo();
+//							con += matrizMedias[i][j].getcIzquierda().getConsumo();
+//							if (j==matrizMedias[0].length-1) { //linea de distribucion
+//								con += matrizMedias[i][j-1].getcVerde().getConsumo();
+//								if (i!=0) con += matrizMedias[i-1][j].getcMorado().getConsumo();
+//								matrizMedias[i][j].setcMorado(new Contador(con));
+//							} else if (matrizMedias[i][j-1].getcVerde()==null) {
+//								con += matrizMedias[i][j-1].getcDerecha().getConsumo();
+//								con += matrizMedias[i][j-1].getcIzquierda().getConsumo();
+//								matrizMedias[i][j].setcVerde(new Contador(con));
+//							} else {
+//								con += matrizMedias[i][j-1].getcVerde().getConsumo();
+//								matrizMedias[i][j].setcVerde(new Contador(con));
+//							}
+//							con = 0;
+//						}
+//					}
+//					
+//					//CONTADOR GENERAL
+//					matrizMedias[matrizMedias.length-1][matrizMedias[0].length-1].setcDerecha(new Contador(Math.random() * (CONSUMO_MINIMO_MEDIO*7 - CONSUMO_MAXIMO_MEDIO*7 + 1) + CONSUMO_MAXIMO_MEDIO*7));
+//		}
+		
+		
+		public void inicializarMedias() {
+			if(columnas%2==0) inicializarMediasPar();
+			else inicializarMediasImpar();
+		}
+		
+		private void inicializarMediasPar() { //Deberiamos inicializar primero los de cada edificio y a partir de ese
+			
+			int y = matrizMedias.length;
+			int jota = matrizMedias[0].length;
+			
 			//RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
-					for (int i = 0;i<matrizMedias.length;i++) {
-						for (int j = 0; j<matrizMedias[0].length;j++) {
-							this.matrizMedias[i][j].setcDerecha(new Contador(Math.random() * (CONSUMO_MINIMO_MEDIO - CONSUMO_MAXIMO_MEDIO + 1) + CONSUMO_MAXIMO_MEDIO));
-							this.matrizMedias[i][j].setcIzquierda(new Contador(Math.random() * (CONSUMO_MINIMO_MEDIO - CONSUMO_MAXIMO_MEDIO + 1) + CONSUMO_MAXIMO_MEDIO));
-						}
-					}
+			for (int i = 0;i<matrizMedias.length;i++) {
+				for (int j = 0; j<matrizMedias[0].length;j++) {
+					if (i!=matrizMedias.length-1 || j!=matrizMedias[0].length-1) //CASILLA GENERAL
+						this.matrizMedias[i][j].setcDerecha(new Contador(Math.random() * (CONSUMO_MINIMO_MEDIO - CONSUMO_MAXIMO_MEDIO + 1) + CONSUMO_MAXIMO_MEDIO));
+					this.matrizMedias[i][j].setcIzquierda(new Contador(Math.random() * (CONSUMO_MINIMO_MEDIO - CONSUMO_MAXIMO_MEDIO + 1) + CONSUMO_MAXIMO_MEDIO));
+				}
+			}
+			
+			//INICIALIZAMOS LO CONTADORES VERDES Y MORADOS Y EL GENERAL
+			double con = 0;
+			for (int i = 0;i < matrizMedias.length;i++) {
+				for (int j = 1; j < matrizMedias[0].length;j++) {
 					
-					//INICIALIZAMOS LO CONTADORES VERDES Y MORADOS
-					double con = 0;
-					for (int i = 0;i<matrizMedias.length;i++) {
-						for (int j = 1; j<matrizMedias[0].length;j++) {
-							con += matrizMedias[i][j].getcDerecha().getConsumo();
-							con += matrizMedias[i][j].getcIzquierda().getConsumo();
-							if (j==matrizMedias[0].length-1) { //linea de distribucion
-								con += matrizMedias[i][j-1].getcVerde().getConsumo();
-								if (i!=0) con += matrizMedias[i-1][j].getcMorado().getConsumo();
-								matrizMedias[i][j].setcMorado(new Contador(con));
-							} else if (matrizMedias[i][j-1].getcVerde()==null) {
-								con += matrizMedias[i][j-1].getcDerecha().getConsumo();
-								con += matrizMedias[i][j-1].getcIzquierda().getConsumo();
-								matrizMedias[i][j].setcVerde(new Contador(con));
-							} else {
-								con += matrizMedias[i][j-1].getcVerde().getConsumo();
-								matrizMedias[i][j].setcVerde(new Contador(con));
-							}
-							con = 0;
-						}
+					if (i==matrizMedias.length-1 && j==matrizMedias[0].length-1) {
+						con += matrizMedias[i][j].getcIzquierda().getConsumo();
+						//System.out.println("  izq" +  pEdificios[i][j].getcIzquierda().getConsumo());
+						con += matrizMedias[i][j-1].getcVerde().getConsumo();
+						//System.out.println("verde   " + pEdificios[i][j-1].getcVerde().getConsumo());
+						con += matrizMedias[i-1][j].getcMorado().getConsumo();
+						//System.out.println("morado   " + pEdificios[i-1][j].getcMorado().getConsumo());
+						this.matrizMedias[i][j].setcDerecha(new Contador(con)); //CONTADOR GENERAL
+						System.out.println("");
+						System.out.println("");
+						continue;
 					}
-					
-					//CONTADOR GENERAL
-					matrizMedias[matrizMedias.length-1][matrizMedias[0].length-1].setcDerecha(new Contador(Math.random() * (CONSUMO_MINIMO_MEDIO*7 - CONSUMO_MAXIMO_MEDIO*7 + 1) + CONSUMO_MAXIMO_MEDIO*7));
+					if (j==matrizMedias[0].length-1 && i != matrizMedias.length-1) { //linea de distribucion
+						con += matrizMedias[i][j-1].getcVerde().getConsumo();
+						con += matrizMedias[i][j].getcDerecha().getConsumo();
+						con += matrizMedias[i][j].getcIzquierda().getConsumo();
+						if (i!=0) con += matrizMedias[i-1][j].getcMorado().getConsumo();
+						matrizMedias[i][j].setcMorado(new Contador(con));
+					} else if (matrizMedias[i][j-1].getcVerde()==null) { //final de la linea de distribucion por abajo
+						con += matrizMedias[i][j].getcDerecha().getConsumo();
+						con += matrizMedias[i][j].getcIzquierda().getConsumo();
+						con += matrizMedias[i][j-1].getcDerecha().getConsumo();
+						con += matrizMedias[i][j-1].getcIzquierda().getConsumo();
+						matrizMedias[i][j].setcVerde(new Contador(con));
+					} else { //caso base
+						con += matrizMedias[i][j].getcDerecha().getConsumo();
+						con += matrizMedias[i][j].getcIzquierda().getConsumo();
+						con += matrizMedias[i][j-1].getcVerde().getConsumo();
+						matrizMedias[i][j].setcVerde(new Contador(con));
+					}
+					con = 0;
+				}
+			}
+		}
+		
+		private void inicializarMediasImpar() {
+			inicializarMediasPar();
+			for (int j = 0; j < matrizMedias[0].length;j++) {
+				this.matrizMedias[0][j].setcIzquierda(null);
+			}
 		}
 		
 		
@@ -345,9 +416,6 @@ public class Damero {
 	 */
 	private ArrayList<Object> consumoExcesivoRec(ParEdificios[] pE, ParEdificios[] media, int i, int j) {
 		int mitad;
-		System.out.println(i+"  "+j);
-		System.out.println(pE.length);
-		System.out.println(media.length);
 		//Le voy a añadir un ID al Contador porque luego para buscarlo y decir en que casilla se encuentra creo que es lo mas 
 		//rapido para buscarlo en funcion de esto
 		
@@ -423,68 +491,7 @@ public class Damero {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
-	
-	
-	
-	
-	
-	
-	//MANOMETROS
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	//RESOLVER
 	
 //	public String resolverMedidores() {
@@ -528,32 +535,32 @@ public class Damero {
 //		return resultado;
 //	}
 //	
-//	private ArrayList<String> resolverManometros() {
-//		ArrayList<String> general = new ArrayList<>();
-//		ArrayList<String> distribucion = new ArrayList<>();
-//		ArrayList<String> resultado = new ArrayList<>();
-//		
-//		general.addAll(resolverManometrosGeneral());
-//		for (int i = 0;i<pEdificios.length;i++) {
-//			distribucion.addAll(resolverManometrosDistribucion(i));
-//		}
-//		
-//		resultado.add("TRONCAL");
-//		if(general.isEmpty()) resultado.add("No se han producido roturas en la linea troncal.");
-//		else {
-//			resultado.add("Se han producido roturas entre las manzanas:");
-//			resultado.addAll(general);
-//		}
-//		
-//		resultado.add("DISTRIBUCION");
-//		if (distribucion.isEmpty()) resultado.add("No se han producido roturas en ninguna linea de distribucion.");
-//		else {
-//			resultado.add("Se han producido roturas entre las manzanas:");
-//			resultado.addAll(distribucion);
-//		}
-//		
-//		return resultado;
-//	}
+	public ArrayList<String> resolverManometros() {
+		ArrayList<String> general = new ArrayList<>();
+		ArrayList<String> distribucion = new ArrayList<>();
+		ArrayList<String> resultado = new ArrayList<>();
+		
+		general.addAll(resolverManometrosGeneral());
+		for (int i = 0;i<pEdificios.length;i++) {
+			distribucion.addAll(resolverManometrosDistribucion(i));
+		}
+		
+		resultado.add("TRONCAL");
+		if(general.isEmpty()) resultado.add("No se han producido roturas en la linea troncal.");
+		else {
+			resultado.add("Se han producido roturas entre las manzanas:");
+			resultado.addAll(general);
+		}
+		
+		resultado.add("DISTRIBUCION");
+		if (distribucion.isEmpty()) resultado.add("No se han producido roturas en ninguna linea de distribucion.");
+		else {
+			resultado.add("Se han producido roturas entre las manzanas:");
+			resultado.addAll(distribucion);
+		}
+		
+		return resultado;
+	}
 //	
 //	private ArrayList<String> resolverManometrosRecursivo() {
 //		ArrayList<String> resultado = new ArrayList<>();
@@ -566,34 +573,32 @@ public class Damero {
 //		return resultado;
 //	}
 //	
-//	private ArrayList<String> resolverManometrosGeneral() {
-//		ArrayList<String> resultadoGeneral = new ArrayList<>();
-//		double aux;
-//		double current;
-//		for (int i = pEdificios.length-1;i>=1;i--) {
-//			aux = pEdificios[i-1][pEdificios[0].length-1].getMan().getPresion();
-//			current = pEdificios[i][pEdificios[0].length-1].getMan().getPresion();
-//			if (aux<(current-current*10/100))
-//				resultadoGeneral.add( ((2*i)+1) + " - " + ((2*i)+2));
-//		}
-//		return resultadoGeneral;
-//	}
-//	
-//	private ArrayList<String> resolverManometrosDistribucion(int i) {
-//		ArrayList<String> resultadoDistribucion = new ArrayList<>();
-//		double aux;
-//		double current;
-//		
-//		for (int j = pEdificios[0].length-2;j>1;j--) {
-//			current = pEdificios[i][j].getMan().getPresion();
-//			aux = pEdificios[i][j-1].getMan().getPresion();
-//			if (aux<(current-current*10/100)) {
-//				//resultadoDistribucion.add("["+ i + ", " + j + "]" + " - " + "["+ i + ", " + (j+1) + "]");
-//				resultadoDistribucion.add(((2*i)+1) + " - " + ((2*i)+2) + "\t De la calle " + j+1);
-//			}
-//				
-//				
-//		}
-//		return resultadoDistribucion;
-//	}
+	private ArrayList<String> resolverManometrosGeneral() {
+		ArrayList<String> resultadoGeneral = new ArrayList<>();
+		double aux;
+		double current;
+		for (int i = pEdificios.length-1;i>=1;i--) {
+			aux = pEdificios[i-1][pEdificios[0].length-1].getMan().getPresion();
+			current = pEdificios[i][pEdificios[0].length-1].getMan().getPresion();
+			if (aux<(current-current*10/100))
+				resultadoGeneral.add( ((2*i)+1) + " - " + ((2*i)+2));
+		}
+		return resultadoGeneral;
+	}
+	
+	private ArrayList<String> resolverManometrosDistribucion(int i) {
+		ArrayList<String> resultadoDistribucion = new ArrayList<>();
+		double aux;
+		double current;
+		
+		for (int j = pEdificios[0].length-2;j>1;j--) {
+			current = pEdificios[i][j].getMan().getPresion();
+			aux = pEdificios[i][j-1].getMan().getPresion();
+			if (aux<(current-current*10/100)) {
+				//resultadoDistribucion.add("["+ i + ", " + j + "]" + " - " + "["+ i + ", " + (j+1) + "]");
+				resultadoDistribucion.add(((2*i)+1) + " - " + ((2*i)+2) + "\t De la calle " + (j+1));
+			}				
+		}
+		return resultadoDistribucion;
+	}
 }

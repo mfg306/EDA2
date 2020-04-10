@@ -37,7 +37,7 @@ public class DameroTest {
 				contador++;
 			}
 		}
-		
+		System.out.println(damero.toString());
 		Assert.assertFalse(resultado);
 		Assert.assertEquals(contador, pE[0].length);
 	}
@@ -118,26 +118,9 @@ public class DameroTest {
 		Assert.assertTrue(resultado);
 	}
 	
-	
-//	@Test
-//	public void TestDatosFueraDeRango() {
-//		
-//		try {
-//			Damero damero = new Damero(4,4);
-//		}catch(Exception e) {
-//			assertEquals(e.getMessage(), "Ha introducido demasiada agua y se han roto las tuberías.");
-//		}
-//		
-//		try {
-//			Damero damero = new Damero(4,4);
-//		}catch(Exception e) {
-//			assertEquals(e.getMessage(), "El sistema no puede funcionar con tan poco cauce.");
-//		}
-//	}
-	
 	@Test
 	public void TestConsumoExcesivoTroncal() { 
-		Damero damero = new Damero(20,20);
+		Damero damero = new Damero(4,4);
 		ArrayList<Object> contadores = new ArrayList<>();
 		boolean condicion = false;
 		ArrayList<Object> encontrados = new ArrayList<>();
@@ -174,10 +157,20 @@ public class DameroTest {
 
 		//Si hemos encontrado una rotura, entonces contadores no puede estar vacio
 		if(!condicion) {
+			System.out.println("HOLO");
 			Assert.assertTrue(contadores.isEmpty());
 		} else {
+			System.out.println(contadores.toString());
 			Assert.assertTrue(!contadores.isEmpty()); 
 		}
+		System.out.println("");
+		System.out.println("DATOS");
+		System.out.println(damero.toString());
+		System.out.println("");
+		System.out.println("MEDIAS");
+		System.out.println(damero.toStringMmedias());
+		
+		System.out.println(damero.interpretarSolucionConsumoExcesivo(contadores));
 	}
 	
 	
@@ -217,10 +210,17 @@ public class DameroTest {
 		if(!condicion) {
 			Assert.assertTrue(contadores.isEmpty());
 		} else {
-			System.out.println("Si quito esta mierda no me pasa el test?? " + contadores.toString());
+			//System.out.println("Si quito esta mierda no me pasa el test?? " + contadores.toString());
 			Assert.assertTrue(!contadores.isEmpty());
 		}
 		
+		System.out.println("");
+		System.out.println("DATOS");
+		System.out.println(damero.toString());
+		System.out.println("");
+		System.out.println("MEDIAS");
+		System.out.println(damero.toStringMmedias());
+		System.out.println(damero.interpretarSolucionConsumoExcesivo(contadores));
 	}
 	
 	@Test

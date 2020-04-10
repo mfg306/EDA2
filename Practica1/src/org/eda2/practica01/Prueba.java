@@ -25,7 +25,7 @@ public class Prueba {
 		System.out.println("MEDIAS");
 		System.out.println(d.toStringMmedias());
 		
-		
+		System.out.println(d.resolverManometros());
 		
 		
 		
