@@ -8,22 +8,26 @@ public class Damero {
 	private int columnas;
 	private ParEdificios[][] pEdificios;
 	private ParEdificios[][] matrizMedias;
-	private ArrayList<Object> roturasContadorTroncal = new ArrayList();
-	private ArrayList<Object> roturasContadorLineasD = new ArrayList();
+	private ArrayList<Object> roturasContadorTroncal = new ArrayList<Object>();
+	private ArrayList<Object> roturasContadorLineasD = new ArrayList<Object>();
+	private ArrayList<Object> roturasProblemaRecursivo = new ArrayList<>();
 	
-	private ParEdificios[] lineaTroncal;
+	public final static double CONSUMO_MINIMO_GENERAL = 300000;
+	public final static double CONSUMO_MAXIMO_GENERAL = 500000;
 	
-	public final static double CONSUMO_MINIMO = 300000;
-	public final static double CONSUMO_MAXIMO = 500000;
+	public final static double CONSUMO_MINIMO_MEDIO = 300000;
+	public final static double CONSUMO_MAXIMO_MEDIO = 500000;
 	//Presiones para la casilla general
 	public final static double PRESION_MAXIMA = 150;
 	public final static double PRESION_MINIMA = 110;
 	
-	private double suministroAgua;
+	
 	
 	//CONSTRUCTOR
-	public Damero(int columnas, int filas, double cauceInicial) {
+	public Damero(int columnas, int filas) {
 		Contador.reiniciarId();
+		this.roturasContadorTroncal.clear();
+		this.roturasContadorLineasD.clear();
 		this.filas = filas;
 		this.columnas = columnas;
 		if (filas % 2 == 0) {
@@ -40,12 +44,6 @@ public class Damero {
 				matrizMedias[a][b] = new ParEdificios();
 			}
 		}
-//		this.inicializarContadores(this.pEdificios);
-//		setSuministroAgua(cauceInicial, this.pEdificios);
-//		this.inicializarContadores(this.matrizMedias);
-//		this.setSuministroAgua(500000,this.matrizMedias); //Datos de la empresa
-//		this.inicializarManometros();
-		
 		
 		//Podemos inicializar primero los contadores y luego los manometros en función de las roturas
 		//que hayan tenido los contadores, ya que estos son mas complejos
@@ -56,14 +54,14 @@ public class Damero {
 	
 	//Obtener la linea troncal
 	public ParEdificios[] lineaTroncal() {
-		ParEdificios[] pE = new ParEdificios[pEdificios.length-1]; //Le quitamos la casilla general
+		ParEdificios[] pE = new ParEdificios[pEdificios.length]; 
 		for (int i = 0;i<pE.length;i++) pE[i] = pEdificios[i][pEdificios[0].length-1];
 		return pE;
 	}
 	
 	//Obtener las medias de la linea troncal
 	public ParEdificios[] lineaTroncalMedia() {
-		ParEdificios[] pE = new ParEdificios[pEdificios.length-1]; //Le quitamos la casilla general
+		ParEdificios[] pE = new ParEdificios[pEdificios.length]; 
 		for (int i = 0; i<pE.length;i++) pE[i] = matrizMedias[i][pEdificios[0].length-1];
 		return pE;
 	}
@@ -101,63 +99,7 @@ public class Damero {
 	
 	
 	//CONTADORES
-	private void inicializarContadores(ParEdificios[][] pEdificios) {
-		// La primera fila tiene solo contadores morados, izq y der
-		// El resto tiene verdes, izq y der
-		// Lo inicializo todo a cero y cuando sepamos la cantidad inicial ya se la
-		// asignamos a todos
-
-		for (int i = 0; i < this.pEdificios.length; i++) {
-			for (int j = 0; j < this.pEdificios[0].length; j++) {
-				pEdificios[i][j] = new ParEdificios();
-				pEdificios[i][j].setcDerecha(new Contador(0.0));
-				pEdificios[i][j].setcIzquierda(new Contador(0.0));
-
-				if (j == this.pEdificios[0].length - 1) { //En la casilla general no hay nada, solo un contador general
-					pEdificios[i][j].setcMorado(new Contador(0.0));
-				} else {
-					pEdificios[i][j].setcVerde(new Contador(0.0));
-				}
-			}
-		}
-
-		if (this.filas % 2 == 0)
-			this.inicializarContadoresPar(pEdificios);
-		else
-			this.inicializarContadoresImpar(pEdificios);
-	}
-	
-	private void inicializarContadoresPar(ParEdificios[][] pEdificios) {
-		int columnas = pEdificios.length - 1;
-		for (int i = 0; i < pEdificios[0].length; i++) {
-			pEdificios[columnas][i] = new ParEdificios();
-			pEdificios[columnas][i].setcDerecha(new Contador(0.0));
-			pEdificios[columnas][i].setcIzquierda(new Contador(0.0));
-
-			if (i != pEdificios[0].length - 1)
-				pEdificios[columnas][i].setcVerde(new Contador(0.0));
-		}
-	}
-
-	/**
-	 * La ultima columna la ponemos a null
-	 */
-	private void inicializarContadoresImpar(ParEdificios[][] pEdificios) {
-		int columnas = pEdificios.length - 1;
-		for (int i = 0; i < pEdificios[0].length; i++) {
-			pEdificios[columnas][i] = new ParEdificios();
-			pEdificios[columnas][i].setcIzquierda(new Contador(0.0));
-			pEdificios[columnas][i].setcDerecha(null);
-			if (i != pEdificios[0].length - 1)
-				pEdificios[columnas][i].setcVerde(new Contador(0.0));
-		}
-	}
-	
-	
-	
-	
-	
-	
+		
 	public void inicializarContadores() {
 		if(columnas%2==0) inicializarContadoresPar();
 		else inicializarContadoresImpar();
@@ -171,7 +113,7 @@ public class Damero {
 		//RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
 		for (int i = 0;i<pEdificios.length;i++) {
 			for (int j = 0; j<pEdificios[0].length;j++) {
-				if (i!=pEdificios.length-1 || j!=pEdificios[0].length-1) 
+				if (i!=pEdificios.length-1 || j!=pEdificios[0].length-1) //CASILLA GENERAL
 					this.pEdificios[i][j].setcDerecha(new Contador(Math.random() * (100 - 1000 + 1) + 1000));
 				this.pEdificios[i][j].setcIzquierda(new Contador(Math.random() * (100 - 1000 + 1) + 1000));
 			}
@@ -184,9 +126,14 @@ public class Damero {
 				
 				if (i==pEdificios.length-1 && j==pEdificios[0].length-1) {
 					con += pEdificios[i][j].getcIzquierda().getConsumo();
+					//System.out.println("  izq" +  pEdificios[i][j].getcIzquierda().getConsumo());
 					con += pEdificios[i][j-1].getcVerde().getConsumo();
+					//System.out.println("verde   " + pEdificios[i][j-1].getcVerde().getConsumo());
 					con += pEdificios[i-1][j].getcMorado().getConsumo();
+					//System.out.println("morado   " + pEdificios[i-1][j].getcMorado().getConsumo());
 					this.pEdificios[i][j].setcDerecha(new Contador(con)); //CONTADOR GENERAL
+					System.out.println("");
+					System.out.println("");
 					continue;
 				}
 				if (j==pEdificios[0].length-1 && i != pEdificios.length-1) { //linea de distribucion
@@ -219,7 +166,66 @@ public class Damero {
 		}
 	}
 	
+	//MANOMETROS
 	
+		private void inicializarManometros() {
+			
+			int ancho = pEdificios.length-1;
+			int alto = pEdificios[0].length-1;
+			double pAnterior, error;
+			for(int j=pEdificios[0].length-1; j>=1; j--) {
+				for(int i=pEdificios.length-1; i>=0; i--) {				
+					if (i==ancho && j==alto) { //Manómetro general
+						this.pEdificios[i][j].setMan(new Manometro(Math.random()*(110-150+1)+150));
+						continue;
+					}
+					//Obtenemos el valor de la presion del manometro anterior para obtener el siguiente a partir de él
+					if (j==alto) pAnterior = this.pEdificios[i+1][j].getMan().getPresion();
+					else pAnterior = this.pEdificios[i][j+1].getMan().getPresion();
+					
+					error = pAnterior - (pAnterior*13/100); //Margen de error del manometro
+					this.pEdificios[i][j].setMan(new Manometro((Math.random()*(error-pAnterior+1)+pAnterior))); //Establecemos la presion del manómetro
+				}
+			}
+		}
+		
+		//MATRIZ MEDIAS
+		public void generarMatrizMedias() {
+			//RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
+					for (int i = 0;i<matrizMedias.length;i++) {
+						for (int j = 0; j<matrizMedias[0].length;j++) {
+							this.matrizMedias[i][j].setcDerecha(new Contador(Math.random() * (CONSUMO_MINIMO_MEDIO - CONSUMO_MAXIMO_MEDIO + 1) + CONSUMO_MAXIMO_MEDIO));
+							this.matrizMedias[i][j].setcIzquierda(new Contador(Math.random() * (CONSUMO_MINIMO_MEDIO - CONSUMO_MAXIMO_MEDIO + 1) + CONSUMO_MAXIMO_MEDIO));
+						}
+					}
+					
+					//INICIALIZAMOS LO CONTADORES VERDES Y MORADOS
+					double con = 0;
+					for (int i = 0;i<matrizMedias.length;i++) {
+						for (int j = 1; j<matrizMedias[0].length;j++) {
+							con += matrizMedias[i][j].getcDerecha().getConsumo();
+							con += matrizMedias[i][j].getcIzquierda().getConsumo();
+							if (j==matrizMedias[0].length-1) { //linea de distribucion
+								con += matrizMedias[i][j-1].getcVerde().getConsumo();
+								if (i!=0) con += matrizMedias[i-1][j].getcMorado().getConsumo();
+								matrizMedias[i][j].setcMorado(new Contador(con));
+							} else if (matrizMedias[i][j-1].getcVerde()==null) {
+								con += matrizMedias[i][j-1].getcDerecha().getConsumo();
+								con += matrizMedias[i][j-1].getcIzquierda().getConsumo();
+								matrizMedias[i][j].setcVerde(new Contador(con));
+							} else {
+								con += matrizMedias[i][j-1].getcVerde().getConsumo();
+								matrizMedias[i][j].setcVerde(new Contador(con));
+							}
+							con = 0;
+						}
+					}
+					
+					//CONTADOR GENERAL
+					matrizMedias[matrizMedias.length-1][matrizMedias[0].length-1].setcDerecha(new Contador(Math.random() * (CONSUMO_MINIMO_MEDIO*7 - CONSUMO_MAXIMO_MEDIO*7 + 1) + CONSUMO_MAXIMO_MEDIO*7));
+		}
+		
+		
 	//ToString
 	
 	public String toString() {
@@ -261,118 +267,26 @@ public class Damero {
 	}
 	
 	
-	private ArrayList<Object> traducirIndices(int i) {
-		double division = i / 2;
-		Boolean esPar = (division % 2 == 0) ? true : false;
-		double nuevaFila = Math.floor(division);
-		ArrayList<Object> solucion = new ArrayList<>();
 
-		solucion.add(nuevaFila);
-		solucion.add(esPar);
-
-		return solucion;
+	
+	public double getLitrosEdificio(int i, int j, ParEdificios[][] pEdificios, String cont) { // columnas, filas
+		//DIVM
+		if (cont.equals("D")) return pEdificios[i][j].getcDerecha().getConsumo();
+		else if (cont.equals("I")) return pEdificios[i][j].getcIzquierda().getConsumo();
+		else if (cont.equals("V")) return pEdificios[i][j].getcVerde().getConsumo();
+		else return pEdificios[i][j].getcMorado().getConsumo();
 	}
 	
-	private void setSuministroAgua(double cauce, ParEdificios[][] pEdificios) {
-		if (cauce > CONSUMO_MAXIMO)
-			throw new RuntimeException("Ha introducido demasiada agua y se han roto las tuberías.");
-		if (cauce < CONSUMO_MINIMO)
-			throw new RuntimeException("El sistema no puede funcionar con tan poco cauce.");
-
-		setLitrosEdificio(cauce, pEdificios);
-	}
-	
-	private void setLitrosEdificio(double cauce, ParEdificios[][] pEdificios) { // ***
-		int numTotalManzanas = (this.filas * this.columnas) - 1; // quitamos la general
-		double porcionIndividual = cauce / numTotalManzanas;
-		double porcentajeAVariar; // Esto es para que no todas las manzanas consuman exactamente lo mismo.
-		double cantidadVerde;
-		
-		if (this.columnas % 2 != 0) {
-			for (int i = 0; i < pEdificios.length; i++) {
-				for (int j = 0; j < pEdificios[i].length; j++) {
-					if (i == pEdificios.length - 1) { // En la ultima columna solo inicializamos izquierda y verde
-						if (j == pEdificios[i].length - 1) pEdificios[i][j].setcIzquierda(new Contador(cauce)); // CASILLA GENERAL
-						else {
-							porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
-							pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
-							// El contador verde en este caso tendra el consumo del edificio izquierdo
-							pEdificios[i][j].setcVerde(pEdificios[i][j].getcVerde());
-						}
-					} else { //Para el resto de columnas, se da valor de forma normal
-						porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
-						pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
-						porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
-						pEdificios[i][j].setcDerecha(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
-						if (pEdificios[i][j].getcVerde() != null) {
-							cantidadVerde = pEdificios[i][j].getcDerecha().getConsumo() + pEdificios[i][j].getcDerecha().getConsumo();
-							pEdificios[i][j].setcVerde(new Contador(cantidadVerde));
-						}
-						if (pEdificios[i][j].getcMorado() != null) {
-							//Aqui hay que dar valor el morado , no se si es mejor hacer un metodo aparte cuando ya lo tengamos todo
-
-						}
-					}
-				}
-			}
-		} else { // Si es par, se da valor a todo lo que no esté a null
-			for (int i = 0; i < pEdificios.length; i++) {
-				for (int j = 0; j < pEdificios[i].length; j++) {
-					//Aqui la casilla general es la ultima derecha
-					if(i == pEdificios.length -1 && j == pEdificios[i].length -1) {
-						pEdificios[i][j].setcDerecha(new Contador(cauce));
-						porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
-						pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
-					} else {
-						porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
-						pEdificios[i][j].setcIzquierda(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
-						porcentajeAVariar = (Math.random() * (0 - 0.5 + 1) + 0.5);
-						pEdificios[i][j].setcDerecha(new Contador(porcionIndividual - (porcionIndividual * porcentajeAVariar)));
-						if (pEdificios[i][j].getcVerde() != null) {
-							cantidadVerde = pEdificios[i][j].getcDerecha().getConsumo() + pEdificios[i][j].getcDerecha().getConsumo();
-							pEdificios[i][j].setcVerde(new Contador(cantidadVerde));
-						}
-						if (pEdificios[i][j].getcMorado() != null) {
-							//Aqui hay que dar valor el morado , no se si es mejor hacer un metodo aparte cuando ya lo tengamos todo
-						}
-					}
-				}
-			}
-		}
-	}
-
-	public double getLitrosEdificio(int i, int j, ParEdificios[][] pEdificios) { // columnas, filas
-		i--;
-		j--;
-		double filas = (double) this.traducirIndices(i).get(0);
-		boolean par = (boolean) this.traducirIndices(i).get(1);
-
-		if (filas > this.filas / 2 || i > this.columnas) {
-			throw new IndexOutOfBoundsException( "Debe introducir un edificio válido. Compruebe que los índices son correctos.");
-		}
-		
-		//Si el tablero es par
-		if(this.columnas % 2 == 0) { //par es si la columna a la que accedemos es par
-			return (par == true) ? pEdificios[(int) filas][j].getcIzquierda().getConsumo() : pEdificios[(int) filas][j].getcDerecha().getConsumo();
-		} else { // Si no estamos en un tablero par 
-			//Tenemos que ver si la posicion a la que queremos acceder es la ultima casilla, si es la ultima casilla 
-			//no es derecha, es izquierda, porq la derecha esta a null 
-			if((int) filas == this.pEdificios.length-1 && j == this.pEdificios[0].length-1) {
-				return pEdificios[(int)filas][j].getcIzquierda().getConsumo();
-			} else {
-				return (par == true) ? pEdificios[(int) filas][j].getcIzquierda().getConsumo() : pEdificios[(int) filas][j].getcDerecha().getConsumo();
-			}
-		}
-	}
-	
-	public double getLitrosCasillasSalvoCasillaGeneral() { //No contempla el caso de que sea impar el damero
+	//REVISAR
+	//EL VALOR DEBERIA COINCIDIR CON LA CASILLA GENERAL PERO NO COINCIDE
+	public double getLitrosCasillasSalvoCasillaGeneral() {
 		double resultado = 0;
 
 		for (int i = 0; i < this.pEdificios.length; i++) {
 			for (int j = 0; j < this.pEdificios[0].length; j++) {
-				if (i == (this.columnas / 2) - 1 && j == this.filas - 1) break; // La general no
-				System.out.println(i + "   " + j);
-				if (columnas%2 != 0 && i == 0) {
+				if (i == (this.pEdificios.length-1) && j == this.pEdificios[0].length - 1) {// La general no
+					resultado+=this.pEdificios[i][j].getcIzquierda().getConsumo();
+				} else if (columnas%2 != 0 && i == 0) {
 					resultado += this.pEdificios[i][j].getcDerecha().getConsumo();
 				} else {
 					resultado += this.pEdificios[i][j].getcDerecha().getConsumo() + this.pEdificios[i][j].getcIzquierda().getConsumo();
@@ -383,31 +297,57 @@ public class Damero {
 		return resultado;
 	}
 	
+	
+	//DyV
+	/**
+	 * @return un ArrayList de Object en el que guardaremos el contador que ha provocado una rotura de segundo grado en la linea troncal. 
+	 * (ID, Contador)
+	 */
 	public ArrayList<Object> consumoExcesivoTroncal() {
+		ArrayList<Object> resultado = new ArrayList<>();
 		int i = 0;
-		int j = this.lineaTroncal().length - 1;
+		int j = this.lineaTroncal().length-1;
 		
-		return this.consumoExcesivoRec(this.lineaTroncal(),this.lineaTroncalMedia(), i, j);
+		roturasProblemaRecursivo.clear();
+		resultado = this.consumoExcesivoRec(this.lineaTroncal(),this.lineaTroncalMedia(), i, j);
+		
+		if(!resultado.isEmpty()) this.roturasContadorTroncal.addAll(resultado);
+		
+		return resultado;
 	}
+
 	
-	
+	/**
+	 * @return un ArrayList de Object en el que guardaremos el contador que ha provocado una rotura de segundo grado en las lineas de distribucion.
+	 *  (ID, Contador)
+	 */
 	public ArrayList<Object> consumoExcesivoLineasDistribucion(){
 		ArrayList<Object> resultado = new ArrayList<>();
-		int tamMax =  lineasDistribucion(1).length-1; //Todas las lineas tienen el mismo tamaño puesto que son matrices cuadradas. 
-													// Le quitamos la ultima fila
+		int tamMax = this.pEdificios.length;
 		
-		for(int i=0; i<tamMax; i++) { //Para cada fila llamamos al metodo consumoExcesivoRec 
+		roturasProblemaRecursivo.clear();
+
+		for(int i=0; i<tamMax; i++) { //Para cada columna llamamos al metodo consumoExcesivoRec 
 			resultado = this.consumoExcesivoRec(lineasDistribucion(i),lineasDistribucionMedias(i), 0, lineasDistribucion(i).length-1);
-//			if(roturasContadorLineasD.contains(resultado)) continue; //No añadimos duplicados
-			if(!resultado.isEmpty()) roturasContadorLineasD.add(resultado);
+			if(!resultado.isEmpty()) roturasContadorLineasD.addAll(resultado);
 		}
 		return roturasContadorLineasD;
 	}
 	
-	
+	/**
+	 * Nuestro algoritmo recursivo va a dividir el problema hasta el máximo. Es decir, vamos a coger nuestro array de parEdificios 
+	 * y vamos a simplificarlo hasta quedarnos con un solo par. Sobre este par podemos ver si se dan las condiciones necesarias 
+	 * para que se produzca una rotura
+	 * @param pE es la estructura a la que vamos a buscarle roturas de contadores
+	 * @param i posicion inicial a partir de la cual vamos a empzar a buscar
+	 * @param j posicion final de la búsqueda
+	 * @return un ArrayList con todos los contadores que han presentado una rotura
+	 */
 	private ArrayList<Object> consumoExcesivoRec(ParEdificios[] pE, ParEdificios[] media, int i, int j) {
 		int mitad;
-
+		System.out.println(i+"  "+j);
+		System.out.println(pE.length);
+		System.out.println(media.length);
 		//Le voy a añadir un ID al Contador porque luego para buscarlo y decir en que casilla se encuentra creo que es lo mas 
 		//rapido para buscarlo en funcion de esto
 		
@@ -417,32 +357,36 @@ public class Damero {
 				//sea muy costoso. Luego hacemos un metodo que en función del ID nos diga donde se ubica el contador
 		//2º -> El contador que ha provocado una rotura
 		
-		if (i >= j - 1) { // Caso base
-			if(pE[i].getcDerecha().getConsumo() > 7*media[i].getcDerecha().getConsumo()) {
-				roturasContadorTroncal.add(pE[i].getcDerecha().getId());
-				roturasContadorTroncal.add(pE[i].getcDerecha());				
+		if (i == j) { // Caso base
+			if(pE[i].getcDerecha() != null && pE[i].getcDerecha().getConsumo() > 7*media[i].getcDerecha().getConsumo()) {
+					roturasProblemaRecursivo.add(pE[i].getcDerecha().getId());
+					roturasProblemaRecursivo.add(pE[i].getcDerecha());
+				
 			}
-			if(pE[i].getcIzquierda().getConsumo() > 7*media[i].getcIzquierda().getConsumo()) {
-				roturasContadorTroncal.add(pE[i].getcIzquierda().getId());
-				roturasContadorTroncal.add(pE[i].getcIzquierda());				
+			if(pE[i].getcIzquierda() != null && pE[i].getcIzquierda().getConsumo() > 7*media[i].getcIzquierda().getConsumo()) {
+					roturasProblemaRecursivo.add(pE[i].getcIzquierda().getId());
+					roturasProblemaRecursivo.add(pE[i].getcIzquierda());	
 			}
 			if(pE[i].getcMorado() != null && pE[i].getcMorado().getConsumo() > 7*media[i].getcMorado().getConsumo()) {
-				roturasContadorTroncal.add(pE[i].getcMorado().getId());
-				roturasContadorTroncal.add(pE[i].getcMorado());				
+					roturasProblemaRecursivo.add(pE[i].getcMorado().getId());
+					roturasProblemaRecursivo.add(pE[i].getcMorado());	
 			}
 			if(pE[i].getcVerde() != null && pE[i].getcVerde().getConsumo() > 7*media[i].getcVerde().getConsumo()) {
-				roturasContadorTroncal.add(pE[i].getcVerde().getId());
-				roturasContadorTroncal.add(pE[i].getcVerde());				
+					roturasProblemaRecursivo.add(pE[i].getcVerde().getId());
+					roturasProblemaRecursivo.add(pE[i].getcVerde());		
 			}
 			
 		} else { // Casos recursivos
-			mitad = (i + j) / 2;
+			mitad = (i + (j+1)) / 2;
 			this.consumoExcesivoRec(pE, media, i, mitad - 1);
 			this.consumoExcesivoRec(pE, media, mitad, j);
 		}
-		return this.roturasContadorTroncal;
+		return roturasProblemaRecursivo;
 	}
 	
+	/**
+	 * @return una cadena con las casillas en las que se ha producido una rotura
+	 */
 	public String interpretarSolucionConsumoExcesivo(ArrayList<Object> consumo) {
 		String cadena = "";
 		int contador = 0;
@@ -450,7 +394,6 @@ public class Damero {
 		//Obtenemos el ID del contador y lo buscamos en nuestra matriz
 
 		if(!consumo.isEmpty()) {
-			System.out.println("Debe revisar las siguientes casillas: ");
 			for(Object o : consumo) {
 				if(contador % 2 == 0) { //Solo nos interesa las posiciones pares
 					Integer id = (Integer)o;
@@ -458,17 +401,16 @@ public class Damero {
 					for(int i=0; i<this.pEdificios.length; i++) {
 						for(int j=0; j<this.pEdificios[i].length; j++) {
 							if(Integer.compare(this.pEdificios[i][j].getcDerecha().getId(), id) == 0) {
-								cadena += "* Casilla: [" + i+ ", " + j + "]\n";
+								cadena += "* Casilla: [" + i+ ", " + j + "]. El contador derecha ha provocado la rotura\n";
 							}
 							if(Integer.compare(this.pEdificios[i][j].getcIzquierda().getId(), id) == 0) {
-								cadena += "* Casilla: [" + i+ ", " + j + "]\n";
-
+								cadena += "* Casilla: [" + i+ ", " + j + "]. El contador izquierda ha provocado la rotura\n";
 							}
 							if(this.pEdificios[i][j].getcMorado() != null && Integer.compare(this.pEdificios[i][j].getcMorado().getId(), id) == 0) {
-								cadena += "* Casilla: [" + i+ ", " + j + "]\n";
+								cadena += "* Casilla: [" + i+ ", " + j + "]. El contador morado ha provocado la rotura\n";
 							}
 							if(this.pEdificios[i][j].getcVerde() != null && Integer.compare(this.pEdificios[i][j].getcVerde().getId(), id) == 0) {
-								cadena += "* Casilla: [" + i+ ", " + j + "]\n";
+								cadena += "* Casilla: [" + i+ ", " + j + "]. El contador verde ha provocado la rotura\n";
 							}
 						}
 					}
@@ -477,32 +419,11 @@ public class Damero {
 			}
 		}
 
-		return cadena;
+		return (cadena.isEmpty())? "No hay roturas.\n ": cadena;
 	}
 	
 	
-	//MANOMETROS
 	
-	private void inicializarManometros() {
-		
-		int ancho = pEdificios.length-1;
-		int alto = pEdificios[0].length-1;
-		double pAnterior, error;
-		for(int j=pEdificios[0].length-1; j>=1; j--) {
-			for(int i=pEdificios.length-1; i>=0; i--) {				
-				if (i==ancho && j==alto) { //Manómetro general
-					this.pEdificios[i][j].setMan(new Manometro(Math.random()*(110-150+1)+150));
-					continue;
-				}
-				//Obtenemos el valor de la presion del manometro anterior para obtener el siguiente a partir de él
-				if (j==alto) pAnterior = this.pEdificios[i+1][j].getMan().getPresion();
-				else pAnterior = this.pEdificios[i][j+1].getMan().getPresion();
-				
-				error = pAnterior - (pAnterior*13/100); //Margen de error del manometro
-				this.pEdificios[i][j].setMan(new Manometro((Math.random()*(error-pAnterior+1)+pAnterior))); //Establecemos la presion del manómetro
-			}
-		}
-	}
 	
 	
 	
@@ -549,41 +470,6 @@ public class Damero {
 	
 	
 	
-	//MATRIZ MEDIAS
-	public void generarMatrizMedias() {
-		//RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
-				for (int i = 0;i<matrizMedias.length;i++) {
-					for (int j = 0; j<matrizMedias[0].length;j++) {
-						this.matrizMedias[i][j].setcDerecha(new Contador(Math.random() * (CONSUMO_MINIMO - CONSUMO_MAXIMO + 1) + CONSUMO_MAXIMO));
-						this.matrizMedias[i][j].setcIzquierda(new Contador(Math.random() * (CONSUMO_MINIMO - CONSUMO_MAXIMO + 1) + CONSUMO_MAXIMO));
-					}
-				}
-				
-				//INICIALIZAMOS LO CONTADORES VERDES Y MORADOS
-				double con = 0;
-				for (int i = 0;i<matrizMedias.length;i++) {
-					for (int j = 1; j<matrizMedias[0].length;j++) {
-						con += matrizMedias[i][j].getcDerecha().getConsumo();
-						con += matrizMedias[i][j].getcIzquierda().getConsumo();
-						if (j==matrizMedias[0].length-1) { //linea de distribucion
-							con += matrizMedias[i][j-1].getcVerde().getConsumo();
-							if (i!=0) con += matrizMedias[i-1][j].getcMorado().getConsumo();
-							matrizMedias[i][j].setcMorado(new Contador(con));
-						} else if (matrizMedias[i][j-1].getcVerde()==null) {
-							con += matrizMedias[i][j-1].getcDerecha().getConsumo();
-							con += matrizMedias[i][j-1].getcIzquierda().getConsumo();
-							matrizMedias[i][j].setcVerde(new Contador(con));
-						} else {
-							con += matrizMedias[i][j-1].getcVerde().getConsumo();
-							matrizMedias[i][j].setcVerde(new Contador(con));
-						}
-						con = 0;
-					}
-				}
-				
-				//CONTADOR GENERAL
-				matrizMedias[matrizMedias.length-1][matrizMedias[0].length-1].setcDerecha(new Contador(Math.random() * (CONSUMO_MINIMO*7 - CONSUMO_MAXIMO*7 + 1) + CONSUMO_MAXIMO*7));
-	}
 	
 	
 	
@@ -593,9 +479,8 @@ public class Damero {
 	
 	
 	
-	public double getSuministroAgua() {
-		return suministroAgua;
-	}
+	
+	
 	
 	
 	

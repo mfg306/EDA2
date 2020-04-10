@@ -10,7 +10,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestInicializarContadoresDameroPar() {
-		Damero damero = new Damero(4,4,500000); 		//Si es par de 4x4, no puede haber ninguna manzana que sea nula
+		Damero damero = new Damero(4,4); 		//Si es par de 4x4, no puede haber ninguna manzana que sea nula
 		boolean resultado = true;
 		ParEdificios[][] pE = damero.getDamero();
 		
@@ -26,14 +26,13 @@ public class DameroTest {
 	
 	@Test
 	public void TestInicializarContadoresDameroImpar() {
-		Damero damero = new Damero(3,3,500000); //Si es impar de 3x3, los contadores de la derecha de la ultima columna tienen que ser null
+		Damero damero = new Damero(3,3); //Si es impar de 3x3, los contadores de la derecha de la ultima columna tienen que ser null
 		boolean resultado = true;
 		ParEdificios[][] pE = damero.getDamero();
-		int columnas = pE.length-1;
 		int contador = 0;
 		
 		for(int i=0; i<pE[0].length; i++) {
-			if(pE[columnas][i].getcDerecha() == null) { //Los contadores derechos de la ultima columna tienen que estar todos a null
+			if(pE[0][i].getcIzquierda() == null) { //Los contadores derechos de la ultima columna tienen que estar todos a null
 				resultado = false;
 				contador++;
 			}
@@ -43,31 +42,12 @@ public class DameroTest {
 		Assert.assertEquals(contador, pE[0].length);
 	}
 	
-	@Test
-	public void TestCasillaGeneralPar() {
-		Damero damero = new Damero(4,4,300000);
-		double resultado = 300000.0;
-		double resultadoObtenido = damero.getLitrosEdificio(4, 4, damero.getDamero());
-		
-		Assert.assertTrue(resultado - resultadoObtenido == 0.0);
-	} 
-	
-	@Test
-	public void TestCasillaGeneralImpar() { //Este creo q esta mal
-		Damero damero = new Damero(3,3,300000);
-		double resultado = 300000;
-		double resultadoObtenido = damero.getLitrosEdificio(3, 3, damero.getDamero());
-		
-		Assert.assertTrue(resultado - resultadoObtenido == 0.0);
-	}
-	
 	
 	@Test
 	public void TestInicializarContadores() {
-		Damero damero = new Damero(3,3,300000);
-		double resultadoEsperado = damero.getLitrosEdificio(3, 3, damero.getDamero());
-		double resultadoSuma = damero.getLitrosCasillasSalvoCasillaGeneral();			
-		
+		Damero damero = new Damero(3,3);
+		double resultadoEsperado = damero.getLitrosEdificio(1, 2, damero.getDamero(),"D");
+		double resultadoSuma = damero.getLitrosCasillasSalvoCasillaGeneral();
 		//Puede que de todo lo que les estemos dando, no lo consuman todo
 		//Lo que sí que no puede pasar es que consuman más de lo que hay
 		Assert.assertTrue(resultadoEsperado >= resultadoSuma);
@@ -75,7 +55,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestSoloHayContadoresMoradosEnUltimaFila() {
-		Damero damero = new Damero(4,4,300000);
+		Damero damero = new Damero(4,4);
 		ParEdificios[][] pE = damero.getDamero();
 		boolean resultado = true;
 		int contador = 0;
@@ -98,7 +78,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestNoHayContadoresVerdesEnLaUltimaFila() {
-		Damero damero = new Damero(4,4,300000);
+		Damero damero = new Damero(4,4);
 		ParEdificios[][] pE = damero.getDamero();
 		boolean resultado = true;
 		int j = pE[0].length-1;
@@ -114,78 +94,96 @@ public class DameroTest {
 	
 	@Test
 	public void TestContadorVerdeSumaIzquierdaYDerechaSituacionPar() { //Este test creo q esta mal
-		Damero damero = new Damero(4,4,300000);
+		Damero damero = new Damero(4,4);
 		ParEdificios[][] pE = damero.getDamero();
 		boolean resultado = true;
 		
 		for(int i=0; i<pE.length; i++) {
 			if(!resultado) break;
-			for(int j=0; j<pE[i].length; j++) {
-				if(pE[i][j].getcVerde() != null && pE[i][j].getcVerde().getConsumo() != (pE[i][j].getcDerecha().getConsumo() + pE[i][j].getcIzquierda().getConsumo())) {
-					resultado = false;
-					break;
+			for(int j=1; j<pE[i].length; j++) {
+				if (j==1) {
+					if(pE[i][j].getcVerde().getConsumo() != (pE[i][j].getcDerecha().getConsumo() + pE[i][j].getcIzquierda().getConsumo() + pE[i][j-1].getcDerecha().getConsumo() + pE[i][j-1].getcIzquierda().getConsumo())) {
+						resultado = false;
+						break;
+					}
+				} else {
+					if(pE[i][j].getcVerde() != null && pE[i][j].getcVerde().getConsumo() != (pE[i][j].getcDerecha().getConsumo() + pE[i][j].getcIzquierda().getConsumo() + pE[i][j-1].getcVerde().getConsumo())) {
+						resultado = false;
+						break;
+					}
 				}
+				
 			}
 		}
 		Assert.assertTrue(resultado);
 	}
 	
 	
-	@Test
-	public void TestDatosFueraDeRango() {
-		
-		try {
-			Damero damero = new Damero(4,4,600000);
-		}catch(Exception e) {
-			assertEquals(e.getMessage(), "Ha introducido demasiada agua y se han roto las tuberías.");
-		}
-		
-		try {
-			Damero damero = new Damero(4,4,10000);
-		}catch(Exception e) {
-			assertEquals(e.getMessage(), "El sistema no puede funcionar con tan poco cauce.");
-		}
-	}
+//	@Test
+//	public void TestDatosFueraDeRango() {
+//		
+//		try {
+//			Damero damero = new Damero(4,4);
+//		}catch(Exception e) {
+//			assertEquals(e.getMessage(), "Ha introducido demasiada agua y se han roto las tuberías.");
+//		}
+//		
+//		try {
+//			Damero damero = new Damero(4,4);
+//		}catch(Exception e) {
+//			assertEquals(e.getMessage(), "El sistema no puede funcionar con tan poco cauce.");
+//		}
+//	}
 	
 	@Test
 	public void TestConsumoExcesivoTroncal() { 
-		Damero damero = new Damero(4,4,300000);
+		Damero damero = new Damero(20,20);
 		ArrayList<Object> contadores = new ArrayList<>();
 		boolean condicion = false;
-		
-		contadores = damero.consumoExcesivoTroncal();
-		
+		ArrayList<Object> encontrados = new ArrayList<>();
+				
 		ParEdificios[] troncal = damero.lineaTroncal();
 		ParEdificios[] troncalMedia = damero.lineaTroncalMedia();
 		
 		//Vamos a buscar en el damero de forma bruta si hay algun caso en el que haya una rotura
 		for(int i=0; i<troncal.length; i++) {
-			if(troncal[i].getcDerecha().getConsumo() > 7*troncalMedia[i].getcDerecha().getConsumo()) {
+			if(troncal[i].getcDerecha() != null && troncal[i].getcDerecha().getConsumo() > 7*troncalMedia[i].getcDerecha().getConsumo()) {
 				condicion = true; 
+				encontrados.add(troncal[i].getcDerecha().getConsumo());
 				break;
 			}
-			if(troncal[i].getcIzquierda().getConsumo() > 7*troncalMedia[i].getcIzquierda().getConsumo()) {
+			if(troncal[i].getcIzquierda()!= null && troncal[i].getcIzquierda().getConsumo() > 7*troncalMedia[i].getcIzquierda().getConsumo()) {
 				condicion = true; 
+				encontrados.add(troncal[i].getcIzquierda().getConsumo());
 				break;
 			}
-			if(troncal[i].getcMorado().getConsumo() > 7*troncalMedia[i].getcMorado().getConsumo()) {
+			if(troncal[i].getcMorado() != null && troncal[i].getcMorado().getConsumo() > 7*troncalMedia[i].getcMorado().getConsumo()) {
 				condicion = true; 
+				encontrados.add(troncal[i].getcMorado().getConsumo());
+				break;
+			}
+			
+			if(troncal[i].getcVerde() != null && troncal[i].getcVerde().getConsumo() > 7*troncalMedia[i].getcVerde().getConsumo()) {
+				condicion = true; 
+				encontrados.add(troncal[i].getcVerde().getConsumo());
 				break;
 			}
 		}
 		
+		contadores = damero.consumoExcesivoTroncal();
+
 		//Si hemos encontrado una rotura, entonces contadores no puede estar vacio
 		if(!condicion) {
 			Assert.assertTrue(contadores.isEmpty());
 		} else {
-			Assert.assertTrue(!contadores.isEmpty());
+			Assert.assertTrue(!contadores.isEmpty()); 
 		}
 	}
 	
 	
 	@Test
 	public void TestConsumoExcesivoLineasDistribucion() {
-		Damero damero = new Damero(4,4,300000);
+		Damero damero = new Damero(4,4);
 		ArrayList<Object> contadores = new ArrayList<>();
 		boolean condicion = false;
 		contadores = damero.consumoExcesivoLineasDistribucion();
@@ -227,9 +225,9 @@ public class DameroTest {
 	
 	@Test
 	public void TestIntervaloPresionCasillaGeneral() {
-		Damero damero = new Damero(4,4,300000);
+		Damero damero = new Damero(4,4);
 		
-		double presionCasillaGeneral = damero.getDamero()[0][3].getMan().getPresion();
+		double presionCasillaGeneral = damero.getDamero()[1][3].getMan().getPresion();
 		boolean condicion = (presionCasillaGeneral > Damero.PRESION_MINIMA && presionCasillaGeneral < Damero.PRESION_MAXIMA);
 		
 		Assert.assertTrue(condicion);
@@ -238,29 +236,57 @@ public class DameroTest {
 	
 	@Test
 	public void TestTiemposConsumoExcesivo() {
-		for(int n = 100; n<=500 && n%10 == 0; n++ )	{ //100,200,300,400 y 500
-			Damero damero = new Damero(n,n,400000);
-			ArrayList<Object> resultado = new ArrayList<Object>();
-			String resultadoFinal = "";
-			long inicio, fin;
-			long sumaTiempos = 0;
+		long inicio = 0, fin = 0;
+		long sumaTiempos = 0;
+		ArrayList<Object> resultado = new ArrayList<Object>();
+		String resultadoFinal = "";
+		int contador = 0;
+		ArrayList<Object> problemaTroncal;
+		ArrayList<Object> problemaLineas; 
+		
+		
+		//Estudiamos el problema de la troncal 
+		while(contador != 10) {
+			Damero damero = new Damero(4,4);
+			problemaTroncal = damero.consumoExcesivoTroncal();
 			
-			for(int i=0; i<10; i++) {
+			
+			System.out.println("EMPIEZA");
+			if(!problemaTroncal.isEmpty()) { 
+				System.out.println("VACIO");
+				//Solo vamos a medir los tiempos para aquellos casos en los que haya rotura, si no no tiene sentido
 				inicio = System.nanoTime();
-				resultado.addAll(damero.consumoExcesivoTroncal());
-				resultado.addAll(damero.consumoExcesivoLineasDistribucion());
-				resultadoFinal += damero.interpretarSolucionConsumoExcesivo(damero.getRoturasContadorLineasD());
-				resultadoFinal += "\n";
-				resultadoFinal += damero.interpretarSolucionConsumoExcesivo(damero.getRoturasContadorTroncal());
+				resultado.addAll(problemaTroncal);
+				resultadoFinal += damero.interpretarSolucionConsumoExcesivo(problemaTroncal);
 				System.out.println(resultadoFinal);
 				fin = System.nanoTime();
-				
-				sumaTiempos += (fin-inicio);
+				contador++;
 			}
-			
+		}
+		
+		sumaTiempos += (fin-inicio);
+		System.out.println("Tiempo medio: " + sumaTiempos/10);
+		sumaTiempos = 0;
+		contador = 0;
+		
+		//Estudiamos el problema de las lineas 
+		while(contador != 10) {
+			Damero damero = new Damero(4,4);
+			problemaLineas = damero.consumoExcesivoLineasDistribucion();
+			if(!problemaLineas.isEmpty()) { 
+				//Solo vamos a medir los tiempos para aquellos casos en los que haya rotura, si no no tiene sentido
+				inicio = System.nanoTime();
+				resultado.addAll(problemaLineas);
+				resultadoFinal += damero.interpretarSolucionConsumoExcesivo(problemaLineas);
+				System.out.println(resultadoFinal);
+				fin = System.nanoTime();
+				contador++;
+			}
+		}
+		
+			sumaTiempos += (fin-inicio);
 			System.out.println("Tiempo medio: " + sumaTiempos/10);
 			
-		}
 	}
 
 }
