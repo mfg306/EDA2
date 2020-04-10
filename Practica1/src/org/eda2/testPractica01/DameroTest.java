@@ -37,7 +37,6 @@ public class DameroTest {
 				contador++;
 			}
 		}
-		System.out.println(damero.toString());
 		Assert.assertFalse(resultado);
 		Assert.assertEquals(contador, pE[0].length);
 	}
@@ -157,20 +156,10 @@ public class DameroTest {
 
 		//Si hemos encontrado una rotura, entonces contadores no puede estar vacio
 		if(!condicion) {
-			System.out.println("HOLO");
 			Assert.assertTrue(contadores.isEmpty());
 		} else {
-			System.out.println(contadores.toString());
 			Assert.assertTrue(!contadores.isEmpty()); 
 		}
-		System.out.println("");
-		System.out.println("DATOS");
-		System.out.println(damero.toString());
-		System.out.println("");
-		System.out.println("MEDIAS");
-		System.out.println(damero.toStringMmedias());
-		
-		System.out.println(damero.interpretarSolucionConsumoExcesivo(contadores));
 	}
 	
 	
@@ -213,14 +202,6 @@ public class DameroTest {
 			//System.out.println("Si quito esta mierda no me pasa el test?? " + contadores.toString());
 			Assert.assertTrue(!contadores.isEmpty());
 		}
-		
-		System.out.println("");
-		System.out.println("DATOS");
-		System.out.println(damero.toString());
-		System.out.println("");
-		System.out.println("MEDIAS");
-		System.out.println(damero.toStringMmedias());
-		System.out.println(damero.interpretarSolucionConsumoExcesivo(contadores));
 	}
 	
 	@Test
@@ -250,15 +231,12 @@ public class DameroTest {
 			Damero damero = new Damero(4,4);
 			problemaTroncal = damero.consumoExcesivoTroncal();
 			
-			
-			System.out.println("EMPIEZA");
 			if(!problemaTroncal.isEmpty()) { 
-				System.out.println("VACIO");
 				//Solo vamos a medir los tiempos para aquellos casos en los que haya rotura, si no no tiene sentido
 				inicio = System.nanoTime();
 				resultado.addAll(problemaTroncal);
 				resultadoFinal += damero.interpretarSolucionConsumoExcesivo(problemaTroncal);
-				System.out.println(resultadoFinal);
+				//System.out.println(resultadoFinal);
 				fin = System.nanoTime();
 				contador++;
 			}
@@ -278,7 +256,7 @@ public class DameroTest {
 				inicio = System.nanoTime();
 				resultado.addAll(problemaLineas);
 				resultadoFinal += damero.interpretarSolucionConsumoExcesivo(problemaLineas);
-				System.out.println(resultadoFinal);
+				//System.out.println(resultadoFinal);
 				fin = System.nanoTime();
 				contador++;
 			}

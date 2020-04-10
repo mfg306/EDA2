@@ -61,6 +61,22 @@ public class ParEdificios {
 		this.man = man;
 	}
 	
+	public boolean containsID(int id) {
+		if(this.cDerecha!=null && Integer.compare(id, this.cDerecha.getId())==0) return true;
+		else if(this.cIzquierda!=null && Integer.compare(id, this.cIzquierda.getId())==0) return true;
+		else if(this.cVerde!=null && Integer.compare(id, this.cVerde.getId())==0) return true;
+		else if(this.cMorado!=null && Integer.compare(id, this.cMorado.getId())==0) return true;
+		return false;
+	}
+	
+	public String getTipo(int id) {
+		if(Integer.compare(id, this.cDerecha.getId())==0) return "D";
+		else if(Integer.compare(id, this.cIzquierda.getId())==0) return "I";
+		else if(Integer.compare(id, this.cVerde.getId())==0) return "V";
+		else if(Integer.compare(id, this.cMorado.getId())==0) return "M";
+		return null;
+	}
+	
 	public String toString() {
 		return "Dcha: " + this.getcDerecha() + ", Izq: " + this.getcIzquierda() + ", M: " + this.getcMorado() + ", V: " + this.getcVerde() + ", Man: " + this.getMan();
 	}
