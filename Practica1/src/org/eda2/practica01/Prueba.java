@@ -4,15 +4,21 @@ public class Prueba {
 
 	public static void main(String[] args) {
 		
-		Damero pc = new Damero(4,4,0);
-		//pc.setSuministroAgua(110);
-		//System.out.println("Array de Medias: \n \n" + pc.toStringMmedias());
 		
-		System.out.println("Los medidores son: " + "\n \n" + pc.toString());	
-		System.out.println();
+		Damero d = new Damero(4,4,300000);
+		ParEdificios[][] pE = d.getDamero();
+		ParEdificios[][] medias = d.getMedias();
 		
-		System.out.println(pc.toStringMmedias());
-		System.out.println(pc.resolverMedidores());
+
+		
+		
+		System.out.println("DATOS");
+		System.out.println(d.toString());
+		System.out.println("");
+		System.out.println("MEDIAS");
+		System.out.println(d.toStringMmedias());
+		
+		
 		
 		
 		
