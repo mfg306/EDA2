@@ -9,7 +9,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestInicializarContadoresDameroPar() {
-		Damero damero = new Damero(4,4,500000); 		//Si es par de 4x4, no puede haber ninguna manzana que sea nula
+		Damero damero = new Damero(4,4,500000); //Si es par de 4x4, no puede haber ninguna manzana que sea nula
 		boolean resultado = true;
 		ParEdificios[][] pE = damero.getDamero();
 		
@@ -62,7 +62,7 @@ public class DameroTest {
 	
 	
 	@Test
-	public void TestInicializarContadores() {
+	public void TestInicializarContadores() { //Este ya no sirve -> Adaptarlo
 		Damero damero = new Damero(3,3,300000);
 		double resultadoEsperado = damero.getLitrosEdificio(3, 3, damero.getDamero());
 		double resultadoSuma = damero.getLitrosCasillasSalvoCasillaGeneral();			
@@ -70,6 +70,7 @@ public class DameroTest {
 		//Puede que de todo lo que les estemos dando, no lo consuman todo
 		//Lo que sí que no puede pasar es que consuman más de lo que hay
 		Assert.assertTrue(resultadoEsperado >= resultadoSuma);
+		Assert.assertTrue(false); 
 	}
 	
 	@Test
@@ -252,31 +253,52 @@ public class DameroTest {
 	
 	@Test
 	public void TestTiemposConsumoExcesivo() {
-		long inicio, fin;
+		long inicio = 0, fin = 0;
 		long sumaTiempos = 0;
 		ArrayList<Object> resultado = new ArrayList<Object>();
 		String resultadoFinal = "";
-
-			
-			//Hay contadores que se están repitiendo en ambos, y eso no deberia de ser
-//			System.out.println(damero.consumoExcesivoTroncal().toString());
-//			System.out.println(damero.consumoExcesivoLineasDistribucion().toString());
-			
-			for(int i=0; i<10; i++) {
-				Damero damero = new Damero(4,4,400000);
+		int contador = 0;
+		ArrayList<Object> problemaTroncal;
+		ArrayList<Object> problemaLineas; 
+		
+		
+		//Estudiamos el problema de la troncal 
+		while(contador != 10) {
+			Damero damero = new Damero(4,4,400000);
+			problemaTroncal = damero.consumoExcesivoTroncal();
+			if(!problemaTroncal.isEmpty()) { 
+				//Solo vamos a medir los tiempos para aquellos casos en los que haya rotura, si no no tiene sentido
 				inicio = System.nanoTime();
-				resultado.addAll(damero.consumoExcesivoTroncal());
-				resultado.addAll(damero.consumoExcesivoLineasDistribucion());
-				resultadoFinal += damero.interpretarSolucionConsumoExcesivo(damero.getRoturasContadorLineasD());
-				resultadoFinal += "\n";
-				resultadoFinal += damero.interpretarSolucionConsumoExcesivo(damero.getRoturasContadorTroncal());
+				resultado.addAll(problemaTroncal);
+				resultadoFinal += damero.interpretarSolucionConsumoExcesivo(problemaTroncal);
 				System.out.println(resultadoFinal);
 				fin = System.nanoTime();
-				
-				sumaTiempos += (fin-inicio);
+				contador++;
 			}
-			
-//			System.out.println("Tiempo medio: " + sumaTiempos/10);
+		}
+		
+		sumaTiempos += (fin-inicio);
+		System.out.println("Tiempo medio: " + sumaTiempos/10);
+		sumaTiempos = 0;
+		contador = 0;
+		
+		//Estudiamos el problema de las lineas 
+		while(contador != 10) {
+			Damero damero = new Damero(4,4,400000);
+			problemaLineas = damero.consumoExcesivoLineasDistribucion();
+			if(!problemaLineas.isEmpty()) { 
+				//Solo vamos a medir los tiempos para aquellos casos en los que haya rotura, si no no tiene sentido
+				inicio = System.nanoTime();
+				resultado.addAll(problemaLineas);
+				resultadoFinal += damero.interpretarSolucionConsumoExcesivo(problemaLineas);
+				System.out.println(resultadoFinal);
+				fin = System.nanoTime();
+				contador++;
+			}
+		}
+		
+			sumaTiempos += (fin-inicio);
+			System.out.println("Tiempo medio: " + sumaTiempos/10);
 			
 	}
 	

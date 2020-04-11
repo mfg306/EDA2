@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class DameroTest {
 	
+	
 	@Test
 	public void TestInicializarContadoresDameroPar() {
 		Damero damero = new Damero(4,4,500000); //Si es par de 4x4, no puede haber ninguna manzana que sea nula
