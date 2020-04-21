@@ -411,6 +411,7 @@ public class Damero {
 		int ancho = pEdificios.length - 1;
 		int alto = pEdificios[0].length - 1;
 		double pAnterior, error;
+		double x;
 		
 		for (int j = pEdificios[0].length - 1; j >= 1; j--) {
 			for (int i = pEdificios.length - 1; i >= 0; i--) {
@@ -423,18 +424,38 @@ public class Damero {
 				if (j == alto) pAnterior = this.pEdificios[i + 1][j].getMan().getPresion();
 				else pAnterior = this.pEdificios[i][j + 1].getMan().getPresion();
 
-				error = pAnterior - (pAnterior * 13 / 100); // Margen de error del manometro
-				this.pEdificios[i][j].setMan(new Manometro((Math.random() * (error - pAnterior + 1) + pAnterior)));
+				//Voy a generar el '13' de forma aleatoria para buscar reventones jeje
+				x = Math.random() * (13 - 55 + 1) + 55; //cantidad a disminuir
+				
+				//si se ha perdido más de un 50%, entonces es porque ha habido algun problema tecnico en el 
+				//manometro i, y no ha podido llegar la presion al manometro i+1
+				
+				if(x > 50) { //INVOCANDO EL CASO DEL REVENTON
+					this.pEdificios[i][j].setMan(new Manometro(0.0));
+				} else {
+					error = pAnterior - (pAnterior * x / 100); //presionAnterior disminuida una cantidad x/100
+
+//					error = pAnterior - (pAnterior * 13 / 100); // Margen de error del manometro
+					this.pEdificios[i][j].setMan(new Manometro((Math.random() * (error - pAnterior + 1) + pAnterior)));
+				}
+				
+
 			}
 		}
 	}
 	
+	/**
+	 * @param i columna del ParEdificio al que queremos acceder
+	 * @param j fila del ParEdificio al que queremos acceder
+	 * @return la presion 
+	 */
 	public double getPresionPar(int i, int j) {
 		return this.pEdificios[i][j].getMan().getPresion();
 	}
 	
 	/**
-	 * @return
+	 * @return una lista con los IDS de los manometros que presentan una rotura de 
+	 * primer grado en la linea troncal
 	 */
 	public ArrayList<Integer> perdidaExcesivaPresionTroncal(){
 		ParEdificios[] pE = this.lineaTroncal();
@@ -442,7 +463,8 @@ public class Damero {
 	}
 	
 	/**
-	 * @return
+	 * @return una lista con los IDS de los manometros que presentan una rotura de 
+	 * primer grado en las lineas de distribucion
 	 */
 	public ArrayList<Integer> perdidaExcesivaPresionLineasDistribucion(){
 		ArrayList<Integer> resultado = new ArrayList<>();
@@ -459,6 +481,10 @@ public class Damero {
 	}
 	
 
+	/**
+	 * @param pE array de ParEdificios al que queremos eliminarle la primera fila
+	 * @return el array sin la primera fila, puesto que los manometros son nulos, los quitamos
+	 */
 	public ParEdificios[] elminarPrimeraFila(ParEdificios[] pE) {
 		ParEdificios[] resultado = new ParEdificios[pE.length-1];
 		for(int i=0; i<resultado.length; i++) {
@@ -488,6 +514,10 @@ public class Damero {
 	}
 	
 	
+	/**
+	 * @param roturas la lista con las roturas encontradas
+	 * @return una cadena con las casillas en las que hay roturas
+	 */
 	public String interpretarSolucionPerdidaExcesivo(ArrayList<Integer> roturas){
 		String cadena = "";
 		

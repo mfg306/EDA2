@@ -40,6 +40,31 @@ public class DameroTest {
 		Assert.assertEquals(contador, pE[0].length);
 	}
 	
+	@Test
+	public void TestPerdidaDemasiadoGrandeSeEscapaLaPresion() {
+		//El test de si hay un reventon se queda a 0
+		Damero damero = new Damero(4,4);
+		ParEdificios[][] pE = damero.getDamero();
+		boolean reventon = false;
+		boolean casillaACero = false;
+		
+		for(int i=0; i<pE.length; i++) {
+			for(int j=0; j<pE[i].length; j++) {
+				if(pE[i][j].getMan() == null || j==pE[i].length-1) continue;
+				if(pE[i][j].getMan().getPresion() < (pE[i][j+1].getMan().getPresion()- 0.5*pE[i][j+1].getMan().getPresion())) {
+					reventon = true;
+				}
+				if(pE[i][j].getMan().getPresion() == 0.0) casillaACero = true;
+			}
+		}
+
+		//Tienen que ir emparejadas
+		if(reventon || casillaACero) {
+			Assert.assertTrue(reventon && casillaACero);
+		}
+		
+	}
+	
 	
 	@Test
 	public void TestInicializarContadores() {
