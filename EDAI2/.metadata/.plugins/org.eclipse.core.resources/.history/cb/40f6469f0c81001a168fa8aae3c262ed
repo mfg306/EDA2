@@ -1,0 +1,31 @@
+package org.eda2.dyv;
+import java.util.ArrayList;
+
+public class Programa {
+
+	public static void main(String[] args) {
+		Damero damero= new Damero(4,4);
+
+		ArrayList<Object> roturasContadoresTroncal = new ArrayList<>();
+		ArrayList<Object> roturasContadoresLineas = new ArrayList<>();
+		ArrayList<Object> roturasContadoresTotal = new ArrayList<>();
+		
+			
+
+		System.out.println("A continuación, le mostramos los datos de su damero: ");
+		System.out.println(damero.toString());
+		
+		roturasContadoresTroncal = damero.consumoExcesivoTroncal();
+		roturasContadoresLineas = damero.consumoExcesivoLineasDistribucion();
+		roturasContadoresTotal.addAll(roturasContadoresTroncal);
+		if(!roturasContadoresTotal.containsAll(roturasContadoresLineas)) roturasTotal.addAll(roturasContadoresLineas);
+
+		if(!roturasContadoresTotal.isEmpty()) {
+			System.out.println("Hemos encontrado las siguientes roturas de segundo grado:");
+			System.out.println(damero.interpretarSolucionConsumoExcesivo(roturasTotal));
+		}else {
+			System.out.println("No se han encontrado roturas de segundo grado.");
+		}
+	}
+
+}

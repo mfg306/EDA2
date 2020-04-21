@@ -2,17 +2,22 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="ToStrin" key="selection"/>
+		<item value="CONSUMO_MINIMO_GENERAL" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="CONSUMO_MINIMO_GENERAL"/>
+			<item value="contains"/>
+			<item value="//&#x09;&#x09;for(int i=0; i&lt;pE.length; i++) {"/>
+			<item value="Contador()"/>
+			<item value="Contador("/>
+			<item value="Contador"/>
 			<item value="toStrin"/>
 			<item value="System"/>
 			<item value="//&#x09;@Test"/>
 			<item value="traducir"/>
-			<item value="pCalles"/>
 		</list>
 		<list key="replacehistory">
 			<item value="pEdificios"/>

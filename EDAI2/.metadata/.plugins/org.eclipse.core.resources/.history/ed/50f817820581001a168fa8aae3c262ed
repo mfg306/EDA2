@@ -1,0 +1,13 @@
+package org.eda2.dyv;
+
+public class Circulo {
+
+	private double radio;
+	private static int num = 0;
+	
+	public Circulo() {
+		this.radio = 20.0;
+		Circulo.num++;
+	}
+	
+}

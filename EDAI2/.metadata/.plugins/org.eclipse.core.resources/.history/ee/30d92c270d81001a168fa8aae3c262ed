@@ -1,0 +1,39 @@
+package org.eda2.dyv;
+import java.util.ArrayList;
+
+public class Programa {
+
+	public static void main(String[] args) {
+		Damero damero= new Damero(4,4);
+
+		ArrayList<Object> roturasContadoresTroncal;
+		ArrayList<Object> roturasContadoresLineas;
+		ArrayList<Object> roturasContadoresTotal = new ArrayList<>();
+		ArrayList<Manometro> roturasManometrosTroncal;
+		ArrayList<Manometro> roturasManometrosLineas;
+		ArrayList<Manometro> roturasManometrosTotal = new ArrayList<>();
+		
+			
+
+		System.out.println("A continuación, le mostramos los datos de su damero: ");
+		System.out.println(damero.toString());
+		
+		roturasManometrosTotal = damero.perdidaExcesivaPresionTroncal();
+		roturasManometrosTotal.addAll(roturasManometrosTotal);
+		roturasManometrosLineas = damero.perdidaExcesivaPresionLineasDistribucion();
+		if(!roturasManometrosTotal.contains(roturasManometrosLineas)) roturasManometrosTotal.addAll(roturasManometrosLineas);
+		
+		roturasContadoresTroncal = damero.consumoExcesivoTroncal();
+		roturasContadoresLineas = damero.consumoExcesivoLineasDistribucion();
+		roturasContadoresTotal.addAll(roturasContadoresTroncal);
+		if(!roturasContadoresTotal.containsAll(roturasContadoresLineas)) roturasContadoresTotal.addAll(roturasContadoresLineas);
+
+		if(!roturasContadoresTotal.isEmpty()) {
+			System.out.println("Hemos encontrado las siguientes roturas de segundo grado:");
+			System.out.println(damero.interpretarSolucionConsumoExcesivo(roturasContadoresTotal));
+		}else {
+			System.out.println("No se han encontrado roturas de segundo grado.");
+		}
+	}
+
+}

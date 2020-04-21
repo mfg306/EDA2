@@ -11,7 +11,7 @@ public class Damero {
 	private ArrayList<Object> roturasContadorTroncal = new ArrayList<>();
 	private ArrayList<Object> roturasContadorLineasD = new ArrayList<>();
 	private ArrayList<Object> roturasContadorProblemaRecursivo = new ArrayList<>();
-	private ArrayList<Manometro> roturaManometroProblemaRecursivo = new ArrayList<>();
+	private ArrayList<Integer> roturaManometroProblemaRecursivo = new ArrayList<>();
 	// Consumo minimo y maximo del contador general
 	public final static double CONSUMO_MINIMO_GENERAL = 300000;
 	public final static double CONSUMO_MAXIMO_GENERAL = 500000;
@@ -49,9 +49,9 @@ public class Damero {
 				matrizMedias[a][b] = new ParEdificios();
 			}
 		}
-		this.inicializarContadores();
+		this.inicializarContadores(this.pEdificios);
+		this.inicializarContadores(this.matrizMedias);
 		this.inicializarManometros();
-		this.inicializarMedias();
 	}
 
 	/**
@@ -63,6 +63,7 @@ public class Damero {
 		for (int i = 0; i < pE.length; i++) pE[i] = pEdificios[i][pEdificios[0].length - 1];
 		return pE;
 	}
+	
 
 	/**
 	 * 
@@ -97,7 +98,6 @@ public class Damero {
 		return pE;
 	}
 
-	// Getter y Setters
 	/**
 	 * 
 	 * @return la matriz con los datos de los contadores y los medidores
@@ -134,56 +134,55 @@ public class Damero {
 	/**
 	 * LLama al metodo Par o Impar segun el caso
 	 */
-	public void inicializarContadores() {
-		if (columnas % 2 == 0) inicializarContadoresPar();
-		else inicializarContadoresImpar();
+	private void inicializarContadores(ParEdificios[][] pE) {
+		if (columnas % 2 == 0) inicializarContadoresPar(pE);
+		else inicializarContadoresImpar(pE);
 	}
 
 	/**
 	 * Inicializa los datos de los contadores en el caso de que la ciudad tenga
 	 * columnas pares
 	 */
-	private void inicializarContadoresPar() { // Deberiamos inicializar primero los de cada edificio y a partir de ese
+	private void inicializarContadoresPar(ParEdificios[][] pE) { // Deberiamos inicializar primero los de cada edificio y a partir de ese
 
 		// RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
-		for (int i = 0; i < pEdificios.length; i++) {
-			for (int j = 0; j < pEdificios[0].length; j++) {
-				if (i != pEdificios.length - 1 || j != pEdificios[0].length - 1) // CASILLA GENERAL
-					this.pEdificios[i][j].setcDerecha(new Contador(Math.random() * (100 - 1000 + 1) + 1000));
-				this.pEdificios[i][j].setcIzquierda(new Contador(Math.random() * (100 - 1000 + 1) + 1000));
+		for (int i = 0; i < pE.length; i++) {
+			for (int j = 0; j < pE[0].length; j++) {
+				if (i != pE.length - 1 || j != pE[0].length - 1) // CASILLA GENERAL
+					pE[i][j].setcDerecha(new Contador(Math.random() * (100 - 1000 + 1) + 1000));
+				pE[i][j].setcIzquierda(new Contador(Math.random() * (100 - 1000 + 1) + 1000));
 			}
 		}
 
 		// INICIALIZAMOS LO CONTADORES VERDES Y MORADOS Y EL GENERAL
 		double con = 0;
-		for (int i = 0; i < pEdificios.length; i++) {
-			for (int j = 1; j < pEdificios[0].length; j++) {
-
-				if (i == pEdificios.length - 1 && j == pEdificios[0].length - 1) {
-					con += pEdificios[i][j].getcIzquierda().getConsumo();
-					con += pEdificios[i][j - 1].getcVerde().getConsumo();
-					con += pEdificios[i - 1][j].getcMorado().getConsumo();
-					this.pEdificios[i][j].setcDerecha(new Contador(con)); // CONTADOR GENERAL
+		for (int i = 0; i < pE.length; i++) {
+			for (int j = 1; j < pE[0].length; j++) {
+				if (i == pEdificios.length - 1 && j == pE[0].length - 1) {
+					con += pE[i][j].getcIzquierda().getConsumo();
+					con += pE[i][j - 1].getcVerde().getConsumo();
+					con += pE[i - 1][j].getcMorado().getConsumo();
+					pE[i][j].setcDerecha(new Contador(con)); // CONTADOR GENERAL
 					continue;
 				}
-				if (j == pEdificios[0].length - 1 && i != pEdificios.length - 1) { // linea de distribucion
-					con += pEdificios[i][j - 1].getcVerde().getConsumo();
-					con += pEdificios[i][j].getcDerecha().getConsumo();
-					con += pEdificios[i][j].getcIzquierda().getConsumo();
+				if (j == pE[0].length - 1 && i != pE.length - 1) { // linea de distribucion
+					con += pE[i][j - 1].getcVerde().getConsumo();
+					con += pE[i][j].getcDerecha().getConsumo();
+					con += pE[i][j].getcIzquierda().getConsumo();
 					if (i != 0)
-						con += pEdificios[i - 1][j].getcMorado().getConsumo();
-					pEdificios[i][j].setcMorado(new Contador(con));
-				} else if (pEdificios[i][j - 1].getcVerde() == null) { // final de la linea de distribucion por abajo
-					con += pEdificios[i][j].getcDerecha().getConsumo();
-					con += pEdificios[i][j].getcIzquierda().getConsumo();
-					con += pEdificios[i][j - 1].getcDerecha().getConsumo();
-					con += pEdificios[i][j - 1].getcIzquierda().getConsumo();
-					pEdificios[i][j].setcVerde(new Contador(con));
+						con += pE[i - 1][j].getcMorado().getConsumo();
+					pE[i][j].setcMorado(new Contador(con));
+				} else if (pE[i][j - 1].getcVerde() == null) { // final de la linea de distribucion por abajo
+					con += pE[i][j].getcDerecha().getConsumo();
+					con += pE[i][j].getcIzquierda().getConsumo();
+					con += pE[i][j - 1].getcDerecha().getConsumo();
+					con += pE[i][j - 1].getcIzquierda().getConsumo();
+					pE[i][j].setcVerde(new Contador(con));
 				} else { // caso base
-					con += pEdificios[i][j].getcDerecha().getConsumo();
-					con += pEdificios[i][j].getcIzquierda().getConsumo();
-					con += pEdificios[i][j - 1].getcVerde().getConsumo();
-					pEdificios[i][j].setcVerde(new Contador(con));
+					con += pE[i][j].getcDerecha().getConsumo();
+					con += pE[i][j].getcIzquierda().getConsumo();
+					con += pE[i][j - 1].getcVerde().getConsumo();
+					pE[i][j].setcVerde(new Contador(con));
 				}
 				con = 0;
 			}
@@ -194,81 +193,13 @@ public class Damero {
 	 * Inicializa los datos de los contadores en el caso de que la ciudad tenga
 	 * columnas impares
 	 */
-	private void inicializarContadoresImpar() {
-		inicializarContadoresPar();
-		for (int j = 0; j < pEdificios[0].length; j++) {
-			this.pEdificios[0][j].setcIzquierda(null);
+	private void inicializarContadoresImpar(ParEdificios[][] pE) {
+		inicializarContadoresPar(pE);
+		for (int j = 0; j < pE[0].length; j++) {
+			pE[0][j].setcIzquierda(null);
 		}
 	}
 
-	// MATRIZ DE MEDIAS
-	/**
-	 * LLama al metodo de inicializar la matriz de medias par o impar segun las
-	 * columnas que tenga la ciudad
-	 */
-	public void inicializarMedias() {
-		if (columnas % 2 == 0) inicializarMediasPar();
-		else inicializarMediasImpar();
-	}
-
-	/**
-	 * Inicializa la matriz de medias para las ciudades con columnas pares
-	 */
-	private void inicializarMediasPar() { // Deberiamos inicializar primero los de cada edificio y a partir de ese
-
-		// RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
-		for (int i = 0; i < matrizMedias.length; i++) {
-			for (int j = 0; j < matrizMedias[0].length; j++) {
-				if (i != matrizMedias.length - 1 || j != matrizMedias[0].length - 1) // CASILLA GENERAL
-					this.matrizMedias[i][j].setcDerecha(new Contador(Math.random() * (CONSUMO_MINIMO_MEDIO - CONSUMO_MAXIMO_MEDIO + 1) + CONSUMO_MAXIMO_MEDIO));
-				this.matrizMedias[i][j].setcIzquierda(new Contador(Math.random() * (CONSUMO_MINIMO_MEDIO - CONSUMO_MAXIMO_MEDIO + 1) + CONSUMO_MAXIMO_MEDIO));
-			}
-		}
-
-		// INICIALIZAMOS LO CONTADORES VERDES Y MORADOS Y EL GENERAL
-		double con = 0;
-		for (int i = 0; i < matrizMedias.length; i++) {
-			for (int j = 1; j < matrizMedias[0].length; j++) {
-
-				if (i == matrizMedias.length - 1 && j == matrizMedias[0].length - 1) {
-					con += matrizMedias[i][j].getcIzquierda().getConsumo();
-					con += matrizMedias[i][j - 1].getcVerde().getConsumo();
-					con += matrizMedias[i - 1][j].getcMorado().getConsumo();
-					this.matrizMedias[i][j].setcDerecha(new Contador(con)); // CONTADOR GENERAL
-					continue;
-				}
-				if (j == matrizMedias[0].length - 1 && i != matrizMedias.length - 1) { // linea de distribucion
-					con += matrizMedias[i][j - 1].getcVerde().getConsumo();
-					con += matrizMedias[i][j].getcDerecha().getConsumo();
-					con += matrizMedias[i][j].getcIzquierda().getConsumo();
-					if (i != 0)
-						con += matrizMedias[i - 1][j].getcMorado().getConsumo();
-					matrizMedias[i][j].setcMorado(new Contador(con));
-				} else if (matrizMedias[i][j - 1].getcVerde() == null) { // final de la linea de distribucion por abajo
-					con += matrizMedias[i][j].getcDerecha().getConsumo();
-					con += matrizMedias[i][j].getcIzquierda().getConsumo();
-					con += matrizMedias[i][j - 1].getcDerecha().getConsumo();
-					con += matrizMedias[i][j - 1].getcIzquierda().getConsumo();
-					matrizMedias[i][j].setcVerde(new Contador(con));
-				} else { // caso base
-					con += matrizMedias[i][j].getcDerecha().getConsumo();
-					con += matrizMedias[i][j].getcIzquierda().getConsumo();
-					con += matrizMedias[i][j - 1].getcVerde().getConsumo();
-					matrizMedias[i][j].setcVerde(new Contador(con));
-				}
-				con = 0;
-			}
-		}
-	}
-
-	/**
-	 * Inicializa la matriz de medias para las ciudades con columnas impares
-	 */
-	private void inicializarMediasImpar() {
-		inicializarMediasPar();
-		for (int j = 0; j < matrizMedias[0].length; j++)
-			this.matrizMedias[0][j].setcIzquierda(null);
-	}
 
 	public String toString() {
 		String resultado = "";
@@ -299,10 +230,11 @@ public class Damero {
 	 */
 	public String toStringM() {
 		String resultado = "";
-		for (int i = 0; i < pEdificios.length; i++) {
-			for (int j = 0; j < pEdificios[i].length; j++)
-				resultado += pEdificios[i][j].toStringManometros() + "       " + i + " " + j + "\n";
-			resultado += "\n";
+		for(int j=0; j<pEdificios[0].length; j++) {
+			for(int i=0; i<pEdificios.length; i++) {
+				resultado +=  pEdificios[i][j].toStringManometros() + "(" + i+" ,"+j + ")" + "\t";
+			}
+			resultado += "\n";	
 		}
 		return resultado;
 	}
@@ -357,7 +289,6 @@ public class Damero {
 		return resultado;
 	}
 
-	// DyV
 	/**
 	 * @return un ArrayList de Object en el que guardaremos el contador que ha
 	 *         provocado una rotura de segundo grado en la linea troncal. (ID,
@@ -385,11 +316,12 @@ public class Damero {
 		ArrayList<Object> resultado = new ArrayList<>();
 		int tamMax = this.pEdificios.length;
 
-		roturasContadorProblemaRecursivo.clear();
 
 		for (int i = 0; i < tamMax; i++) { // Para cada columna llamamos al metodo consumoExcesivoRec
 			resultado = this.consumoExcesivoRec(lineasDistribucion(i), lineasDistribucionMedias(i), 0, lineasDistribucion(i).length - 1);
-			if (!resultado.isEmpty()) roturasContadorLineasD.addAll(resultado);
+			if (!resultado.isEmpty()) {
+				roturasContadorLineasD.addAll(resultado);
+			}
 		}
 		return roturasContadorLineasD;
 	}
@@ -407,16 +339,6 @@ public class Damero {
 	 */
 	private ArrayList<Object> consumoExcesivoRec(ParEdificios[] pE, ParEdificios[] media, int i, int j) {
 		int mitad;
-		// Le voy a añadir un ID al Contador porque luego para buscarlo y decir en que
-		// casilla se encuentra creo que es lo mas
-		// rapido para buscarlo en funcion de esto
-
-		// Lo que devuelve el ArrayList<Object>:
-		// 1º -> Su ID (Como despues tenemos que hacer un estudio algoritmico de este
-		// metodo solo le metemos el ID para que no
-		// sea muy costoso. Luego hacemos un metodo que en función del ID nos diga donde
-		// se ubica el contador
-		// 2º -> El contador que ha provocado una rotura
 
 		if (i == j) { // Caso base
 			if (pE[i].getcDerecha() != null
@@ -460,7 +382,7 @@ public class Damero {
 					Integer id = (Integer) o;
 					for (int i = 0; i < this.pEdificios.length; i++) {
 						for (int j = 0; j < this.pEdificios[i].length; j++) {
-							if (pEdificios[i][j].containsID(id)) {
+							if (pEdificios[i][j].containsContadorID(id)) {
 								String tipo = pEdificios[i][j].getTipo(id);
 								if (tipo.equals("D"))
 									cadena += "* Casilla: [" + i + ", " + j + "]. El contador derecho ha provocado la rotura\n";
@@ -507,13 +429,14 @@ public class Damero {
 		}
 	}
 	
-
-
+	public double getPresionPar(int i, int j) {
+		return this.pEdificios[i][j].getMan().getPresion();
+	}
 	
 	/**
 	 * @return
 	 */
-	public ArrayList<Manometro> perdidaExcesivaPresionTroncal(){
+	public ArrayList<Integer> perdidaExcesivaPresionTroncal(){
 		ParEdificios[] pE = this.lineaTroncal();
 		return this.perdidaExcesivaPresionRec(pE, 0, pE.length-1);
 	}
@@ -521,26 +444,25 @@ public class Damero {
 	/**
 	 * @return
 	 */
-	public ArrayList<Manometro> perdidaExcesivaPresionLineasDistribucion(){
-		ArrayList<Manometro> resultado = new ArrayList<>();
+	public ArrayList<Integer> perdidaExcesivaPresionLineasDistribucion(){
+		ArrayList<Integer> resultado = new ArrayList<>();
 		int tamMax = this.pEdificios.length;
 		ParEdificios[] pE = new ParEdificios[this.pEdificios[0].length];
 		roturaManometroProblemaRecursivo.clear();
-		
-		
+			
 		for(int i=0; i<tamMax; i++) {
 			//Tenemos que quitarle la primera fila porque no hay manometros
 			pE = this.elminarPrimeraFila(this.lineasDistribucion(i));
 			resultado = this.perdidaExcesivaPresionRec(pE, 0, pE.length-1);
-			if(!resultado.isEmpty()) roturaManometroProblemaRecursivo.addAll(resultado);
 		}
 		return resultado;
 	}
 	
+
 	public ParEdificios[] elminarPrimeraFila(ParEdificios[] pE) {
-		ParEdificios[] resultado = new ParEdificios[pE.length];
-		for(int i=1; i<pE.length; i++) {
-			resultado[i] = pE[i];
+		ParEdificios[] resultado = new ParEdificios[pE.length-1];
+		for(int i=0; i<resultado.length; i++) {
+			resultado[i] = pE[i+1];
 		}
 		
 		return resultado;
@@ -551,11 +473,11 @@ public class Damero {
 	 * necesitamos dos elementos en lugar de uno
 	 * @return
 	 */
-	private ArrayList<Manometro> perdidaExcesivaPresionRec(ParEdificios[] pE, int i, int j){
+	private ArrayList<Integer> perdidaExcesivaPresionRec(ParEdificios[] pE, int i, int j){
 		int mitad;
 		if(j-i == 1) {
 			if(pE[i].getMan().getPresion() < (pE[j].getMan().getPresion() - 0.1*pE[j].getMan().getPresion())) {
-				this.roturaManometroProblemaRecursivo.add(pE[i].getMan());
+				this.roturaManometroProblemaRecursivo.add(pE[i].getMan().getId());
 			}
 		} else {
 			mitad = (i + j)/2;
@@ -564,5 +486,25 @@ public class Damero {
 		}
 		return this.roturaManometroProblemaRecursivo;		
 	}
+	
+	
+	public String interpretarSolucionPerdidaExcesivo(ArrayList<Integer> roturas){
+		String cadena = "";
+		
+		for(Integer id : roturas) {
+			for(int i=0; i<this.pEdificios.length; i++) {
+				for(int j=0; j<this.pEdificios[i].length; j++) {
+					if(this.pEdificios[i][j].getMan() == null) continue;
+					if(id.equals(this.pEdificios[i][j].getMan().getId())) cadena += "* Casilla: [" + i + ", " + j + "]. El manometro ha provocado la rotura\n";
+				}
+			}
+		}
+		
+		return cadena;
+		
+	}
+	
+	
+	
 	
 }

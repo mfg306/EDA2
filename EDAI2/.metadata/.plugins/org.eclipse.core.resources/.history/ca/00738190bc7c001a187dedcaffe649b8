@@ -1,5 +1,0 @@
-package org.eda2.dyv;
-
-public class Medidor {
-
-}

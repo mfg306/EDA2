@@ -9,7 +9,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestInicializarContadoresDameroPar() {
-		Damero damero = new Damero(4,4); 		//Si es par de 4x4, no puede haber ninguna manzana que sea nula
+		Damero damero = new Damero(4,4);//Si es par de 4x4, no puede haber ninguna manzana que sea nula
 		boolean resultado = true;
 		ParEdificios[][] pE = damero.getDamero();
 		
@@ -25,13 +25,13 @@ public class DameroTest {
 	
 	@Test
 	public void TestInicializarContadoresDameroImpar() {
-		Damero damero = new Damero(3,3); //Si es impar de 3x3, los contadores de la derecha de la ultima columna tienen que ser null
+		Damero damero = new Damero(3,3); //Si es impar de 3x3, los contadores de la izquierda de la ultima columna tienen que ser null
 		boolean resultado = true;
 		ParEdificios[][] pE = damero.getDamero();
 		int contador = 0;
 		
 		for(int i=0; i<pE[0].length; i++) {
-			if(pE[0][i].getcIzquierda() == null) { //Los contadores derechos de la ultima columna tienen que estar todos a null
+			if(pE[0][i].getcIzquierda() == null) {
 				resultado = false;
 				contador++;
 			}
@@ -46,8 +46,7 @@ public class DameroTest {
 		Damero damero = new Damero(3,3);
 		double resultadoEsperado = damero.getLitrosEdificio(1, 2, damero.getDamero(),"D");
 		double resultadoSuma = damero.getLitrosCasillasSalvoCasillaGeneral();
-		//Puede que de todo lo que les estemos dando, no lo consuman todo
-		//Lo que sí que no puede pasar es que consuman más de lo que hay
+
 		Assert.assertTrue(resultadoEsperado >= resultadoSuma);
 	}
 	
@@ -91,7 +90,7 @@ public class DameroTest {
 	}
 	
 	@Test
-	public void TestContadorVerdeSumaIzquierdaYDerechaSituacionPar() { //Este test creo q esta mal
+	public void TestContadorVerdeSumaIzquierdaYDerechaSituacionPar() {
 		Damero damero = new Damero(4,4);
 		ParEdificios[][] pE = damero.getDamero();
 		boolean resultado = true;
@@ -213,6 +212,44 @@ public class DameroTest {
 	}
 	
 	@Test
+	public void TestDecrementoDePresionLineaTroncal() {
+		Damero damero = new Damero(4,4);
+		ParEdificios[] troncal = damero.lineaTroncal();
+		boolean condicion = true;
+		
+		for(int i=0; i<troncal.length; i++) {
+			if(i==troncal.length-1) break;
+			if(troncal[i].getMan().getPresion() > troncal[i+1].getMan().getPresion()) {
+				condicion = false;
+				break;
+			}
+		}
+		
+		Assert.assertTrue(condicion);
+	}
+	
+	@Test
+	public void TestDecrementoDePresionLineasDistribucion() {
+		Damero damero = new Damero(4,4);
+		ParEdificios[] lineas;
+		int n = damero.getDamero().length;
+		boolean condicion = true;
+		
+		for(int i=0; i<n; i++) {
+			lineas = damero.lineasDistribucion(i);
+			for(int j=0; j<lineas.length; j++) {
+				if(j == lineas.length -1 || j == 0) continue;
+				if(lineas[j].getMan().getPresion() > lineas[j].getMan().getPresion()) {
+					condicion = false;
+					break;
+				}
+			}
+		}
+
+		Assert.assertTrue(condicion);
+	}
+	
+	@Test
 	public void TestNoHayManometrosEnLaPrimeraFila() {
 		Damero damero = new Damero(4,4);
 		ParEdificios[][] pE = damero.getDamero();
@@ -228,23 +265,42 @@ public class DameroTest {
 		Assert.assertTrue(condicion);		
 	}
 	
+	
+	@Test 
+	public void TestDiminuyeLaPresion() {
+		//Tiene que salir menos presión de la que entra 
+		Damero damero = new Damero(5,5);
+		
+		int filas = damero.getDamero().length-1;
+		int columnas = damero.getDamero()[0].length-1;
+		
+		double presionCasillaOrigen = damero.getPresionPar(filas, columnas); //casilla general, donde se inicia todo
+		double presionCasillaFinal = damero.getPresionPar(0, 1); 
+		
+		Assert.assertTrue(presionCasillaOrigen > presionCasillaFinal);
+		
+	}
+	
 	@Test
 	public void TestPerdidaPresionTroncal() {
-		Damero damero = new Damero(5,5);
+		Damero damero = new Damero(10,10);
 		boolean rotura = false;
 		ParEdificios[] troncal = damero.lineaTroncal();
-		ArrayList<Manometro> roturas = damero.perdidaExcesivaPresionTroncal();
+		ArrayList<Integer> roturas = damero.perdidaExcesivaPresionTroncal();
+		ArrayList<Integer> roturasI = new ArrayList<>(); //para ver obtenemos el mismo resultado
 		
+
 		for(int i=0; i<troncal.length; i++) {
 			if(i == troncal.length-1) continue;
 			if(troncal[i].getMan().getPresion() < (troncal[i+1].getMan().getPresion() - (troncal[i+1].getMan().getPresion()*0.1))){
 				rotura = true;
-				break;
+				roturasI.add(troncal[i].getMan().getId());
 			}
 		}
 
 		if(rotura) {
 			Assert.assertTrue(!roturas.isEmpty());
+			Assert.assertEquals(roturas, roturasI);
 		} else {		
 			Assert.assertTrue(roturas.isEmpty());
 		}
@@ -257,27 +313,27 @@ public class DameroTest {
 		boolean rotura = false;
 		ParEdificios[] linea;
 		int numLineas = damero.getDamero().length;
-		ArrayList<Manometro> resultado = damero.perdidaExcesivaPresionLineasDistribucion();
-				
+		ArrayList<Integer> roturasI = new ArrayList<>(); //para ver obtenemos el mismo resultado
+		ArrayList<Integer> resultado = damero.perdidaExcesivaPresionLineasDistribucion();
+
 		for(int i=0; i<numLineas; i++) {
 			linea = damero.lineasDistribucion(i);
 			for(int j=1; j<linea.length; j++) { //En la primera fila no hay manometros
 				if(j==linea.length-1) continue;
 				if(linea[j].getMan().getPresion() < (linea[j+1].getMan().getPresion() - (linea[j+1].getMan().getPresion()*0.1))){
 					rotura = true;
-					break;
+					roturasI.add(linea[j].getMan().getId());
 				}
 			}
 		}
 		
 		if(!rotura) {
-			Assert.assertTrue(!resultado.isEmpty());
-		} else {
 			Assert.assertTrue(resultado.isEmpty());
 
+		} else {
+			Assert.assertTrue(!resultado.isEmpty());
+			Assert.assertEquals(resultado, roturasI);
 		}
-		
-		
 	}
 	
 	
@@ -305,5 +361,31 @@ public class DameroTest {
 //		System.out.println(sumaTiempos/10);
 
 	}
+	
+	@Test
+	public void TestPerdidaExcesiva() {
+		long inicio = 0, fin = 0;
+		long sumaTiempos = 0;
+		int contador = 0;
+		ArrayList<Integer> problemaTroncal;
+		ArrayList<Integer> problemaLineas; 
+		
+
+		while(contador != 10) { //Vamos a hacer 10 veces cada i, pero buscando las roturas
+			Damero damero = new Damero(4,4);
+			inicio = System.nanoTime();
+			problemaTroncal = damero.perdidaExcesivaPresionTroncal();
+			problemaLineas = damero.perdidaExcesivaPresionLineasDistribucion();
+			fin = System.nanoTime();
+			if(!problemaTroncal.isEmpty() || !problemaLineas.isEmpty()) { //El problema puede tener roturas en una u otro
+				sumaTiempos += (fin-inicio);
+				contador ++;
+			}
+		}
+//		System.out.println(sumaTiempos/10);
+
+	}
+	
+
 
 }

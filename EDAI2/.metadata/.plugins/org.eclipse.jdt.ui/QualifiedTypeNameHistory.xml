@@ -15,4 +15,8 @@
     <fullyQualifiedTypeName name="com.sun.tools.javac.util.Assert"/>
     <fullyQualifiedTypeName name="org.eda2.ParEdificios"/>
     <fullyQualifiedTypeName name="org.graalvm.compiler.graph.Graph.SourcePositionTracking"/>
+    <fullyQualifiedTypeName name="org.eda2.dyv.ParEdificios"/>
+    <fullyQualifiedTypeName name="org.eda2.dyv.Contador"/>
+    <fullyQualifiedTypeName name="org.eda2.dyv.Manometro"/>
+    <fullyQualifiedTypeName name="org.graalvm.compiler.nodes.PiArrayNode"/>
 </qualifiedTypeNameHistroy>
