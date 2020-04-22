@@ -20,7 +20,7 @@ public class Damero { //Representación de la ciudad
 
 		
 		}
-	}
+	
 	
 	@Override
 	public String toString() {

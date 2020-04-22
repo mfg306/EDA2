@@ -35,6 +35,10 @@ public class Contador {
 	public static void reiniciarId() {
 		Contador.contador = 0;
 	}
+	
+	public boolean equals(Contador obj) {
+        return (this.consumo == obj.consumo);
+    }
 
 	@Override
 	public String toString() {
