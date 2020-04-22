@@ -5,17 +5,19 @@ import java.util.Locale;
 public class Contador {
 
 	private double consumo;
-	private static int numContador = 0;
-	private int id = numContador;
+	private static int contador = 0;
+	private int id;
 
 	public Contador() {
 		this.consumo = (Math.random() * (108 - 162 + 1) + 162);
-		this.id = numContador++;
+		this.id = Contador.contador;
+		Contador.contador++;
 	}
 	
 	public Contador(double consumo) { // Consumo diario
-		this.consumo = consumo;//(Math.random() * (108 - 162 + 1) + 162);
-		this.id = numContador++;
+		this.consumo = consumo;
+		this.id = Contador.contador;
+		Contador.contador++;
 	}
 
 	public double getConsumo() {
@@ -30,12 +32,8 @@ public class Contador {
 		return this.id;
 	}
 	
-	public int getNumContador() {
-		return numContador;
-	}
-	
 	public static void reiniciarId() {
-		Contador.numContador = 0;
+		Contador.contador = 0;
 	}
 
 	@Override

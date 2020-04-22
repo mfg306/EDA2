@@ -2,7 +2,7 @@ package org.eda2.practica01;
 
 import java.util.ArrayList;
 
-public class Prueba {
+public class Programa {
 
 	public static void main(String[] args) {
 		

@@ -61,11 +61,16 @@ public class ParEdificios {
 		this.man = man;
 	}
 	
-	public boolean containsID(int id) {
+	public boolean containsContadorID(int id) {
 		if(this.cDerecha!=null && Integer.compare(id, this.cDerecha.getId())==0) return true;
 		else if(this.cIzquierda!=null && Integer.compare(id, this.cIzquierda.getId())==0) return true;
 		else if(this.cVerde!=null && Integer.compare(id, this.cVerde.getId())==0) return true;
 		else if(this.cMorado!=null && Integer.compare(id, this.cMorado.getId())==0) return true;
+		return false;
+	}
+	
+	public boolean containsManometroID(int id) {
+		if(this.man.getId()==id) return true;
 		return false;
 	}
 	
