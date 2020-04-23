@@ -154,13 +154,19 @@ public class Damero {
 
 		// INICIALIZAMOS LO CONTADORES VERDES Y MORADOS Y EL GENERAL
 		double con = 0;
+		double p;
 		for (int i = 0; i < pEdificios.length; i++) {
 			for (int j = 1; j < pEdificios[0].length; j++) {
-
+				//Para cada contador tenemos que ver de forma aleatoria si tiene rotura
+				p = Math.random();
 				if (i == pEdificios.length - 1 && j == pEdificios[0].length - 1) {
 					con += pEdificios[i][j].getcIzquierda().getConsumo();
 					con += pEdificios[i][j - 1].getcVerde().getConsumo();
 					con += pEdificios[i - 1][j].getcMorado().getConsumo();
+					if (p>0.6) {
+						con += 10000;
+						System.out.println(i+" "+j);
+					}
 					this.pEdificios[i][j].setcDerecha(new Contador(con)); // CONTADOR GENERAL
 					continue;
 				}
@@ -170,17 +176,29 @@ public class Damero {
 					con += pEdificios[i][j].getcIzquierda().getConsumo();
 					if (i != 0)
 						con += pEdificios[i - 1][j].getcMorado().getConsumo();
-					pEdificios[i][j].setcMorado(new Contador(con));
+					if (p>0.6) {
+						System.out.println(i+" "+j);
+						con += 10000;
+					}
+					pEdificios[i][j].setcMorado(new Contador(con)); //EL CONTADOR MORADO A VECES SALE COMO RESULTADO SIN ENTRAR EN P
 				} else if (pEdificios[i][j - 1].getcVerde() == null) { // final de la linea de distribucion por abajo
 					con += pEdificios[i][j].getcDerecha().getConsumo();
 					con += pEdificios[i][j].getcIzquierda().getConsumo();
 					con += pEdificios[i][j - 1].getcDerecha().getConsumo();
 					con += pEdificios[i][j - 1].getcIzquierda().getConsumo();
+					if (p>0.6) {
+						System.out.println(i+" "+j);
+						con += 10000;
+					}
 					pEdificios[i][j].setcVerde(new Contador(con));
 				} else { // caso base
 					con += pEdificios[i][j].getcDerecha().getConsumo();
 					con += pEdificios[i][j].getcIzquierda().getConsumo();
 					con += pEdificios[i][j - 1].getcVerde().getConsumo();
+					if (p>0.6) {
+						con += 10000;
+						System.out.println(i+" "+j);
+					}
 					pEdificios[i][j].setcVerde(new Contador(con));
 				}
 				con = 0;
@@ -384,7 +402,6 @@ public class Damero {
 
 	//Greedy
 	
-	public ArrayList<Object> consumoExcesivoContadores() {
 		/*En este ejemplo tenemos el problema de que estamos simulando una solución aleatoria en la que no sabemos donde se 
 		 * produciran las roturas, ni siquiera sabemos si habrá alguna. Por lo tanto, tenemos que definir los elementos del 
 		 * problema de la siguiente forma: 
@@ -398,99 +415,49 @@ public class Damero {
 		 * no podemos incluirlo. PUEDE SER COMPROBAR QUE EL ARRAY DE CANDIDATOS ESTA VACIO?*/
 		
 		//Conjunto de candidatos -> ArrayList porq la busqueda es O(1), en vez de O(n²) en nuestra matriz
-		ArrayList<Contador> candidatos = this.obtenerCandidatos();
-		return new ArrayList<>();
 		
-	}
-	
-	/**
-	 * @return una lista con todos los candidatos a ser estudiados. En nuestro caso, todos los contadores de nuestro damero
-	 */
-	public ArrayList<Contador> obtenerCandidatos(){
-		ArrayList<Contador> candidatos = new ArrayList<>();
 		
-		for(int i=0; i<this.pEdificios.length; i++) {
-			for(int j=0; j<this.pEdificios[i].length; j++) {
-				if (this.pEdificios[i][j].getcDerecha() != null) {
-					candidatos.add(this.pEdificios[i][j].getcDerecha());
-				}
-				if (this.pEdificios[i][j].getcIzquierda() != null) {
-					candidatos.add(this.pEdificios[i][j].getcIzquierda());
-				}
-				if (this.pEdificios[i][j].getcMorado() != null) {
-					candidatos.add(this.pEdificios[i][j].getcMorado());
-				}
-				if (this.pEdificios[i][j].getcVerde() != null) {
-					candidatos.add(this.pEdificios[i][j].getcVerde());
-				}
-				
-				
-				
-			}
-		}
-		
-		return candidatos;
-	}
-	
-	/**
-	 * @return una lista con todos los contadores que presentan roturas
-	 */
-	public ArrayList<Contador> contadoresConRoturas(){
-		ArrayList<Contador> s = new ArrayList<>();
-			
-		for(int i=0; i<this.pEdificios.length; i++) {
-			for(int j=0; j<this.pEdificios[i].length; j++) {
-				if(this.pEdificios[i][j].getcDerecha().getConsumo() > 5*this.matrizMedias[i][j].getcDerecha().getConsumo()) {
-					s.add(this.pEdificios[i][j].getcDerecha());
-				}
-				if(this.pEdificios[i][j].getcIzquierda().getConsumo() > 5*this.matrizMedias[i][j].getcIzquierda().getConsumo()) {
-					s.add(this.pEdificios[i][j].getcIzquierda());
-				}
-				if(!this.pEdificios[i][j].getcMorado().equals(null) && this.pEdificios[i][j].getcMorado().getConsumo() > 5*this.matrizMedias[i][j].getcMorado().getConsumo()) {
-					s.add(this.pEdificios[i][j].getcMorado());
-				}
-				if(this.pEdificios[i][j].getcVerde().getConsumo() > 5*this.matrizMedias[i][j].getcVerde().getConsumo()) {
-					s.add(this.pEdificios[i][j].getcVerde());
-				}
-			}
-		}
-		return s;
-	}
-	
-	//La funcion de seleccion determina el mejor candidato del conjunto de candidatos seleccionables
-	
-	public Contador funcionSeleccion(ArrayList<Contador> candidatos) {
-		//¿Cual es el mejor candidato?
-		return new Contador();
-	}
-	
-	
-	
-	
-	
-	
-	
-	
 	//ALEX
-	public ArrayList<Contador> solucion() {
-		ArrayList<Contador> candidatos = obtenerCandidatos();
+	/*PSEUDOCODIGO
+	 * arrayListContadores
+	 * elegidos
+	 * 
+	 * mientras contadores.length != 0
+	 * 		x = contador con mayor consumo
+	 * 		elimina x de candidatos
+	 * 
+	 * 		si el contador tiene una rotura && la rotura es propia
+	 * 			añade x a elegidos
+	 * 		fsi
+	 * finmientras
+	 * rettorna elegidos
+	 *  
+	 * 
+	 * Candidatos: Contadores verdes y morados
+	 * Solución: hemos comprobado todos los contadores
+	 * Condición de factibilidad: el contador tiene una rotura propia
+	 * Función de selección: mayor gasto
+	 * Función objetivo: Comprobar todos los contadores
+	 * 
+	 */
+	public ArrayList<Contador> resolverContadoresGreedy() {
+		ArrayList<Contador> candidatos = obtenerCandidatos(); //todos los contadores
 		ArrayList<Contador> elegidos = new ArrayList<>();
 		Contador posible;
 		
-		while(candidatos.size()!=0) {
+		while(candidatos.size()!=0) { //Solucion: hemos comprobado todos los contadores
 			
-			posible = obtenerContadorConMayorGasto(candidatos);
-			candidatos.remove(posible);
-			if(contadorConRotura(posible)) {//Devuelve true o false si el contador tiene una rotura o no
+			posible = contadorMayorGasto(candidatos);//Función de selección
+			candidatos.remove(posible); //Eliminamos posible de la lista de candidatos
+			if(roturaPropia(posible)) {//Devuelve true o false si el contador tiene una rotura propia o no
 				elegidos.add(posible);
 			}
-			
 		}
 		return elegidos;
 	}
 	
-	//Obtiene el contador con mayor gasto de entre los candidatos
-	public Contador obtenerContadorConMayorGasto(ArrayList<Contador> candidatos) {
+	
+	public Contador contadorMayorGasto(ArrayList<Contador> candidatos) {
 		double max = -1;
 		Contador maximo = new Contador();
 		for(Contador c: candidatos) {
@@ -499,14 +466,17 @@ public class Damero {
 				maximo = c;
 			}
 		}
-		return maximo.equals(null) ? null : maximo;
+		return maximo;
 	}
 	
-	//Devuelve true si el contador tiene una rotura
-	public boolean contadorConRotura(Contador con) {
+	
+	//Devuelve true si el contador tiene una rotura y es propia
+	public boolean roturaPropia(Contador con) {
 		String[] indices = obtenerCoordenadas(con);
 		int i = Integer.parseInt(indices[0]);
 		int j = Integer.parseInt(indices[1]);
+		if (!comprobarPropia(con, indices)) return false; //Si la rotura no es del propio contador, ya no nos interesa
+		
 		Contador media = new Contador();
 		switch(indices[2]) {
 		case "D":
@@ -524,11 +494,51 @@ public class Damero {
 		}
 		double consumo = con.getConsumo();
 		double mediaCon = media.getConsumo();
-		if(consumo > mediaCon*7) {
-			return true;
+		//comprueba si el consumo es mayor a la media en 5 veces
+		if(consumo > mediaCon*5) return true;
+		return false;
+	}
+	
+	//Devuelve true si la rotura del contador es suya y false si es de alguno de los contiguos
+	public boolean comprobarPropia(Contador con, String[] indices) {
+		int i = Integer.parseInt(indices[0]);
+		int j = Integer.parseInt(indices[1]);
+		if (indices[2].equals("V")) {
+			if (j == 1) { //Final de la linea de distribucion
+				double verde = this.pEdificios[i][j].getcVerde().getConsumo();
+				double dcha = this.pEdificios[i][j].getcDerecha().getConsumo();
+				double izqda = this.pEdificios[i][j].getcIzquierda().getConsumo();
+				double abajoD = this.pEdificios[i][j-1].getcDerecha().getConsumo();
+				double abajoI = this.pEdificios[i][j-1].getcIzquierda().getConsumo();
+				if (verde > (dcha+izqda+abajoD+abajoI)) return true;
+			} else { //Caso más común
+				double verde = this.pEdificios[i][j].getcVerde().getConsumo();
+				double dcha = this.pEdificios[i][j].getcDerecha().getConsumo();
+				double izqda = this.pEdificios[i][j].getcIzquierda().getConsumo();
+				double verde2 = this.pEdificios[i][j-1].getcVerde().getConsumo();
+				if (verde > (dcha+izqda+verde2)) return true;
+			}
+		} else if (indices[2].equals("M")){
+			double morado = this.pEdificios[i][j].getcMorado().getConsumo();
+			double dcha = this.pEdificios[i][j].getcDerecha().getConsumo();
+			double verde = this.pEdificios[i][j-1].getcVerde().getConsumo();
+			double izquierda = 0;
+			if (this.pEdificios[i][j].getcIzquierda() != null) {
+				izquierda = this.pEdificios[i][j].getcIzquierda().getConsumo();
+			}
+			double moradoI = 0;
+			if (i>0 && this.pEdificios[i-1][j].getcMorado() != null) {
+				moradoI = this.pEdificios[i-1][j].getcMorado().getConsumo();
+			}
+			if (morado > (dcha+izquierda+verde+moradoI)) return true;
+			
+		} else { //Casilla general
+			double izquierda = this.pEdificios[i][j].getcIzquierda().getConsumo();
+			double derecha = this.pEdificios[i][j].getcDerecha().getConsumo();//general
+			double moradoI = this.pEdificios[i-1][j].getcMorado().getConsumo();
+			double verdeAbajo = this.pEdificios[i][j-1].getcVerde().getConsumo();
+			if (derecha > (izquierda+moradoI+verdeAbajo)) return true;
 		}
-		//comprueba si el consumo es mayor a la media en 7 veces
-		
 		return false;
 	}
 	
@@ -562,29 +572,27 @@ public class Damero {
 					coordenadas[2] = tipo;
 					break;
 				}
-				
-				//si coincide break
 			}
 		}
 		return coordenadas;
 	}
-	/*
-	 * comprobados = 0
-	 * arrayListContadores (podemos ordenarlos de mayor a menor consumo)
-	 * elegidos
-	 * 
-	 * mientras comprobados < contadores.length
-	 * 		x = contador con mayor consumo que tenga rotura
-	 * 		si no existe x entonces
-	 * 			retorna no hay solucion
-	 * 		fsi
-	 * 		añade x a elegidos
-	 * 		comprobados++
-	 * finmientras
-	 * rettorna elegidos
+	
+	/**
+	 * @return una lista con todos los candidatos a ser estudiados. En nuestro caso, todos los contadores de nuestra red (verdes y morados)
 	 */
-	
-	
-	
-	
+	public ArrayList<Contador> obtenerCandidatos(){
+		ArrayList<Contador> candidatos = new ArrayList<>();
+		
+		for(int i=0; i<this.pEdificios.length; i++) {
+			for(int j=0; j<this.pEdificios[i].length; j++) {
+				if (this.pEdificios[i][j].getcMorado() != null) 
+					candidatos.add(this.pEdificios[i][j].getcMorado());
+				if (this.pEdificios[i][j].getcVerde() != null) 
+					candidatos.add(this.pEdificios[i][j].getcVerde());
+				if (i==this.pEdificios.length-1 && j == this.pEdificios[0].length-1) 
+					candidatos.add(this.pEdificios[i][j].getcDerecha());
+			}
+		}
+		return candidatos;
+	}
 }
