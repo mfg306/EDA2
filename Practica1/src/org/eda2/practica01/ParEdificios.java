@@ -94,7 +94,21 @@ public class ParEdificios {
 		return "Dcha: " + this.getcDerecha() + ", Izq: " + this.getcIzquierda() + ", M: " + this.getcMorado() + ", V: " + this.getcVerde();
 	}
 	
+	public double getConsumoV() {
+		return this.cVerde.getConsumo();
+	}
 	
+	public double getConsumoD() {
+		return this.cDerecha.getConsumo();
+	}
+	
+	public double getConsumoI() {
+		return this.cIzquierda.getConsumo();
+	}
+	
+	public double getConsumoM() {
+		return this.cMorado.getConsumo();
+	}
 	
 	
 }

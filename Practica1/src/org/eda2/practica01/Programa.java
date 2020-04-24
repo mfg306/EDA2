@@ -7,7 +7,7 @@ public class Programa {
 	public static void main(String[] args) {
 		
 		
-		Damero d = new Damero(4,4);
+		Damero d = new Damero(10,10);
 		ParEdificios[][] pE = d.getDamero();
 		ParEdificios[][] medias = d.getMedias();
 		ParEdificios[] troncal = d.lineaTroncal();
@@ -24,7 +24,8 @@ public class Programa {
 		System.out.println("");
 		System.out.println("MEDIAS");
 		System.out.println(d.toStringMmedias());
-		
+		System.out.println("");
+		System.out.println(problemaTroncal);
 		
 		
 		

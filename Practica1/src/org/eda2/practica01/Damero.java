@@ -159,24 +159,24 @@ public class Damero {
 			for (int j = 1; j < pE[0].length; j++) {
 
 				if (i == pE.length - 1 && j == pE[0].length - 1) {
-					con += pE[i][j].getcIzquierda().getConsumo();
-					con += pE[i][j - 1].getcVerde().getConsumo();
-					con += pE[i - 1][j].getcMorado().getConsumo();
+					con += pE[i][j].getConsumoI();
+					con += pE[i][j - 1].getConsumoV();
+					con += pE[i - 1][j].getConsumoM();
 					pE[i][j].setcDerecha(new Contador(con)); // CONTADOR GENERAL
 					continue;
 				}
 				if (j == pE[0].length - 1 && i != pE.length - 1) { // linea de distribucion
-					con += pE[i][j - 1].getcVerde().getConsumo();
-					con += pE[i][j].getcDerecha().getConsumo();
-					con += pE[i][j].getcIzquierda().getConsumo();
+					con += pE[i][j - 1].getConsumoV();
+					con += pE[i][j].getConsumoD();
+					con += pE[i][j].getConsumoI();
 					if (i != 0)
-						con += pE[i - 1][j].getcMorado().getConsumo();
+						con += pE[i - 1][j].getConsumoM();
 					pE[i][j].setcMorado(new Contador(con));
 				} else if (pE[i][j - 1].getcVerde() == null) { // final de la linea de distribucion por abajo
-					con += pE[i][j].getcDerecha().getConsumo();
-					con += pE[i][j].getcIzquierda().getConsumo();
-					con += pE[i][j - 1].getcDerecha().getConsumo();
-					con += pE[i][j - 1].getcIzquierda().getConsumo();
+					con += pE[i][j].getConsumoD();
+					con += pE[i][j].getConsumoI();
+					con += pE[i][j - 1].getConsumoD();
+					con += pE[i][j - 1].getConsumoI();
 					pE[i][j].setcVerde(new Contador(con));
 				} else { // caso base
 					con += pE[i][j].getcDerecha().getConsumo();
@@ -301,8 +301,7 @@ public class Damero {
 		else return pEdificios[i][j].getcMorado().getConsumo();
 	}
 
-	// REVISAR
-	// EL VALOR DEBERIA COINCIDIR CON LA CASILLA GENERAL PERO NO COINCIDE
+	
 	/**
 	 * 
 	 * @return el consumo de toda la ciudad sin tener en cuenta la casilla general
