@@ -134,15 +134,58 @@ public class DameroTest {
 						break;
 					}
 				}
-				
 			}
 		}
 		Assert.assertTrue(resultado);
 	}
+	@Test
+	public void TestConsumoExcesivoTroncalPar() { 
+		Damero damero = new Damero(4,4);
+		ArrayList<Integer> contadores = new ArrayList<>();
+		boolean condicion = false;
+		ArrayList<Integer> encontrados = new ArrayList<>();
+				
+		ParEdificios[] troncal = damero.lineaTroncal();
+		ParEdificios[] troncalMedia = damero.lineaTroncalMedia();
+		
+		//Vamos a buscar en el damero de forma bruta si hay algun caso en el que haya una rotura
+		for(int i=0; i<troncal.length; i++) {
+			if(troncal[i].getcDerecha() != null && troncal[i].getcDerecha().getConsumo() > 7*troncalMedia[i].getcDerecha().getConsumo()) {
+				condicion = true; 
+				encontrados.add(troncal[i].getcDerecha().getId());
+				break;
+			}
+			if(troncal[i].getcIzquierda()!= null && troncal[i].getcIzquierda().getConsumo() > 7*troncalMedia[i].getcIzquierda().getConsumo()) {
+				condicion = true; 
+				encontrados.add(troncal[i].getcIzquierda().getId());
+				break;
+			}
+			if(troncal[i].getcMorado() != null && troncal[i].getcMorado().getConsumo() > 7*troncalMedia[i].getcMorado().getConsumo()) {
+				condicion = true; 
+				encontrados.add(troncal[i].getcMorado().getId());
+				break;
+			}
+			
+			if(troncal[i].getcVerde() != null && troncal[i].getcVerde().getConsumo() > 7*troncalMedia[i].getcVerde().getConsumo()) {
+				condicion = true; 
+				encontrados.add(troncal[i].getcVerde().getId());
+				break;
+			}
+		}
+		
+		contadores = damero.consumoExcesivoTroncal();
+
+		//Si hemos encontrado una rotura, entonces contadores no puede estar vacio
+		if(!condicion) {
+			Assert.assertTrue(contadores.isEmpty());
+		} else {
+			Assert.assertTrue(!contadores.isEmpty()); 
+		}
+	}
 	
 	@Test
-	public void TestConsumoExcesivoTroncal() { 
-		Damero damero = new Damero(100,100);
+	public void TestConsumoExcesivoTroncalImPar() { 
+		Damero damero = new Damero(5,5);
 		ArrayList<Integer> contadores = new ArrayList<>();
 		boolean condicion = false;
 		ArrayList<Integer> encontrados = new ArrayList<>();
@@ -187,8 +230,8 @@ public class DameroTest {
 	
 	
 	@Test
-	public void TestConsumoExcesivoLineasDistribucion() {
-		Damero damero = new Damero(100,100);
+	public void TestConsumoExcesivoLineasDistribucionPar() {
+		Damero damero = new Damero(4,4);
 		ArrayList<Integer> contadores = new ArrayList<>();
 		boolean condicion = false;
 		contadores = damero.consumoExcesivoLineasDistribucion();
@@ -208,6 +251,46 @@ public class DameroTest {
 					break;
 				}
 				if(dist[j].getcIzquierda().getConsumo() > 7*media[j].getcIzquierda().getConsumo()) {
+					condicion = true;
+					break;
+				}
+				if(dist[j].getcMorado()!= null && dist[j].getcMorado().getConsumo() > 7*media[j].getcMorado().getConsumo()) {
+					condicion = true;
+					break;
+				}
+			}
+		}
+		
+		//Si hemos encontrado una rotura, entonces contadores no puede estar vacio
+		if(!condicion) {
+			Assert.assertTrue(contadores.isEmpty());
+		} else {
+			Assert.assertTrue(!contadores.isEmpty());
+		}
+	}
+	
+	@Test
+	public void TestConsumoExcesivoLineasDistribucionImPar() {
+		Damero damero = new Damero(5,5);
+		ArrayList<Integer> contadores = new ArrayList<>();
+		boolean condicion = false;
+		contadores = damero.consumoExcesivoLineasDistribucion();
+		int numeroLineas = 2;
+		ParEdificios[] dist;
+		ParEdificios[] media;
+		
+		//Vamos a hacer lo mismo que antes. Vamos a buscar las roturas de forma bruta. Si encontramos al menos una, 
+		//entonces nuetro algoritmo tiene que haber encontrado también al menos una.
+		
+		for(int i=0; i<numeroLineas; i++) {
+			dist = damero.lineasDistribucion(i);
+			media = damero.lineasDistribucionMedias(i);	
+			for(int j=0; j<dist.length; j++) {
+				if(dist[j].getcDerecha().getConsumo() > 7*media[j].getcDerecha().getConsumo()) {
+					condicion = true;
+					break;
+				}
+				if(dist[j].getcIzquierda()!=null && dist[j].getcIzquierda().getConsumo() > 7*media[j].getcIzquierda().getConsumo()) {
 					condicion = true;
 					break;
 				}
@@ -334,7 +417,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestPerdidaPresionLineasDistribucion() {
-		Damero damero = new Damero(100,100);
+		Damero damero = new Damero(50,50);
 		boolean rotura = false;
 		ParEdificios[] linea;
 		int numLineas = damero.getDamero().length;
@@ -357,6 +440,9 @@ public class DameroTest {
 
 		} else {
 			Assert.assertTrue(!resultado.isEmpty());
+			System.out.println("------------------");
+			System.out.println(resultado.toString()); //dyv --> duplicados
+			System.out.println(roturasI.toString());
 			Assert.assertEquals(resultado, roturasI);
 		}
 	}
@@ -407,7 +493,7 @@ public class DameroTest {
 				contador ++;
 			}
 		}
-		System.out.println(sumaTiempos/10);
+//		System.out.println(sumaTiempos/10);
 
 	}
 	

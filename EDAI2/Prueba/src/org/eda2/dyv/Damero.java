@@ -495,8 +495,13 @@ public class Damero {
 			pE = this.elminarPrimeraFila(this.lineasDistribucion(i));
 			resultado = this.perdidaExcesivaPresionRec(pE, 0, pE.length-1);
 			
+			
+			System.out.println("Solucion para la linea " + i ); 
+			System.out.println(resultado.toString());
+			
+			
 			//PROBLEMA -> METE DUPLICADOS !!!!  
-			if(!resultado.isEmpty() && !roturasManometroLineasD.containsAll(resultado)) roturasManometroLineasD.addAll(resultado);
+			if(!resultado.isEmpty()) roturasManometroLineasD.addAll(resultado);
 		}
 		return roturasManometroLineasD;
 	}
