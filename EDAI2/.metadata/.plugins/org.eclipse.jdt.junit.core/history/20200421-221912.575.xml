@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testrun name="DameroTest.TestDiminuyeLaPresion" project="Prueba" tests="1" started="1" failures="0" errors="0" ignored="0">
-  <testsuite name="org.eda2.DameroTest" time="0.0" uniqueid="[engine:junit-vintage]/[runner:org.eda2.DameroTest]">
-    <testcase name="TestDiminuyeLaPresion" classname="org.eda2.DameroTest" time="0.0" displayname="TestDiminuyeLaPresion" uniqueid="[engine:junit-vintage]/[runner:org.eda2.DameroTest]/[test:TestDiminuyeLaPresion(org.eda2.DameroTest)]"/>
-  </testsuite>
-</testrun>

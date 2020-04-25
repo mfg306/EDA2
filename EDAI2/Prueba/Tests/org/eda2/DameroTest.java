@@ -77,7 +77,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestSoloHayContadoresMoradosEnUltimaFila() {
-		Damero damero = new Damero(4,4);
+		Damero damero = new Damero(100,100);
 		ParEdificios[][] pE = damero.getDamero();
 		boolean resultado = true;
 		int contador = 0;
@@ -100,7 +100,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestNoHayContadoresVerdesEnLaUltimaFila() {
-		Damero damero = new Damero(4,4);
+		Damero damero = new Damero(100,100);
 		ParEdificios[][] pE = damero.getDamero();
 		boolean resultado = true;
 		int j = pE[0].length-1;
@@ -142,10 +142,10 @@ public class DameroTest {
 	
 	@Test
 	public void TestConsumoExcesivoTroncal() { 
-		Damero damero = new Damero(4,4);
-		ArrayList<Object> contadores = new ArrayList<>();
+		Damero damero = new Damero(100,100);
+		ArrayList<Integer> contadores = new ArrayList<>();
 		boolean condicion = false;
-		ArrayList<Object> encontrados = new ArrayList<>();
+		ArrayList<Integer> encontrados = new ArrayList<>();
 				
 		ParEdificios[] troncal = damero.lineaTroncal();
 		ParEdificios[] troncalMedia = damero.lineaTroncalMedia();
@@ -154,23 +154,23 @@ public class DameroTest {
 		for(int i=0; i<troncal.length; i++) {
 			if(troncal[i].getcDerecha() != null && troncal[i].getcDerecha().getConsumo() > 7*troncalMedia[i].getcDerecha().getConsumo()) {
 				condicion = true; 
-				encontrados.add(troncal[i].getcDerecha().getConsumo());
+				encontrados.add(troncal[i].getcDerecha().getId());
 				break;
 			}
 			if(troncal[i].getcIzquierda()!= null && troncal[i].getcIzquierda().getConsumo() > 7*troncalMedia[i].getcIzquierda().getConsumo()) {
 				condicion = true; 
-				encontrados.add(troncal[i].getcIzquierda().getConsumo());
+				encontrados.add(troncal[i].getcIzquierda().getId());
 				break;
 			}
 			if(troncal[i].getcMorado() != null && troncal[i].getcMorado().getConsumo() > 7*troncalMedia[i].getcMorado().getConsumo()) {
 				condicion = true; 
-				encontrados.add(troncal[i].getcMorado().getConsumo());
+				encontrados.add(troncal[i].getcMorado().getId());
 				break;
 			}
 			
 			if(troncal[i].getcVerde() != null && troncal[i].getcVerde().getConsumo() > 7*troncalMedia[i].getcVerde().getConsumo()) {
 				condicion = true; 
-				encontrados.add(troncal[i].getcVerde().getConsumo());
+				encontrados.add(troncal[i].getcVerde().getId());
 				break;
 			}
 		}
@@ -188,8 +188,8 @@ public class DameroTest {
 	
 	@Test
 	public void TestConsumoExcesivoLineasDistribucion() {
-		Damero damero = new Damero(4,4);
-		ArrayList<Object> contadores = new ArrayList<>();
+		Damero damero = new Damero(100,100);
+		ArrayList<Integer> contadores = new ArrayList<>();
 		boolean condicion = false;
 		contadores = damero.consumoExcesivoLineasDistribucion();
 		int numeroLineas = 2;
@@ -308,7 +308,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestPerdidaPresionTroncal() {
-		Damero damero = new Damero(10,10);
+		Damero damero = new Damero(100,100);
 		boolean rotura = false;
 		ParEdificios[] troncal = damero.lineaTroncal();
 		ArrayList<Integer> roturas = damero.perdidaExcesivaPresionTroncal();
@@ -334,7 +334,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestPerdidaPresionLineasDistribucion() {
-		Damero damero = new Damero(4,4);
+		Damero damero = new Damero(100,100);
 		boolean rotura = false;
 		ParEdificios[] linea;
 		int numLineas = damero.getDamero().length;
@@ -367,10 +367,9 @@ public class DameroTest {
 		long inicio = 0, fin = 0;
 		long sumaTiempos = 0;
 		int contador = 0;
-		ArrayList<Object> problemaTroncal;
-		ArrayList<Object> problemaLineas; 
+		ArrayList<Integer> problemaTroncal;
+		ArrayList<Integer> problemaLineas; 
 		
-
 		while(contador != 10) { //Vamos a hacer 10 veces cada i, pero buscando las roturas
 			Damero damero = new Damero(100,100);
 			inicio = System.nanoTime();
@@ -383,6 +382,7 @@ public class DameroTest {
 				contador ++;
 			}
 		}
+		
 //		System.out.println(sumaTiempos/10);
 
 	}
@@ -397,7 +397,7 @@ public class DameroTest {
 		
 
 		while(contador != 10) { //Vamos a hacer 10 veces cada i, pero buscando las roturas
-			Damero damero = new Damero(4,4);
+			Damero damero = new Damero(100,100);
 			inicio = System.nanoTime();
 			problemaTroncal = damero.perdidaExcesivaPresionTroncal();
 			problemaLineas = damero.perdidaExcesivaPresionLineasDistribucion();
@@ -407,7 +407,7 @@ public class DameroTest {
 				contador ++;
 			}
 		}
-//		System.out.println(sumaTiempos/10);
+		System.out.println(sumaTiempos/10);
 
 	}
 	

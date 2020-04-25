@@ -3,17 +3,19 @@ package org.eda2.greedy;
 public class Contador extends Medidor{
 
 	private double consumo;
-	private static int id = 0; //Creo que después va a ser útil para en el divide y venceras poder buscar rapidamente
-							// con el id a qué casilla pertenece para dar una solución
+	private static int contador = 0; 
+	private int id;
 
-	public Contador() { // Consumo diario
-		this.consumo = (Math.random() * (108 - 162 + 1) + 162);
-		id++;
+	public Contador() { 
+		this.consumo = (Math.random() * (108 - 162 + 1) + 162); // Consumo diario
+		this.id = Contador.contador;
+		Contador.contador++;
 	}
 	
 	public Contador(double consumo) {
 		this.consumo = consumo;
-		id++;
+		this.id = Contador.contador;
+		Contador.contador++;
 	}
 
 	public double getConsumo() {
@@ -34,7 +36,7 @@ public class Contador extends Medidor{
 	}
 	
 	public static void reiniciarId() {
-		Contador.id = 0;
+		Contador.contador = 0;
 	}
 
 }

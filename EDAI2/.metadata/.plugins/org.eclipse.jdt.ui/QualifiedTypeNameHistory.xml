@@ -10,13 +10,20 @@
     <fullyQualifiedTypeName name="org.eda2.ParCalles"/>
     <fullyQualifiedTypeName name="org.eda2.Manzana"/>
     <fullyQualifiedTypeName name="org.junit.jupiter.api.Test"/>
-    <fullyQualifiedTypeName name="java.util.TreeMap"/>
     <fullyQualifiedTypeName name="java.lang.RuntimeException"/>
     <fullyQualifiedTypeName name="com.sun.tools.javac.util.Assert"/>
     <fullyQualifiedTypeName name="org.eda2.ParEdificios"/>
     <fullyQualifiedTypeName name="org.graalvm.compiler.graph.Graph.SourcePositionTracking"/>
-    <fullyQualifiedTypeName name="org.eda2.dyv.ParEdificios"/>
     <fullyQualifiedTypeName name="org.eda2.dyv.Contador"/>
     <fullyQualifiedTypeName name="org.eda2.dyv.Manometro"/>
     <fullyQualifiedTypeName name="org.graalvm.compiler.nodes.PiArrayNode"/>
+    <fullyQualifiedTypeName name="org.eda2.dyv.ParEdificios"/>
+    <fullyQualifiedTypeName name="java.lang.Comparable"/>
+    <fullyQualifiedTypeName name="java.util.Stack"/>
+    <fullyQualifiedTypeName name="pruebas.Backtracking"/>
+    <fullyQualifiedTypeName name="java.util.TreeMap"/>
+    <fullyQualifiedTypeName name="java.util.Comparator"/>
+    <fullyQualifiedTypeName name="pruebas.Piso"/>
+    <fullyQualifiedTypeName name="pruebas.PisoComparator"/>
+    <fullyQualifiedTypeName name="java.util.PriorityQueue"/>
 </qualifiedTypeNameHistroy>

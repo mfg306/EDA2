@@ -11,9 +11,9 @@ public class Programa {
 	public static void main(String[] args) {
 		Damero damero= new Damero(4,4);
 
-		ArrayList<Object> roturasContadoresTroncal;
-		ArrayList<Object> roturasContadoresLineas;
-		ArrayList<Object> roturasContadoresTotal = new ArrayList<>();
+		ArrayList<Integer> roturasContadoresTroncal;
+		ArrayList<Integer> roturasContadoresLineas;
+		ArrayList<Integer> roturasContadoresTotal = new ArrayList<>();
 		ArrayList<Integer> roturasManometrosTroncal;
 		ArrayList<Integer> roturasManometrosLineas;
 		ArrayList<Integer> roturasManometrosTotal = new ArrayList<>();
