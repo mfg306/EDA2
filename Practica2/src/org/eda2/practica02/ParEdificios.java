@@ -77,6 +77,13 @@ public class ParEdificios {
 		return null;
 	}
 	
+	public Contador getContador(String tipo) {
+		if (tipo.equals("D")) return this.getcDerecha();
+		else if (tipo.equals("I")) return this.getcIzquierda();
+		else if (tipo.equals("V")) return this.getcVerde();
+		else return this.getcMorado();
+	}
+	
 	public String toString() {
 		return "Dcha: " + this.getcDerecha() + ", Izq: " + this.getcIzquierda() + ", M: " + this.getcMorado() + ", V: " + this.getcVerde() + ", Man: " + this.getMan();
 	}

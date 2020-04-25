@@ -434,14 +434,14 @@ public class Damero {
 	 *  
 	 * 
 	 * Candidatos: Contadores verdes y morados
-	 * Solución: hemos comprobado todos los contadores
+	 * Solución: hemos comprobado todos los candidatos
 	 * Condición de factibilidad: el contador tiene una rotura propia
-	 * Función de selección: mayor gasto
+	 * Función de selección: mayor gasto/mayor diferencia con la media/
 	 * Función objetivo: Comprobar todos los contadores
 	 * 
 	 */
 	public ArrayList<Contador> resolverContadoresGreedy() {
-		ArrayList<Contador> candidatos = obtenerCandidatos(); //todos los contadores
+		ArrayList<Contador> candidatos = obtenerCandidatosContadores(); //todos los contadores
 		ArrayList<Contador> elegidos = new ArrayList<>();
 		Contador posible;
 		
@@ -457,16 +457,33 @@ public class Damero {
 	}
 	
 	
+//	public Contador contadorMayorGasto(ArrayList<Contador> candidatos) {
+//		double max = -1;
+//		Contador maximo = new Contador();
+//		for(Contador c: candidatos) {
+//			if (c.getConsumo()>max) {
+//				max = c.getConsumo();
+//				maximo = c;
+//			}
+//		}
+//		return maximo;
+//	}
+	
 	public Contador contadorMayorGasto(ArrayList<Contador> candidatos) {
-		double max = -1;
-		Contador maximo = new Contador();
-		for(Contador c: candidatos) {
-			if (c.getConsumo()>max) {
-				max = c.getConsumo();
-				maximo = c;
+		double diferencia = -1;
+		Contador resultado = new Contador();
+		for (Contador c: candidatos) {
+			String[] coordenadas = obtenerCoordenadas(c);
+			int i = Integer.parseInt(coordenadas[0]);
+			int j = Integer.parseInt(coordenadas[1]);
+			double consumoPE = pEdificios[i][j].getContador(coordenadas[2]).getConsumo();
+			double consumoMedio = matrizMedias[i][j].getContador(coordenadas[2]).getConsumo();
+			if ((consumoPE - consumoMedio) > diferencia) {
+				diferencia = consumoPE - consumoMedio;
+				resultado = c;
 			}
 		}
-		return maximo;
+		return resultado;
 	}
 	
 	
@@ -545,7 +562,7 @@ public class Damero {
 	public String[] obtenerCoordenadas(Contador con) {
 		String[] coordenadas = new String[3];
 		boolean encontrado = false;
-		String tipo = "";;
+		String tipo = "";
 		for (int i = 0;i<pEdificios.length;i++) {
 			if(encontrado) break;
 			for (int j = 0;j<pEdificios[0].length;j++) {
@@ -580,7 +597,7 @@ public class Damero {
 	/**
 	 * @return una lista con todos los candidatos a ser estudiados. En nuestro caso, todos los contadores de nuestra red (verdes y morados)
 	 */
-	public ArrayList<Contador> obtenerCandidatos(){
+	public ArrayList<Contador> obtenerCandidatosContadores(){
 		ArrayList<Contador> candidatos = new ArrayList<>();
 		
 		for(int i=0; i<this.pEdificios.length; i++) {
@@ -595,4 +612,167 @@ public class Damero {
 		}
 		return candidatos;
 	}
+	
+	
+	//1a Manometros con un consumo mayor a 10%
+	/*PSEUDOCODIGO
+	 * candidatos
+	 * elegidos
+	 * posible
+	 * 
+	 * mientras candidatos.length != 0
+	 * 		posible = manometro con menor presion
+	 * 		elimina posible de candidatos
+	 * 
+	 * 		si el manometro tiene una rotura
+	 * 			añade posible a elegidos
+	 * 		fsi
+	 * finmientras
+	 * rettorna elegidos
+	 *  
+	 * 
+	 * Candidatos: Todos los manometros
+	 * Solución: hemos comprobado todos los candidatos
+	 * Condición de factibilidad: el manometro tiene una rotura propia
+	 * Función de selección: manometro de menor presion/mayor diferencia con el siguiente
+	 * Función objetivo: Comprobar todos los manometros
+	 * 
+	 */
+	
+	public ArrayList<Manometro> resolverManometrosGreedy() {
+		ArrayList<Manometro> candidatos = obtenerCandidatosManometros(); //todos los manometros
+		ArrayList<Manometro> elegidos = new ArrayList<>();
+		Manometro posible;
+		
+		while(!candidatos.isEmpty()) { //Solucion: hemos comprobado todos los manometros
+			
+			posible = manometroMenorPresion(candidatos);//Función de selección
+			candidatos.remove(posible); //Eliminamos posible de la lista de candidatos
+			if(roturaManometro(posible)) {//Devuelve true o false si el manometro tiene una rotura o no
+				elegidos.add(posible);
+			}
+		}
+		return elegidos;
+	}
+	
+	public ArrayList<Manometro> obtenerCandidatosManometros(){
+		ArrayList<Manometro> candidatos = new ArrayList<>();
+		for (int i = 0;i<this.pEdificios.length;i++) 
+			for (int j = 0;j<this.pEdificios[0].length;j++) {
+				if (this.pEdificios[i][j].getMan() != null) candidatos.add(this.pEdificios[i][j].getMan());
+			}
+		return candidatos;
+	}
+	
+	public Manometro manometroMenorPresion(ArrayList<Manometro> candidatos) {
+		Manometro posible = new Manometro(Double.MAX_VALUE);
+		for (Manometro m : candidatos) {
+			if (m.getPresion() < posible.getPresion()) {
+				posible = m;
+			}
+		}
+		return posible;
+	}
+	
+	public boolean roturaManometro(Manometro posible) { //Comprobamos si hay una rotura entre el manometro posible i el anterior
+		int[] coordenadas = obtenerCoordenadasManometro(posible);
+		int i = coordenadas[0];
+		int j = coordenadas[1];
+		Manometro anterior = new Manometro();
+		if (j == this.pEdificios[0].length-1) { //TRONCAL FALLO ENTRE [i,j] Y [i+1,j]
+			if(i==this.pEdificios.length-1) return false;
+			anterior = this.pEdificios[i+1][j].getMan();
+		} else { //DISTRIBUCION FALLO ENTRE [i,j] Y [i,j+1]
+		 anterior = this.pEdificios[i][j+1].getMan();
+		}
+		if (posible.getPresion() < (anterior.getPresion()-anterior.getPresion()*0.1))
+			return true;
+		return false;
+		
+	}
+	
+	public int[] obtenerCoordenadasManometro(Manometro posible) {
+		int[] coordenadas = new int[2];
+		for (int i = 0;i<this.pEdificios.length;i++) {
+			for (int j = 0;j<this.pEdificios[0].length;j++) {
+				if (this.pEdificios[i][j].getMan()!=null) {
+					if (this.pEdificios[i][j].getMan().getId() == (posible.getId())) {
+						coordenadas[0] = i;
+						coordenadas[1] = j;
+						i = this.pEdificios.length;
+						break;
+					}
+				}
+			}
+		}
+		return coordenadas;
+	}
+	
+	
+	//b
+	/*PSEUDOCODIGO
+	 * candidatos
+	 * elegidos
+	 * posible
+	 * 
+	 * mientras candidatos.length != 0
+	 * 		posible = manometro con menor presion
+	 * 		elimina posible de candidatos
+	 * 
+	 * 		si el manometro tiene una rotura
+	 * 			añade posible a elegidos
+	 * 		fsi
+	 * finmientras
+	 * rettorna elegidos
+	 *  
+	 * 
+	 * Candidatos: Todos los contadores rojos
+	 * Solución: hemos comprobado todos los candidatos
+	 * Condición de factibilidad: el contador tiene una rotura (+700%)
+	 * Función de selección: contador con mayor gasto/contador con mayor gasto respecto a su media
+	 * Función objetivo: Comprobar todos los candidatos
+	 * 
+	 */
+	
+	public ArrayList<Contador> resolverConsumidoresGreedy() {
+		ArrayList<Contador> candidatos = obtenerCandidatosConsumidores(); //todos los manometros
+		ArrayList<Contador> elegidos = new ArrayList<>();
+		Contador posible;
+		
+		while(!candidatos.isEmpty()) { //Solucion: hemos comprobado todos los manometros
+			
+			posible = contadorMayorGasto(candidatos);//Función de selección
+			candidatos.remove(posible); //Eliminamos posible de la lista de candidatos
+			if(roturaContador(posible)) {//Devuelve true o false si el manometro tiene una rotura o no
+				elegidos.add(posible);
+			}
+		}
+		return elegidos;
+	}
+	
+	public ArrayList<Contador> obtenerCandidatosConsumidores(){
+		ArrayList<Contador> candidatos = new ArrayList<>();
+		for (int i = 0;i<this.pEdificios.length;i++) {
+			for (int j = 0;j<this.pEdificios[0].length;j++){
+				if (this.pEdificios[i][j].getcDerecha() != null) {
+					if (i!=this.pEdificios.length-1 || j!=this.pEdificios[0].length-1) {
+						candidatos.add(this.pEdificios[i][j].getcDerecha());
+					}
+				}
+				if (this.pEdificios[i][j].getcIzquierda() != null)
+					candidatos.add(this.pEdificios[i][j].getcIzquierda());
+			}
+		}
+		return candidatos;
+	}
+	
+	public boolean roturaContador(Contador posible) {
+		String[] coordenadas = obtenerCoordenadas(posible);
+		int i = Integer.parseInt(coordenadas[0]);
+		int j = Integer.parseInt(coordenadas[1]);
+		double consumo = posible.getConsumo();
+		double consumoMedio = this.matrizMedias[i][j].getContador(coordenadas[2]).getConsumo();
+		if (consumo > consumoMedio*7) return true;
+		return false;
+	}	
 }
