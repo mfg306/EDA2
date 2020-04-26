@@ -15,7 +15,6 @@
     <fullyQualifiedTypeName name="org.eda2.ParEdificios"/>
     <fullyQualifiedTypeName name="org.graalvm.compiler.graph.Graph.SourcePositionTracking"/>
     <fullyQualifiedTypeName name="org.eda2.dyv.Contador"/>
-    <fullyQualifiedTypeName name="org.eda2.dyv.Manometro"/>
     <fullyQualifiedTypeName name="org.graalvm.compiler.nodes.PiArrayNode"/>
     <fullyQualifiedTypeName name="org.eda2.dyv.ParEdificios"/>
     <fullyQualifiedTypeName name="java.lang.Comparable"/>
@@ -26,4 +25,5 @@
     <fullyQualifiedTypeName name="pruebas.Piso"/>
     <fullyQualifiedTypeName name="pruebas.PisoComparator"/>
     <fullyQualifiedTypeName name="java.util.PriorityQueue"/>
+    <fullyQualifiedTypeName name="org.eda2.dyv.Manometro"/>
 </qualifiedTypeNameHistroy>
