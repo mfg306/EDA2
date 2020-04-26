@@ -11,7 +11,6 @@ public class Manometro {
 	public Manometro() {
 		this.presion = 0;
 		this.id = Manometro.contador;
-		Manometro.contador++;
 	}
 	
 	public Manometro (double presion) {
@@ -40,5 +39,11 @@ public class Manometro {
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	
+	public static void reiniciarID() {
+		contador = 0;
+	}
+	
 	
 }

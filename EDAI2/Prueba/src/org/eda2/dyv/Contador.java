@@ -32,7 +32,7 @@ public class Contador extends Medidor{
 
 	@Override
 	public String toString() {
-		return "" + this.consumo;
+		return "(" +this.id+ ")" + this.consumo;
 	}
 	
 	public static void reiniciarId() {
