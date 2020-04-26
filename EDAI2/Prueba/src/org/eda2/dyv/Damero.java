@@ -31,7 +31,6 @@ public class Damero {
 	 */
 	public Damero(int columnas, int filas) {
 		Contador.reiniciarId();
-		Manometro.reiniciarID();
 		this.roturasContadorTroncal.clear();
 		this.roturasContadorLineasD.clear();
 		this.filas = filas;
@@ -235,12 +234,13 @@ public class Damero {
 
 	public String toStringMedias() {
 		String resultado = "";
-		for(int j=0; j<matrizMedias[0].length; j++) {
-			for(int i=0; i<matrizMedias.length; i++) {
-				resultado +=  matrizMedias[i][j].toString() + "(" + i+" ,"+j + ")" + "\t";
+		for (int i = 0; i < this.columnas / 2; i++) {
+			for (int j = 0; j < this.filas; j++) {
+				resultado += this.matrizMedias[i][j] + "\t\t";
 			}
-			resultado += "\n";			
+			resultado += "\n";
 		}
+
 		return resultado;
 	}
 
@@ -336,10 +336,10 @@ public class Damero {
 		ArrayList<Integer> resultado = new ArrayList<>();
 		int tamMax = this.pEdificios.length;
 
+
 		for (int i = 0; i < tamMax; i++) { // Para cada columna llamamos al metodo consumoExcesivoRec
 			resultado = this.consumoExcesivoRec(lineasDistribucion(i), lineasDistribucionMedias(i), 0, lineasDistribucion(i).length - 1);
 			if (!resultado.isEmpty()) {
-				roturasContadorLineasD.clear();
 				roturasContadorLineasD.addAll(resultado);
 			}
 		}
@@ -361,13 +361,16 @@ public class Damero {
 		int mitad;
 
 		if (i == j) { // Caso base
-			if (pE[i].getcDerecha() != null && pE[i].getcDerecha().getConsumo() > 7 * media[i].getcDerecha().getConsumo()) {
+			if (pE[i].getcDerecha() != null
+					&& pE[i].getcDerecha().getConsumo() > 7 * media[i].getcDerecha().getConsumo()) {
 				roturasContadorProblemaRecursivo.add(pE[i].getcDerecha().getId());
 			}
-			if (pE[i].getcIzquierda() != null && pE[i].getcIzquierda().getConsumo() > 7 * media[i].getcIzquierda().getConsumo()) {
+			if (pE[i].getcIzquierda() != null
+					&& pE[i].getcIzquierda().getConsumo() > 7 * media[i].getcIzquierda().getConsumo()) {
 				roturasContadorProblemaRecursivo.add(pE[i].getcIzquierda().getId());
 			}
-			if (pE[i].getcMorado() != null && pE[i].getcMorado().getConsumo() > 7 * media[i].getcMorado().getConsumo()) {
+			if (pE[i].getcMorado() != null
+					&& pE[i].getcMorado().getConsumo() > 7 * media[i].getcMorado().getConsumo()) {
 				roturasContadorProblemaRecursivo.add(pE[i].getcMorado().getId());
 			}
 			if (pE[i].getcVerde() != null && pE[i].getcVerde().getConsumo() > 7 * media[i].getcVerde().getConsumo()) {
@@ -472,10 +475,7 @@ public class Damero {
 		
 		resultado = this.perdidaExcesivaPresionRec(pE, 0, pE.length-1);
 		
-		if(!resultado.isEmpty()) {
-			this.roturasContadorTroncal.clear();
-			this.roturasManometroTroncal.addAll(resultado);
-		}
+		if(!resultado.isEmpty()) this.roturasManometroTroncal.addAll(resultado);
 		
 		return resultado;
 	}
@@ -488,7 +488,6 @@ public class Damero {
 		ArrayList<Integer> resultado = new ArrayList<>();
 		int tamMax = this.pEdificios.length;
 		
-		
 		ParEdificios[] pE = new ParEdificios[this.pEdificios[0].length];
 			
 		for(int i=0; i<tamMax; i++) {
@@ -496,10 +495,13 @@ public class Damero {
 			pE = this.elminarPrimeraFila(this.lineasDistribucion(i));
 			resultado = this.perdidaExcesivaPresionRec(pE, 0, pE.length-1);
 			
-			if(!resultado.isEmpty()) {
-				roturasManometroLineasD.clear();
-				roturasManometroLineasD.addAll(resultado);
-			}
+			
+			System.out.println("Solucion para la linea " + i ); 
+			System.out.println(resultado.toString());
+			
+			
+			//PROBLEMA -> METE DUPLICADOS !!!!  
+			if(!resultado.isEmpty()) roturasManometroLineasD.addAll(resultado);
 		}
 		return roturasManometroLineasD;
 	}

@@ -1,6 +1,5 @@
 package org.eda2.greedy;
 
-
 public class ParEdificios {
 
 	private Contador cDerecha;
@@ -81,6 +80,13 @@ public class ParEdificios {
 		else if(Integer.compare(id, this.cVerde.getId())==0) return "V";
 		else if(Integer.compare(id, this.cMorado.getId())==0) return "M";
 		return null;
+	}
+	
+	public Contador getContador(String tipo) {
+		if (tipo.equals("D")) return this.getcDerecha();
+		else if (tipo.equals("I")) return this.getcIzquierda();
+		else if (tipo.equals("V")) return this.getcVerde();
+		else return this.getcMorado();
 	}
 	
 	public String toString() {
