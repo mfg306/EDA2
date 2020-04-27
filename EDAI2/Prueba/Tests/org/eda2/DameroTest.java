@@ -15,7 +15,7 @@ public class DameroTest {
 		
 		for(int i=0; i<pE.length; i++) {
 			for(int j=0; j<pE[i].length; j++) {
-				//Esto no deberÃ­a de pasar
+				//Esto no debería de pasar
 				if(pE[i][j].getcDerecha() == null || pE[i][j].getcIzquierda() == null) resultado = false; 
 			}
 		}
@@ -231,7 +231,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestConsumoExcesivoLineasDistribucionPar() {
-		Damero damero = new Damero(4,4);
+		Damero damero = new Damero(100,100);
 		ArrayList<Integer> contadores = new ArrayList<>();
 		boolean condicion = false;
 		contadores = damero.consumoExcesivoLineasDistribucion();
@@ -240,7 +240,7 @@ public class DameroTest {
 		ParEdificios[] media;
 		
 		//Vamos a hacer lo mismo que antes. Vamos a buscar las roturas de forma bruta. Si encontramos al menos una, 
-		//entonces nuetro algoritmo tiene que haber encontrado tambiÃ©n al menos una.
+		//entonces nuetro algoritmo tiene que haber encontrado también al menos una.
 		
 		for(int i=0; i<numeroLineas; i++) {
 			dist = damero.lineasDistribucion(i);
@@ -271,32 +271,41 @@ public class DameroTest {
 	
 	@Test
 	public void TestConsumoExcesivoLineasDistribucionImPar() {
-		Damero damero = new Damero(5,5);
+		Damero damero = new Damero(15,15);
 		ArrayList<Integer> contadores = new ArrayList<>();
 		boolean condicion = false;
 		contadores = damero.consumoExcesivoLineasDistribucion();
-		int numeroLineas = 2;
+		ArrayList<Integer> resultado = new ArrayList<>();
+
+		int numeroLineas = damero.getDamero().length;
 		ParEdificios[] dist;
 		ParEdificios[] media;
 		
 		//Vamos a hacer lo mismo que antes. Vamos a buscar las roturas de forma bruta. Si encontramos al menos una, 
-		//entonces nuetro algoritmo tiene que haber encontrado tambiÃ©n al menos una.
+		//entonces nuetro algoritmo tiene que haber encontrado también al menos una.
+		
 		
 		for(int i=0; i<numeroLineas; i++) {
 			dist = damero.lineasDistribucion(i);
 			media = damero.lineasDistribucionMedias(i);	
+			
 			for(int j=0; j<dist.length; j++) {
 				if(dist[j].getcDerecha().getConsumo() > 7*media[j].getcDerecha().getConsumo()) {
 					condicion = true;
-					break;
+					resultado.add(dist[j].getcDerecha().getId());
 				}
 				if(dist[j].getcIzquierda()!=null && dist[j].getcIzquierda().getConsumo() > 7*media[j].getcIzquierda().getConsumo()) {
 					condicion = true;
-					break;
+					resultado.add(dist[j].getcIzquierda().getId());
+
 				}
 				if(dist[j].getcMorado()!= null && dist[j].getcMorado().getConsumo() > 7*media[j].getcMorado().getConsumo()) {
 					condicion = true;
-					break;
+					resultado.add(dist[j].getcMorado().getId());
+				}
+				if(dist[j].getcVerde()!= null && dist[j].getcVerde().getConsumo() > 7*media[j].getcVerde().getConsumo()) {
+					condicion = true;
+					resultado.add(dist[j].getcVerde().getId());
 				}
 			}
 		}
@@ -306,6 +315,7 @@ public class DameroTest {
 			Assert.assertTrue(contadores.isEmpty());
 		} else {
 			Assert.assertTrue(!contadores.isEmpty());
+			Assert.assertEquals(contadores, resultado);
 		}
 	}
 	
@@ -338,7 +348,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestDecrementoDePresionLineasDistribucion() {
-		Damero damero = new Damero(4,4);
+		Damero damero = new Damero(45,45);
 		ParEdificios[] lineas;
 		int n = damero.getDamero().length;
 		boolean condicion = true;
@@ -359,7 +369,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestNoHayManometrosEnLaPrimeraFila() {
-		Damero damero = new Damero(4,4);
+		Damero damero = new Damero(25,25);
 		ParEdificios[][] pE = damero.getDamero();
 		boolean condicion = true;
 		int j=0;
@@ -376,8 +386,8 @@ public class DameroTest {
 	
 	@Test 
 	public void TestDiminuyeLaPresion() {
-		//Tiene que salir menos presiÃ³n de la que entra 
-		Damero damero = new Damero(5,5);
+		//Tiene que salir menos presión de la que entra 
+		Damero damero = new Damero(100,100);
 		
 		int filas = damero.getDamero().length-1;
 		int columnas = damero.getDamero()[0].length-1;
@@ -417,17 +427,17 @@ public class DameroTest {
 	
 	@Test
 	public void TestPerdidaPresionLineasDistribucion() {
-		Damero damero = new Damero(50,50);
+		Damero damero = new Damero(100,100);
 		boolean rotura = false;
 		ParEdificios[] linea;
 		int numLineas = damero.getDamero().length;
 		ArrayList<Integer> roturasI = new ArrayList<>(); //para ver obtenemos el mismo resultado
 		ArrayList<Integer> resultado = damero.perdidaExcesivaPresionLineasDistribucion();
-
+		
+		
 		for(int i=0; i<numLineas; i++) {
 			linea = damero.lineasDistribucion(i);
-			for(int j=1; j<linea.length; j++) { //En la primera fila no hay manometros
-				if(j==linea.length-1) continue;
+			for(int j=1; j<linea.length-1; j++) { //En la primera fila no hay manometros
 				if(linea[j].getMan().getPresion() < (linea[j+1].getMan().getPresion() - (linea[j+1].getMan().getPresion()*0.1))){
 					rotura = true;
 					roturasI.add(linea[j].getMan().getId());
@@ -440,9 +450,6 @@ public class DameroTest {
 
 		} else {
 			Assert.assertTrue(!resultado.isEmpty());
-			System.out.println("------------------");
-			System.out.println(resultado.toString()); //dyv --> duplicados
-			System.out.println(roturasI.toString());
 			Assert.assertEquals(resultado, roturasI);
 		}
 	}
