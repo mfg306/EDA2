@@ -7,6 +7,7 @@ import org.eda2.dyv.*;
 
 public class DameroTest {
 	
+	//TESTS DE INICICALIZACIÓN
 	@Test
 	public void TestInicializarContadoresDameroPar() {
 		Damero damero = new Damero(4,4);//Si es par de 4x4, no puede haber ninguna manzana que sea nula
@@ -22,6 +23,7 @@ public class DameroTest {
 				
 		Assert.assertTrue(resultado);
 	}
+	
 	
 	@Test
 	public void TestInicializarContadoresDameroImpar() {
@@ -40,6 +42,36 @@ public class DameroTest {
 		Assert.assertEquals(contador, pE[0].length);
 	}
 	
+	
+	@Test
+	public void TestInicializarManometrosDameroPar() {
+		Damero damero = new Damero(4,4);
+		ParEdificios[][] pE = damero.getDamero();
+		boolean manometroNulo = false;
+		for (int i = 0;i<pE.length;i++) {
+			for (int j = 0;j<pE[0].length;j++) { //No puede haber ningun manometro sin inicializar
+				if (pE[i][j].getMan() == null) manometroNulo = true;
+			}
+		}
+		Assert.assertTrue(manometroNulo);
+	}
+	
+	
+	@Test
+	public void TestInicializarManometrosDameroImar() {
+		Damero damero = new Damero(3,3);
+		ParEdificios[][] pE = damero.getDamero();
+		boolean manometroNulo = false;
+		for (int i = 0;i<pE.length;i++) {
+			for (int j = 0;j<pE[0].length;j++) { //No puede haber ningun manometro sin inicializar
+				if (pE[i][j].getMan() == null) manometroNulo = true;
+			}
+		}
+		Assert.assertTrue(manometroNulo);
+	}
+	
+	
+	//TESTS DE COMPROBACIÓN DE CONTADORES
 	@Test
 	public void TestPerdidaDemasiadoGrandeSeEscapaLaPresion() {
 		//El test de si hay un reventon se queda a 0
@@ -67,15 +99,6 @@ public class DameroTest {
 	
 	
 	@Test
-	public void TestInicializarContadores() {
-		Damero damero = new Damero(3,3);
-		double resultadoEsperado = damero.getLitrosEdificio(1, 2, damero.getDamero(),"D");
-		double resultadoSuma = damero.getLitrosCasillasSalvoCasillaGeneral();
-
-		Assert.assertTrue(resultadoEsperado >= resultadoSuma);
-	}
-	
-	@Test
 	public void TestSoloHayContadoresMoradosEnUltimaFila() {
 		Damero damero = new Damero(100,100);
 		ParEdificios[][] pE = damero.getDamero();
@@ -98,6 +121,7 @@ public class DameroTest {
 		Assert.assertEquals(contador, pE.length-1); //HAY QUE QUITAR LA CASILLA GENERAL, PORQUE AQUI NO HAY
 	}
 	
+	
 	@Test
 	public void TestNoHayContadoresVerdesEnLaUltimaFila() {
 		Damero damero = new Damero(100,100);
@@ -113,6 +137,7 @@ public class DameroTest {
 		}
 		Assert.assertEquals(resultado, true);
 	}
+	
 	
 	@Test
 	public void TestContadorVerdeSumaIzquierdaYDerechaSituacionPar() {
@@ -138,6 +163,17 @@ public class DameroTest {
 		}
 		Assert.assertTrue(resultado);
 	}
+	
+	@Test
+	public void TestComprobarCasillaGeneral() {
+		Damero damero = new Damero(3,3);
+		double consumoCasillaGeneral = damero.getLitrosEdificio(1, 2, damero.getDamero(),"D");
+		double resultadoSuma = damero.getLitrosCasillasSalvoCasillaGeneral();
+
+		Assert.assertTrue(consumoCasillaGeneral >= resultadoSuma);
+	}
+	
+	
 	@Test
 	public void TestConsumoExcesivoTroncalPar() { 
 		Damero damero = new Damero(4,4);
@@ -183,8 +219,9 @@ public class DameroTest {
 		}
 	}
 	
+	
 	@Test
-	public void TestConsumoExcesivoTroncalImPar() { 
+	public void TestConsumoExcesivoTroncalImpar() { 
 		Damero damero = new Damero(5,5);
 		ArrayList<Integer> contadores = new ArrayList<>();
 		boolean condicion = false;
@@ -269,8 +306,9 @@ public class DameroTest {
 		}
 	}
 	
+	
 	@Test
-	public void TestConsumoExcesivoLineasDistribucionImPar() {
+	public void TestConsumoExcesivoLineasDistribucionImpar() {
 		Damero damero = new Damero(15,15);
 		ArrayList<Integer> contadores = new ArrayList<>();
 		boolean condicion = false;
@@ -319,6 +357,7 @@ public class DameroTest {
 		}
 	}
 	
+	//TESTS COMPROBACIÓN MANÓMETROS
 	@Test
 	public void TestIntervaloPresionCasillaGeneral() {
 		Damero damero = new Damero(4,4);
@@ -342,7 +381,6 @@ public class DameroTest {
 				break;
 			}
 		}
-		
 		Assert.assertTrue(condicion);
 	}
 	
