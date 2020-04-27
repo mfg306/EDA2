@@ -547,6 +547,8 @@ public class DameroTest {
 		}
 	}
 	
+	
+	//TESTS DE LA CIUDAD
 	@Test
 	public void TestCiudadNoCuadradaPar() {
 		Damero damero = new Damero(100,95);
@@ -605,6 +607,8 @@ public class DameroTest {
 		}
 	}
 	
+	
+	//TESTS DE TIEMPOS
 	@Test
 	public void TestTiemposConsumoExcesivo() {
 		long inicio = 0, fin = 0;
