@@ -400,7 +400,7 @@ public class DameroTest {
 	}
 	
 	@Test
-	public void TestPerdidaPresionTroncal() {
+	public void TestPerdidaPresionTroncalPar() {
 		Damero damero = new Damero(100,100);
 		boolean rotura = false;
 		ParEdificios[] troncal = damero.lineaTroncal();
@@ -426,7 +426,7 @@ public class DameroTest {
 	}
 	
 	@Test
-	public void TestPerdidaPresionLineasDistribucion() {
+	public void TestPerdidaPresionLineasDistribucionPar() {
 		Damero damero = new Damero(100,100);
 		boolean rotura = false;
 		ParEdificios[] linea;
@@ -454,6 +454,118 @@ public class DameroTest {
 		}
 	}
 	
+	@Test
+	public void TestPerdidaPresionTroncalImpar() {
+		Damero damero = new Damero(101,101);
+		boolean rotura = false;
+		ParEdificios[] troncal = damero.lineaTroncal();
+		ArrayList<Integer> roturas = damero.perdidaExcesivaPresionTroncal();
+		ArrayList<Integer> roturasI = new ArrayList<>(); //para ver obtenemos el mismo resultado
+		
+
+		for(int i=0; i<troncal.length; i++) {
+			if(i == troncal.length-1) continue;
+			if(troncal[i].getMan().getPresion() < (troncal[i+1].getMan().getPresion() - (troncal[i+1].getMan().getPresion()*0.1))){
+				rotura = true;
+				roturasI.add(troncal[i].getMan().getId());
+			}
+		}
+
+		if(rotura) {
+			Assert.assertTrue(!roturas.isEmpty());
+			Assert.assertEquals(roturas, roturasI);
+		} else {		
+			Assert.assertTrue(roturas.isEmpty());
+		}
+		
+	}
+	
+	@Test
+	public void TestPerdidaPresionLineasDistribucionImpar() {
+		Damero damero = new Damero(101,101);
+		boolean rotura = false;
+		ParEdificios[] linea;
+		int numLineas = damero.getDamero().length;
+		ArrayList<Integer> roturasI = new ArrayList<>(); //para ver obtenemos el mismo resultado
+		ArrayList<Integer> resultado = damero.perdidaExcesivaPresionLineasDistribucion();
+		
+		
+		for(int i=0; i<numLineas; i++) {
+			linea = damero.lineasDistribucion(i);
+			for(int j=1; j<linea.length-1; j++) { //En la primera fila no hay manometros
+				if(linea[j].getMan().getPresion() < (linea[j+1].getMan().getPresion() - (linea[j+1].getMan().getPresion()*0.1))){
+					rotura = true;
+					roturasI.add(linea[j].getMan().getId());
+				}
+			}
+		}
+		
+		if(!rotura) {
+			Assert.assertTrue(resultado.isEmpty());
+
+		} else {
+			Assert.assertTrue(!resultado.isEmpty());
+			Assert.assertEquals(resultado, roturasI);
+		}
+	}
+	
+	@Test
+	public void TestCiudadNoCuadradaPar() {
+		Damero damero = new Damero(100,95);
+		boolean rotura = false;
+		ParEdificios[] linea;
+		int numLineas = damero.getDamero().length;
+		ArrayList<Integer> roturasI = new ArrayList<>(); //para ver obtenemos el mismo resultado
+		ArrayList<Integer> resultado = damero.perdidaExcesivaPresionLineasDistribucion();
+		
+		
+		for(int i=0; i<numLineas; i++) {
+			linea = damero.lineasDistribucion(i);
+			for(int j=1; j<linea.length-1; j++) { //En la primera fila no hay manometros
+				if(linea[j].getMan().getPresion() < (linea[j+1].getMan().getPresion() - (linea[j+1].getMan().getPresion()*0.1))){
+					rotura = true;
+					roturasI.add(linea[j].getMan().getId());
+				}
+			}
+		}
+		
+		if(!rotura) {
+			Assert.assertTrue(resultado.isEmpty());
+
+		} else {
+			Assert.assertTrue(!resultado.isEmpty());
+			Assert.assertEquals(resultado, roturasI);
+		}
+	}
+	
+	@Test
+	public void TestCiudadNoCuadradaImpar() {
+		Damero damero = new Damero(101,96);
+		boolean rotura = false;
+		ParEdificios[] linea;
+		int numLineas = damero.getDamero().length;
+		ArrayList<Integer> roturasI = new ArrayList<>(); //para ver obtenemos el mismo resultado
+		ArrayList<Integer> resultado = damero.perdidaExcesivaPresionLineasDistribucion();
+		
+		
+		for(int i=0; i<numLineas; i++) {
+			linea = damero.lineasDistribucion(i);
+			for(int j=1; j<linea.length-1; j++) { //En la primera fila no hay manometros
+				if(linea[j].getMan().getPresion() < (linea[j+1].getMan().getPresion() - (linea[j+1].getMan().getPresion()*0.1))){
+					rotura = true;
+					roturasI.add(linea[j].getMan().getId());
+				}
+			}
+		}
+		
+		if(!rotura) {
+			Assert.assertTrue(resultado.isEmpty());
+
+		} else {
+			Assert.assertTrue(!resultado.isEmpty());
+			Assert.assertEquals(resultado, roturasI);
+		}
+	}
 	
 	@Test
 	public void TestTiemposConsumoExcesivo() {
@@ -476,12 +588,12 @@ public class DameroTest {
 			}
 		}
 		
-//		System.out.println(sumaTiempos/10);
+		//System.out.println(sumaTiempos/10);
 
 	}
 	
 	@Test
-	public void TestPerdidaExcesiva() {
+	public void TestTiemposPerdidaExcesiva() {
 		long inicio = 0, fin = 0;
 		long sumaTiempos = 0;
 		int contador = 0;
@@ -500,7 +612,7 @@ public class DameroTest {
 				contador ++;
 			}
 		}
-//		System.out.println(sumaTiempos/10);
+		System.out.println(sumaTiempos/10);
 
 	}
 	
