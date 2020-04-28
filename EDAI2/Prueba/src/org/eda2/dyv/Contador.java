@@ -1,17 +1,27 @@
 package org.eda2.dyv;
 
-public class Contador extends Medidor{
+/**
+ * @author marta
+ *
+ */
+public class Contador {
 
 	private double consumo;
 	private static int contador = 0; 
 	private int id;
 
+	/**
+	 * Constructor vacio
+	 */
 	public Contador() { 
 		this.consumo = (Math.random() * (108 - 162 + 1) + 162); // Consumo diario
 		this.id = Contador.contador;
 		Contador.contador++;
 	}
 	
+	/**
+	 * @param consumo el consumo que queremos asignarle al contador
+	 */
 	public Contador(double consumo) {
 		this.consumo = consumo;
 		this.id = Contador.contador;
@@ -35,6 +45,9 @@ public class Contador extends Medidor{
 		return "(" +this.id+ ")" + this.consumo;
 	}
 	
+	/**
+	 * Reinicia el contador a 0
+	 */
 	public static void reiniciarId() {
 		Contador.contador = 0;
 	}

@@ -12,6 +12,8 @@ public class Damero {
 	private ArrayList<Integer> roturasContadorLineasD = new ArrayList<>();
 	private ArrayList<Integer> roturasContadorProblemaRecursivo = new ArrayList<>();
 	private ArrayList<Integer> roturaManometroProblemaRecursivo = new ArrayList<>();
+	private ArrayList<Integer> roturasManometroTroncal = new ArrayList<>();
+	private ArrayList<Integer> roturasManometroLineasD = new ArrayList<>();
 	// Consumo minimo y maximo del contador general
 	public final static double CONSUMO_MINIMO_GENERAL = 300000;
 	public final static double CONSUMO_MAXIMO_GENERAL = 500000;
@@ -117,7 +119,7 @@ public class Damero {
 
 	/**
 	 * 
-	 * @return roturasContadorTroncal
+	 * @return roturasContadorTroncal una lista con las roturas de los contadores de la linea troncal
 	 */
 	public ArrayList<Integer> getRoturasContadorTroncal() {
 		return roturasContadorTroncal;
@@ -125,12 +127,15 @@ public class Damero {
 
 	/**
 	 * 
-	 * @return roturasContadorLineasD
+	 * @return roturasContadorLineasD una lista con las roturas de los contadores de las lineas de distribucion
 	 */
 	public ArrayList<Integer> getRoturasContadorLineasD() {
 		return roturasContadorLineasD;
 	}
 	
+	/**
+	 * @return una lista con las roturas de los manometros de la linea troncal
+	 */
 	public ArrayList<Integer> getRoturasManometroTroncal() {
 		return roturasManometroTroncal;
 	}
@@ -139,6 +144,9 @@ public class Damero {
 		this.roturasManometroTroncal = roturasManometroTroncal;
 	}
 
+	/**
+	 * @return una lista con las roturas de los manometros de las lineas de distribucion
+	 */
 	public ArrayList<Integer> getRoturasManometroLineasD() {
 		return roturasManometroLineasD;
 	}
@@ -147,9 +155,6 @@ public class Damero {
 		this.roturasManometroLineasD = roturasManometroLineasD;
 	}
 
-
-	private ArrayList<Integer> roturasManometroTroncal = new ArrayList<>();
-	private ArrayList<Integer> roturasManometroLineasD = new ArrayList<>();
 
 	// CONTADORES
 	/**
@@ -222,6 +227,9 @@ public class Damero {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		String resultado = "";
 		for(int j=0; j<pEdificios[0].length; j++) {
@@ -233,6 +241,9 @@ public class Damero {
 		return resultado;
 	}
 
+	/**
+	 * @return un string con los datos de lsa medias 
+	 */
 	public String toStringMedias() {
 		String resultado = "";
 		for(int j=0; j<matrizMedias[0].length; j++) {
@@ -276,10 +287,10 @@ public class Damero {
 
 	/**
 	 * 
-	 * @param i
-	 * @param j
-	 * @param pEdificios
-	 * @param cont
+	 * @param i la columna en la que se encuentra
+	 * @param j la fila en la que se encuentra
+	 * @param pEdificios en que estructura queremos buscar
+	 * @param cont de que tipo es 
 	 * @return el consumo de un determinado edificio
 	 */
 	public double getLitrosEdificio(int i, int j, ParEdificios[][] pEdificios, String cont) { // columnas, filas
@@ -289,8 +300,6 @@ public class Damero {
 		else return pEdificios[i][j].getcMorado().getConsumo();
 	}
 
-	// REVISAR
-	// EL VALOR DEBERIA COINCIDIR CON LA CASILLA GENERAL PERO NO COINCIDE
 	/**
 	 * 
 	 * @return el consumo de toda la ciudad sin tener en cuenta la casilla general
@@ -310,9 +319,8 @@ public class Damero {
 	}
 
 	/**
-	 * @return un ArrayList de Object en el que guardaremos el contador que ha
-	 *         provocado una rotura de segundo grado en la linea troncal. (ID,
-	 *         Contador)
+	 * @return un ArrayList de Integer en el que guardaremos el id del contador que ha generado la rotura
+	 * en la linea troncal
 	 */
 	public ArrayList<Integer> consumoExcesivoTroncal() {
 		ArrayList<Integer> resultado = new ArrayList<>();
@@ -328,9 +336,8 @@ public class Damero {
 	}
 
 	/**
-	 * @return un ArrayList de Object en el que guardaremos el contador que ha
-	 *         provocado una rotura de segundo grado en las lineas de distribucion.
-	 *         (ID, Contador)
+	 * @return un ArrayList de Integer en el que guardamos el id del contador que ha generado la rotura
+	 * en las lineas de distribucion
 	 */
 	public ArrayList<Integer> consumoExcesivoLineasDistribucion() {
 		ArrayList<Integer> resultado = new ArrayList<>();
@@ -346,16 +353,13 @@ public class Damero {
 		return roturasContadorLineasD;
 	}
 
+
 	/**
-	 * Nuestro algoritmo recursivo va a dividir el problema hasta el máximo. Es
-	 * decir, vamos a coger nuestro array de parEdificios y vamos a simplificarlo
-	 * hasta quedarnos con un solo par. Sobre este par podemos ver si se dan las
-	 * condiciones necesarias para que se produzca una rotura
-	 * 
-	 * @param pE es la estructura a la que vamos a buscarle roturas de contadores
-	 * @param i  posicion inicial a partir de la cual vamos a empzar a buscar
-	 * @param j  posicion final de la búsqueda
-	 * @return un ArrayList con todos los contadores que han presentado una rotura
+	 * @param pE estructura con los datos generados aleatoriamente
+	 * @param media los datos de las medias con las que vamos a comparar
+	 * @param i posicion inicial a partir de la cual buscar
+	 * @param j posicion final de busqueda 
+	 * @return una lista de enteros con los id de los contadores que generan roturas
 	 */
 	private ArrayList<Integer> consumoExcesivoRec(ParEdificios[] pE, ParEdificios[] media, int i, int j) {
 		int mitad;
@@ -443,7 +447,6 @@ public class Damero {
 				} else {
 					error = pAnterior - (pAnterior * x / 100); //presionAnterior disminuida una cantidad x/100
 
-//					error = pAnterior - (pAnterior * 13 / 100); // Margen de error del manometro
 					this.pEdificios[i][j].setMan(new Manometro((Math.random() * (error - pAnterior + 1) + pAnterior)));
 				}
 				
@@ -473,7 +476,6 @@ public class Damero {
 		resultado = this.perdidaExcesivaPresionRec(pE, 0, pE.length-1);
 		
 		if(!resultado.isEmpty()) {
-			this.roturasContadorTroncal.clear();
 			this.roturasManometroTroncal.addAll(resultado);
 		}
 		
@@ -519,10 +521,12 @@ public class Damero {
 		return resultado;
 	}
 		
+
 	/**
-	 * Es muy similar al anterior. Sin embargo, aqui necesitamos que el elemento de la mitad se mantenga en ambas llamadas. Y en el caso base
-	 * necesitamos dos elementos en lugar de uno
-	 * @return
+	 * @param pE estructura donde vamos a buscar las roturas
+	 * @param i posicion donde empezar a buscar
+	 * @param j posicion donde dejar de buscar
+	 * @return una lista con los id de los manometros que presentan rotura 
 	 */
 	private ArrayList<Integer> perdidaExcesivaPresionRec(ParEdificios[] pE, int i, int j){
 		int mitad;
