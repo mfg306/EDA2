@@ -1,6 +1,6 @@
 package org.eda2.dyv;
 
-public class Contador extends Medidor{
+public class Contador {
 
 	private double consumo;
 	private static int contador = 0; 
