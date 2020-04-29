@@ -11,7 +11,9 @@ public class Damero {
 	private ArrayList<Integer> roturasContadorTroncal = new ArrayList<>();
 	private ArrayList<Integer> roturasContadorLineasD = new ArrayList<>();
 	private ArrayList<Integer> roturasContadorProblemaRecursivo = new ArrayList<>();
-	private ArrayList<Integer> roturaManometroProblemaRecursivo = new ArrayList<>();
+	private ArrayList<Integer> roturasManometroProblemaRecursivo = new ArrayList<>();
+	private ArrayList<Integer> roturasManometroTroncal = new ArrayList<>();
+	private ArrayList<Integer> roturasManometroLineasD = new ArrayList<>();
 	// Consumo minimo y maximo del contador general
 	public final static double CONSUMO_MINIMO_GENERAL = 300000;
 	public final static double CONSUMO_MAXIMO_GENERAL = 500000;
@@ -131,25 +133,38 @@ public class Damero {
 		return roturasContadorLineasD;
 	}
 	
+	/**
+	 * 
+	 * @return roturasManometroTroncal
+	 */
 	public ArrayList<Integer> getRoturasManometroTroncal() {
 		return roturasManometroTroncal;
 	}
 
+	/**
+	 * Establece el valor de roturasManometroTroncal
+	 * @param roturasManometroTroncal
+	 */
 	public void setRoturasManometroTroncal(ArrayList<Integer> roturasManometroTroncal) {
 		this.roturasManometroTroncal = roturasManometroTroncal;
 	}
 
+	/**
+	 * 
+	 * @return roturasManometroLineasD
+	 */
 	public ArrayList<Integer> getRoturasManometroLineasD() {
 		return roturasManometroLineasD;
 	}
 
+	/**
+	 * Establece el valor de roturasManometroLineasD
+	 * @param roturasManometroLineasD
+	 */
 	public void setRoturasManometroLineasD(ArrayList<Integer> roturasManometroLineasD) {
 		this.roturasManometroLineasD = roturasManometroLineasD;
 	}
 
-
-	private ArrayList<Integer> roturasManometroTroncal = new ArrayList<>();
-	private ArrayList<Integer> roturasManometroLineasD = new ArrayList<>();
 
 	// CONTADORES
 	/**
@@ -164,7 +179,7 @@ public class Damero {
 	 * Inicializa los datos de los contadores en el caso de que la ciudad tenga
 	 * columnas pares
 	 */
-	private void inicializarContadoresPar(ParEdificios[][] pE) { // Deberiamos inicializar primero los de cada edificio y a partir de ese
+	private void inicializarContadoresPar(ParEdificios[][] pE) { 
 
 		// RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
 		for (int i = 0; i < pE.length; i++) {
@@ -221,7 +236,9 @@ public class Damero {
 		}
 	}
 
-
+	/**
+	 * @return string con los datos de cada casilla del damero y sus respectivas coordenadas
+	 */
 	public String toString() {
 		String resultado = "";
 		for(int j=0; j<pEdificios[0].length; j++) {
@@ -233,6 +250,10 @@ public class Damero {
 		return resultado;
 	}
 
+	/**
+	 * 
+	 * @return string con las medias de los contadores de la ciudad
+	 */
 	public String toStringMedias() {
 		String resultado = "";
 		for(int j=0; j<matrizMedias[0].length; j++) {
@@ -246,7 +267,7 @@ public class Damero {
 
 	/**
 	 * 
-	 * @return un string que contiene los datos de todos los manometros de la ciudad
+	 * @return string que contiene los datos de todos los manometros de la ciudad
 	 */
 	public String toStringM() {
 		String resultado = "";
@@ -261,7 +282,7 @@ public class Damero {
 
 	/**
 	 * 
-	 * @return un string con todos los contadores de la ciudad
+	 * @return string con todos los contadores de la ciudad
 	 */
 	public String toStringC() {
 		String resultado = "";
@@ -282,15 +303,14 @@ public class Damero {
 	 * @param cont
 	 * @return el consumo de un determinado edificio
 	 */
-	public double getLitrosEdificio(int i, int j, ParEdificios[][] pEdificios, String cont) { // columnas, filas
+	public double getLitrosEdificio(int i, int j, ParEdificios[][] pEdificios, String cont) {
 		if (cont.equals("D")) return pEdificios[i][j].getcDerecha().getConsumo();
 		else if (cont.equals("I")) return pEdificios[i][j].getcIzquierda().getConsumo();
 		else if (cont.equals("V")) return pEdificios[i][j].getcVerde().getConsumo();
 		else return pEdificios[i][j].getcMorado().getConsumo();
 	}
 
-	// REVISAR
-	// EL VALOR DEBERIA COINCIDIR CON LA CASILLA GENERAL PERO NO COINCIDE
+	
 	/**
 	 * 
 	 * @return el consumo de toda la ciudad sin tener en cuenta la casilla general
@@ -353,7 +373,7 @@ public class Damero {
 	 * condiciones necesarias para que se produzca una rotura
 	 * 
 	 * @param pE es la estructura a la que vamos a buscarle roturas de contadores
-	 * @param i  posicion inicial a partir de la cual vamos a empzar a buscar
+	 * @param i  posicion inicial a partir de la cual vamos a empezar a buscar
 	 * @param j  posicion final de la búsqueda
 	 * @return un ArrayList con todos los contadores que han presentado una rotura
 	 */
@@ -432,7 +452,6 @@ public class Damero {
 				if (j == alto) pAnterior = this.pEdificios[i + 1][j].getMan().getPresion();
 				else pAnterior = this.pEdificios[i][j + 1].getMan().getPresion();
 
-				//Voy a generar el '13' de forma aleatoria para buscar reventones jeje
 				x = Math.random() * (13 - 55 + 1) + 55; //cantidad a disminuir
 				
 				//si se ha perdido más de un 50%, entonces es porque ha habido algun problema tecnico en el 
@@ -442,8 +461,6 @@ public class Damero {
 					this.pEdificios[i][j].setMan(new Manometro(0.0));
 				} else {
 					error = pAnterior - (pAnterior * x / 100); //presionAnterior disminuida una cantidad x/100
-
-//					error = pAnterior - (pAnterior * 13 / 100); // Margen de error del manometro
 					this.pEdificios[i][j].setMan(new Manometro((Math.random() * (error - pAnterior + 1) + pAnterior)));
 				}
 				
@@ -528,14 +545,14 @@ public class Damero {
 		int mitad;
 		if(j-i == 1) {
 			if(pE[i].getMan().getPresion() < (pE[j].getMan().getPresion() - 0.1*pE[j].getMan().getPresion())) {
-				this.roturaManometroProblemaRecursivo.add(pE[i].getMan().getId());
+				this.roturasManometroProblemaRecursivo.add(pE[i].getMan().getId());
 			}
 		} else {
 			mitad = (i + j)/2;
 			perdidaExcesivaPresionRec(pE, i, mitad);
 			perdidaExcesivaPresionRec(pE, mitad, j);
 		}
-		return this.roturaManometroProblemaRecursivo;		
+		return this.roturasManometroProblemaRecursivo;		
 	}
 	
 	
@@ -554,9 +571,6 @@ public class Damero {
 				}
 			}
 		}
-		
 		return cadena;
-		
 	}
-	
 }

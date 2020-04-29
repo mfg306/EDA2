@@ -654,10 +654,6 @@ public class DameroTest {
 				contador ++;
 			}
 		}
-		System.out.println(sumaTiempos/10);
-
+		//System.out.println(sumaTiempos/10);
 	}
-	
-
-
 }

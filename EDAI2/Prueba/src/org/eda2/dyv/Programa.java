@@ -48,7 +48,5 @@ public class Programa {
 		}else {
 			System.out.println("No se han encontrado roturas de segundo grado.");
 		}
-		
 	}
-
 }
