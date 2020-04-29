@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 /**
  * Programa que muestra el funcionamiento
- * @author marta
+ * @author marta y alejandro
  *
  */
 public class Programa {
