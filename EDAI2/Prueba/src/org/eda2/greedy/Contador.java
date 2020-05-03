@@ -38,5 +38,11 @@ public class Contador extends Medidor{
 	public static void reiniciarId() {
 		Contador.contador = 0;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		Contador otro = (Contador)other;
+		return this.id == otro.id;
+	}
 
 }

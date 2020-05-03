@@ -1,4 +1,4 @@
-package org.eda2;
+package org.eda2.dyv;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -2,8 +2,6 @@ package org.eda2.greedy;
 
 import java.util.ArrayList;
 
-import java.util.TreeMap;
-
 public class Damero {
 
 	private int filas;
@@ -59,7 +57,6 @@ public class Damero {
 		for (int i = 0; i < pE.length; i++) pE[i] = pEdificios[i][pEdificios[0].length - 1];
 		return pE;
 	}
-	
 
 	/**
 	 * 
@@ -86,7 +83,7 @@ public class Damero {
 	 * 
 	 * @param i
 	 * @return un array con las medias de los contadores de la linea de distribucion
-	 *         i
+	 *
 	 */
 	public ParEdificios[] lineasDistribucionMedias(int i) {
 		ParEdificios[] pE = new ParEdificios[this.matrizMedias[0].length - 1]; // Le quitamos la linea troncal
@@ -124,8 +121,7 @@ public class Damero {
 	 * Inicializa los datos de los contadores en el caso de que la ciudad tenga
 	 * columnas pares
 	 */
-	private void inicializarContadoresPar(ParEdificios[][] pE) { // Deberiamos inicializar primero los de cada edificio y a partir de ese
-
+	private void inicializarContadoresPar(ParEdificios[][] pE) {
 		// RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
 		for (int i = 0; i < pE.length; i++) {
 			for (int j = 0; j < pE[0].length; j++) {
@@ -134,7 +130,6 @@ public class Damero {
 				pE[i][j].setcIzquierda(new Contador(Math.random() * (100 - 1000 + 1) + 1000));
 			}
 		}
-
 		// INICIALIZAMOS LO CONTADORES VERDES Y MORADOS Y EL GENERAL
 		double con = 0;
 		for (int i = 0; i < pE.length; i++) {
@@ -250,8 +245,6 @@ public class Damero {
 		else return pEdificios[i][j].getcMorado().getConsumo();
 	}
 
-	// REVISAR
-	// EL VALOR DEBERIA COINCIDIR CON LA CASILLA GENERAL PERO NO COINCIDE
 	/**
 	 * 
 	 * @return el consumo de toda la ciudad sin tener en cuenta la casilla general
@@ -270,19 +263,15 @@ public class Damero {
 		return resultado;
 	}
 
-
 	/**
 	 * @return una cadena con las casillas en las que se ha producido una rotura
 	 */
-	public String interpretarSolucionConsumoExcesivo(ArrayList<Object> consumo) {
+	public String interpretarSolucionConsumoExcesivo(ArrayList<Integer> consumo) {
 		String cadena = "";
-		int contador = 0;
 
 		// Obtenemos el ID del contador y lo buscamos en nuestra matriz
 		if (!consumo.isEmpty()) {
-			for (Object o : consumo) {
-				if (contador % 2 == 0) { // Solo nos interesa las posiciones pares
-					Integer id = (Integer) o;
+			for (Integer id : consumo) {
 					for (int i = 0; i < this.pEdificios.length; i++) {
 						for (int j = 0; j < this.pEdificios[i].length; j++) {
 							if (pEdificios[i][j].containsContadorID(id)) {
@@ -299,11 +288,9 @@ public class Damero {
 						}
 					}
 				}
-				contador++;
 			}
-		}
 		return (cadena.isEmpty()) ? "No hay roturas.\n " : cadena;
-	}
+		}
 	
 	// MANOMETROS
 	
@@ -327,42 +314,44 @@ public class Damero {
 				if (j == alto) pAnterior = this.pEdificios[i + 1][j].getMan().getPresion();
 				else pAnterior = this.pEdificios[i][j + 1].getMan().getPresion();
 
-				//Voy a generar el '13' de forma aleatoria para buscar reventones jeje
 				x = Math.random() * (13 - 55 + 1) + 55; //cantidad a disminuir
-				
-				//si se ha perdido mÃ¡s de un 50%, entonces es porque ha habido algun problema tecnico en el 
-				//manometro i, y no ha podido llegar la presion al manometro i+1
 				
 				if(x > 50) { //INVOCANDO EL CASO DEL REVENTON
 					this.pEdificios[i][j].setMan(new Manometro(0.0));
 				} else {
-					error = pAnterior - (pAnterior * x / 100); //presionAnterior disminuida una cantidad x/100
+					error = pAnterior - (pAnterior * x / 100);
 
-//					error = pAnterior - (pAnterior * 13 / 100); // Margen de error del manometro
 					this.pEdificios[i][j].setMan(new Manometro((Math.random() * (error - pAnterior + 1) + pAnterior)));
 				}
-				
-
 			}
 		}
+	}
+	
+	/**
+	 * @param i columna del ParEdificio al que queremos acceder
+	 * @param j fila del ParEdificio al que queremos acceder
+	 * @return la presion 
+	 */
+	public double getPresionPar(int i, int j) {
+		return this.pEdificios[i][j].getMan().getPresion();
 	}
 	
 	
 	//Greedy
 	
-			/*En este ejemplo tenemos el problema de que estamos simulando una solución aleatoria en la que no sabemos donde se 
-			 * produciran las roturas, ni siquiera sabemos si habrá alguna. Por lo tanto, tenemos que definir los elementos del 
+			/*En este ejemplo tenemos el problema de que estamos simulando una soluciï¿½n aleatoria en la que no sabemos donde se 
+			 * produciran las roturas, ni siquiera sabemos si habrï¿½ alguna. Por lo tanto, tenemos que definir los elementos del 
 			 * problema de la siguiente forma: 
 			 * - Conjunto de candidatos: todos los contadores del tablero (CREO QUE LOS ROJOS NO) --> LOS PODEMOS ALMACENAR EN UN ARRAY
 			 * - Solucion parcial: seran todos aquellos contadores que presenten una rotura
 			 * - Funcion de seleccion: elegimos a aquellos contadores que presenten una rotura / CONTADORES CON MAYOR GASTO DENTRO DE LOS QUE TIENEN ROTURA
 			 * - Funcion de factibilidad: en realidad, creo que no nos haria falta, pero por seguir el esquema del Greedy podemos hacer 
-			 * que nos verifique que al añadir el contador, el conjunto de todos los contadores de la solucion nuestra presentan roturas / LO VEO BIEN
+			 * que nos verifique que al aï¿½adir el contador, el conjunto de todos los contadores de la solucion nuestra presentan roturas / LO VEO BIEN
 			 * SEGUN EL EJEMPLO DE LAS MONEDAS, PODRIA SER COMPROBAR QUE TODAVIA NO HEMOS MIRADO TODOS LOS CONTADORES
 			 * - Funcion de solucion: como tenemos una situacion aleatoria, no sabemos realmente cual debe ser la solucion, por lo que esto
 			 * no podemos incluirlo. PUEDE SER COMPROBAR QUE EL ARRAY DE CANDIDATOS ESTA VACIO?*/
 			
-			//Conjunto de candidatos -> ArrayList porq la busqueda es O(1), en vez de O(n²) en nuestra matriz
+			//Conjunto de candidatos -> ArrayList porq la busqueda es O(1), en vez de O(nï¿½) en nuestra matriz
 			
 			
 		//ALEX
@@ -375,17 +364,17 @@ public class Damero {
 		 * 		elimina x de candidatos
 		 * 
 		 * 		si el contador tiene una rotura && la rotura es propia
-		 * 			añade x a elegidos
+		 * 			aï¿½ade x a elegidos
 		 * 		fsi
 		 * finmientras
 		 * rettorna elegidos
 		 *  
 		 * 
 		 * Candidatos: Contadores verdes y morados
-		 * Solución: hemos comprobado todos los candidatos
-		 * Condición de factibilidad: el contador tiene una rotura propia
-		 * Función de selección: mayor gasto/mayor diferencia con la media/
-		 * Función objetivo: Comprobar todos los contadores
+		 * Soluciï¿½n: hemos comprobado todos los candidatos
+		 * Condiciï¿½n de factibilidad: el contador tiene una rotura propia
+		 * Funciï¿½n de selecciï¿½n: mayor gasto/mayor diferencia con la media/
+		 * Funciï¿½n objetivo: Comprobar todos los contadores
 		 * 
 		 */
 		public ArrayList<Contador> resolverContadoresGreedy() {
@@ -395,7 +384,7 @@ public class Damero {
 			
 			while(candidatos.size()!=0) { //Solucion: hemos comprobado todos los contadores
 				
-				posible = contadorMayorGasto(candidatos);//Función de selección
+				posible = contadorMayorGasto(candidatos);//Funciï¿½n de selecciï¿½n
 				candidatos.remove(posible); //Eliminamos posible de la lista de candidatos
 				if(roturaPropia(posible)) {//Devuelve true o false si el contador tiene una rotura propia o no
 					elegidos.add(posible);
@@ -435,12 +424,15 @@ public class Damero {
 		}
 		
 		
-		//Devuelve true si el contador tiene una rotura y es propia
-		public boolean roturaPropia(Contador con) {
+		/**
+		 * @param con contador del que queremos ver si tiene una rotura propia y consumo mayor de 5xmedia
+		 * @return true si presenta las condiciones anteriormente dichas, false en caso contrario
+		 */
+		public boolean roturaPropia(Contador con) { 
 			String[] indices = obtenerCoordenadas(con);
 			int i = Integer.parseInt(indices[0]);
 			int j = Integer.parseInt(indices[1]);
-			if (!comprobarPropia(con, indices)) return false; //Si la rotura no es del propio contador, ya no nos interesa
+			if (!comprobarRoturaPropia(con, indices)) return false; //Si la rotura no es del propio contador, ya no nos interesa
 			
 			Contador media = new Contador();
 			switch(indices[2]) {
@@ -464,8 +456,12 @@ public class Damero {
 			return false;
 		}
 		
-		//Devuelve true si la rotura del contador es suya y false si es de alguno de los contiguos
-		public boolean comprobarPropia(Contador con, String[] indices) {
+		/**
+		 * @param con contador del que queremos comprobar la rotura
+		 * @param indices salida del metodo obtenerCoordenadas
+		 * @return true si la rotura es propia, false en caso contrario
+		 */
+		private boolean comprobarRoturaPropia(Contador con, String[] indices) { //Este metodo comprueba si hay rotura propia
 			int i = Integer.parseInt(indices[0]);
 			int j = Integer.parseInt(indices[1]);
 			if (indices[2].equals("V")) {
@@ -476,7 +472,7 @@ public class Damero {
 					double abajoD = this.pEdificios[i][j-1].getcDerecha().getConsumo();
 					double abajoI = this.pEdificios[i][j-1].getcIzquierda().getConsumo();
 					if (verde > (dcha+izqda+abajoD+abajoI)) return true;
-				} else { //Caso más común
+				} else { //Caso mas comun
 					double verde = this.pEdificios[i][j].getcVerde().getConsumo();
 					double dcha = this.pEdificios[i][j].getcDerecha().getConsumo();
 					double izqda = this.pEdificios[i][j].getcIzquierda().getConsumo();
@@ -487,19 +483,14 @@ public class Damero {
 				double morado = this.pEdificios[i][j].getcMorado().getConsumo();
 				double dcha = this.pEdificios[i][j].getcDerecha().getConsumo();
 				double verde = this.pEdificios[i][j-1].getcVerde().getConsumo();
-				double izquierda = 0;
-				if (this.pEdificios[i][j].getcIzquierda() != null) {
-					izquierda = this.pEdificios[i][j].getcIzquierda().getConsumo();
-				}
-				double moradoI = 0;
-				if (i>0 && this.pEdificios[i-1][j].getcMorado() != null) {
-					moradoI = this.pEdificios[i-1][j].getcMorado().getConsumo();
-				}
+				//He cambiado las dos lineas de abajo
+				double izquierda = (this.pEdificios != null) ? izquierda = this.pEdificios[i][j].getcIzquierda().getConsumo() : 0.0 ; 
+				double moradoI = (i>0 && this.pEdificios[i-1][j].getcMorado() != null) ? this.pEdificios[i-1][j].getcMorado().getConsumo() : 0.0 ;
 				if (morado > (dcha+izquierda+verde+moradoI)) return true;
 				
 			} else { //Casilla general
 				double izquierda = this.pEdificios[i][j].getcIzquierda().getConsumo();
-				double derecha = this.pEdificios[i][j].getcDerecha().getConsumo();//general
+				double derecha = this.pEdificios[i][j].getcDerecha().getConsumo();//general -> ESTO SOLO PARA EL CASO PAR?
 				double moradoI = this.pEdificios[i-1][j].getcMorado().getConsumo();
 				double verdeAbajo = this.pEdificios[i][j-1].getcVerde().getConsumo();
 				if (derecha > (izquierda+moradoI+verdeAbajo)) return true;
@@ -507,6 +498,10 @@ public class Damero {
 			return false;
 		}
 		
+		/**
+		 * @param con contador que queremos ubicar
+		 * @return (i,j, tipo) donde el tipo es Derecha, Izquierda, Verde,  Morado
+		 */
 		public String[] obtenerCoordenadas(Contador con) {
 			String[] coordenadas = new String[3];
 			boolean encontrado = false;
@@ -514,22 +509,44 @@ public class Damero {
 			for (int i = 0;i<pEdificios.length;i++) {
 				if(encontrado) break;
 				for (int j = 0;j<pEdificios[0].length;j++) {
-					if(this.pEdificios[i][j].getcDerecha() != null && this.pEdificios[i][j].getcDerecha().getConsumo() == (con.getConsumo())){
+					
+					if(this.pEdificios[i][j].getcDerecha() != null && this.pEdificios[i][j].getcDerecha().equals(con)) {
 						encontrado = true;
 						tipo = "D";
 					}
-					if(this.pEdificios[i][j].getcIzquierda() != null && this.pEdificios[i][j].getcIzquierda().getConsumo() == (con.getConsumo())){
+					
+					if(this.pEdificios[i][j].getcIzquierda() != null && this.pEdificios[i][j].getcIzquierda().equals(con)) {
 						encontrado = true;
 						tipo = "I";
 					}
-					if(this.pEdificios[i][j].getcVerde() != null && this.pEdificios[i][j].getcVerde().getConsumo() == (con.getConsumo())){
-						encontrado = true;
-						tipo = "V";
-					}
-					if(this.pEdificios[i][j].getcMorado() != null && this.pEdificios[i][j].getcMorado().getConsumo() == (con.getConsumo())){
+					
+					if(this.pEdificios[i][j].getcMorado() != null && this.pEdificios[i][j].getcMorado().equals(con)) {
 						encontrado = true;
 						tipo = "M";
 					}
+					
+					if(this.pEdificios[i][j].getcVerde() != null && this.pEdificios[i][j].getcVerde().equals(con)) {
+						encontrado = true;
+						tipo = "V";
+					}
+							
+					
+//					if(this.pEdificios[i][j].getcDerecha() != null && this.pEdificios[i][j].getcDerecha().getConsumo() == (con.getConsumo())){
+//						encontrado = true;
+//						tipo = "D";
+//					}
+//					if(this.pEdificios[i][j].getcIzquierda() != null && this.pEdificios[i][j].getcIzquierda().getConsumo() == (con.getConsumo())){
+//						encontrado = true;
+//						tipo = "I";
+//					}
+//					if(this.pEdificios[i][j].getcVerde() != null && this.pEdificios[i][j].getcVerde().getConsumo() == (con.getConsumo())){
+//						encontrado = true;
+//						tipo = "V";
+//					}
+//					if(this.pEdificios[i][j].getcMorado() != null && this.pEdificios[i][j].getcMorado().getConsumo() == (con.getConsumo())){
+//						encontrado = true;
+//						tipo = "M";
+//					}
 					//comprobamos si alguno de los contadores coincide
 					if(encontrado) {
 						coordenadas[0] = i+"";
@@ -573,17 +590,17 @@ public class Damero {
 		 * 		elimina posible de candidatos
 		 * 
 		 * 		si el manometro tiene una rotura
-		 * 			añade posible a elegidos
+		 * 			aï¿½ade posible a elegidos
 		 * 		fsi
 		 * finmientras
 		 * rettorna elegidos
 		 *  
 		 * 
 		 * Candidatos: Todos los manometros
-		 * Solución: hemos comprobado todos los candidatos
-		 * Condición de factibilidad: el manometro tiene una rotura propia
-		 * Función de selección: manometro de menor presion/mayor diferencia con el siguiente
-		 * Función objetivo: Comprobar todos los manometros
+		 * Soluciï¿½n: hemos comprobado todos los candidatos
+		 * Condiciï¿½n de factibilidad: el manometro tiene una rotura propia
+		 * Funciï¿½n de selecciï¿½n: manometro de menor presion/mayor diferencia con el siguiente
+		 * Funciï¿½n objetivo: Comprobar todos los manometros
 		 * 
 		 */
 		
@@ -594,7 +611,7 @@ public class Damero {
 			
 			while(!candidatos.isEmpty()) { //Solucion: hemos comprobado todos los manometros
 				
-				posible = manometroMenorPresion(candidatos);//Función de selección
+				posible = manometroMenorPresion(candidatos);//Funciï¿½n de selecciï¿½n
 				candidatos.remove(posible); //Eliminamos posible de la lista de candidatos
 				if(roturaManometro(posible)) {//Devuelve true o false si el manometro tiene una rotura o no
 					elegidos.add(posible);
@@ -668,17 +685,17 @@ public class Damero {
 		 * 		elimina posible de candidatos
 		 * 
 		 * 		si el manometro tiene una rotura
-		 * 			añade posible a elegidos
+		 * 			aï¿½ade posible a elegidos
 		 * 		fsi
 		 * finmientras
 		 * rettorna elegidos
 		 *  
 		 * 
 		 * Candidatos: Todos los contadores rojos
-		 * Solución: hemos comprobado todos los candidatos
-		 * Condición de factibilidad: el contador tiene una rotura (+700%)
-		 * Función de selección: contador con mayor gasto/contador con mayor gasto respecto a su media
-		 * Función objetivo: Comprobar todos los candidatos
+		 * Soluciï¿½n: hemos comprobado todos los candidatos
+		 * Condiciï¿½n de factibilidad: el contador tiene una rotura (+700%)
+		 * Funciï¿½n de selecciï¿½n: contador con mayor gasto/contador con mayor gasto respecto a su media
+		 * Funciï¿½n objetivo: Comprobar todos los candidatos
 		 * 
 		 */
 		
@@ -689,7 +706,7 @@ public class Damero {
 			
 			while(!candidatos.isEmpty()) { //Solucion: hemos comprobado todos los manometros
 				
-				posible = contadorMayorGasto(candidatos);//Función de selección
+				posible = contadorMayorGasto(candidatos);//Funciï¿½n de selecciï¿½n
 				candidatos.remove(posible); //Eliminamos posible de la lista de candidatos
 				if(roturaContador(posible)) {//Devuelve true o false si el manometro tiene una rotura o no
 					elegidos.add(posible);
@@ -724,7 +741,5 @@ public class Damero {
 			return false;
 		}	
 
-	
-	
 	
 }

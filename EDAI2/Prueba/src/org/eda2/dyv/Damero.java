@@ -170,7 +170,6 @@ public class Damero {
 	 * columnas pares
 	 */
 	private void inicializarContadoresPar(ParEdificios[][] pE) { // Deberiamos inicializar primero los de cada edificio y a partir de ese
-
 		// RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
 		for (int i = 0; i < pE.length; i++) {
 			for (int j = 0; j < pE[0].length; j++) {
