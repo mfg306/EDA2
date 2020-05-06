@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 /**
  * Programa que muestra el funcionamiento
- * @author marta
+ * @author marta y alejandro
  *
  */
 public class Programa {
@@ -49,5 +49,4 @@ public class Programa {
 			System.out.println("No se han encontrado roturas de segundo grado.");
 		}
 	}
-
 }
