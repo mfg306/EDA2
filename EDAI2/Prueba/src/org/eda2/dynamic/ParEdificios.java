@@ -1,4 +1,4 @@
-package org.eda2.greedy;
+package org.eda2.dynamic;
 
 public class ParEdificios {
 

@@ -2,7 +2,6 @@ package org.eda2.greedy;
 
 import org.junit.Assert;
 import org.junit.Test;
-import java.util.ArrayList;
 
 public class DameroTest {
 	
@@ -95,7 +94,6 @@ public class DameroTest {
 		}
 		
 	}
-	
 	
 	@Test
 	public void TestSoloHayContadoresMoradosEnUltimaFila() {
@@ -237,6 +235,80 @@ public class DameroTest {
 		Assert.assertTrue(condicion);		
 	}
 	
+	@Test
+	public void TestObtenerCoordenadas() {
+		Damero d = new Damero(3,3);
+		String[] expected = {"0","1", "D"};
+		Contador c = new Contador(5000);
+		
+		d.setParEdificio(0, 1, c, "D");
+		
+		String[] result = d.obtenerCoordenadas(c);
+		
+		Assert.assertArrayEquals(expected, result);
+
+	}
+	
+	@Test 
+	public void TestComprobarRoturaPropiaVerde() {
+		
+		//Vamos a hacer un damero personalizado en el que sepamos que hay rotura propia y luego llamamos al metodo para que lo compruebe
+		
+		Damero d = new Damero(3,3);
+		Contador c = new Contador(5000);
+		//columna, fila
+		d.setParEdificio(0, 0, new Contador(0), "D");
+		
+		d.setParEdificio(0, 1, new Contador(0), "D");
+		d.setParEdificio(0, 1, new Contador(0), "V");
+		
+		d.setParEdificio(0, 2, new Contador(0), "D");
+		d.setParEdificio(0, 2, new Contador(0), "M");
+		
+		d.setParEdificio(1, 0, new Contador(20), "I");
+		d.setParEdificio(1, 0, new Contador(20), "D");
+		
+		d.setParEdificio(1, 1, new Contador(20), "I");
+		d.setParEdificio(1, 1, new Contador(20), "D");
+		d.setParEdificio(1, 1, c, "V");
+		
+		d.setParEdificio(1, 2, new Contador(0), "I");
+		d.setParEdificio(1, 2, new Contador(0), "D");
+
+		Assert.assertTrue((d.comprobarRoturaPropia(c , d.obtenerCoordenadas(c))));
+		
+	}
+	
+	@Test 
+	public void TestComprobarRoturaPropiaMorado() {
+		
+		//Vamos a hacer un damero personalizado en el que sepamos que hay rotura propia y luego llamamos al metodo para que lo compruebe
+		
+		Damero d = new Damero(3,3);
+		Contador c = new Contador(5000);
+		//columna, fila
+		d.setParEdificio(0, 0, new Contador(0), "D");
+		
+		d.setParEdificio(0, 1, new Contador(0), "D");
+		d.setParEdificio(0, 1, new Contador(20), "V");
+		
+		d.setParEdificio(0, 2, new Contador(20), "D");
+		d.setParEdificio(0, 2, c, "M");
+		
+		d.setParEdificio(1, 0, new Contador(0), "I");
+		d.setParEdificio(1, 0, new Contador(0), "D");
+		
+		d.setParEdificio(1, 1, new Contador(0), "I");
+		d.setParEdificio(1, 1, new Contador(0), "D");
+		d.setParEdificio(1, 1, new Contador(0), "V");
+		
+		d.setParEdificio(1, 2, new Contador(0), "I");
+		d.setParEdificio(1, 2, new Contador(0), "D");
+
+		Assert.assertTrue((d.comprobarRoturaPropia(c , d.obtenerCoordenadas(c))));
+		
+	}
+	
 	
 	@Test 
 	public void TestDiminuyeLaPresion() {
@@ -252,7 +324,12 @@ public class DameroTest {
 		Assert.assertTrue(presionCasillaOrigen > presionCasillaFinal);
 	}
 	
-	
+	@Test
+	public void TestResolverContadoresGreedy() {
+		Damero damero = new Damero(5,5); //NO ESTA CONTEMPLADO EL CASO IMPAR --> ahora si
+		
+		damero.resolverContadoresRoturaPropiaGreedy();
+	}
 
 
 }

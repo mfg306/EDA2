@@ -657,7 +657,4 @@ public class DameroTest {
 		System.out.println(sumaTiempos/10);
 
 	}
-	
-
-
 }

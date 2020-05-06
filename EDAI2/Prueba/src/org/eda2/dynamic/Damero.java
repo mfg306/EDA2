@@ -1,4 +1,4 @@
-package org.eda2.greedy;
+package org.eda2.dynamic;
 
 import java.util.ArrayList;
 import java.util.PriorityQueue;
@@ -111,33 +111,6 @@ public class Damero {
 	public ParEdificios[][] getMedias() {
 		return this.matrizMedias;
 	}
-	
-	//PARA CUANDO NO QUEREMOS PERSONALIZAR EL DAMERO EN LOS TETS
-	
-	
-	//columna, fila
-	public void setParEdificio(int i, int j, Contador c, String tipo) {
-		switch(tipo) {
-		case "V":
-			if(j == 0 || j == this.pEdificios[0].length) throw new RuntimeException("Ahí no se debe colocar.");
-			this.pEdificios[i][j].setcVerde(c);
-			break;
-		case "M":
-			if(j== 0) throw new RuntimeException("Ahí no se debe colocar.");
-			this.pEdificios[i][j].setcMorado(c);
-			break;
-		case "I":
-			if(this.pEdificios[0].length % 2 != 0 && i == 0) throw new RuntimeException("Ahí no se debe colocar.");
-			this.pEdificios[i][j].setcIzquierda(c);
-			break;
-		case "D":
-			this.pEdificios[i][j].setcDerecha(c);
-			break;
-		default: throw new RuntimeException("Tipo no válido");
-		}
-	} 
-		
-	
 
 	// CONTADORES
 	private void inicializarContadoresMedia() {
@@ -453,17 +426,10 @@ public class Damero {
 	public double getPresionPar(int i, int j) {
 		return this.pEdificios[i][j].getMan().getPresion();
 	}
-	
-	
-	
 
-	/**
-	 * PROBLEMA a.2
-	 * @return una lista con el id de los contadores que presentan una rotura propia
-	 */
-	public ArrayList<Integer> resolverContadoresRoturaPropiaGreedy() {
+	public ArrayList<Contador> resolverContadoresGreedy() {
 		ArrayList<Contador> candidatos = obtenerCandidatosContadores(); // todos los contadores
-		ArrayList<Integer> elegidos = new ArrayList<>();
+		ArrayList<Contador> elegidos = new ArrayList<>();
 		Contador posible;
 		
 		//Para no tener que ir buscando el mayor en cada iteracion (busqueda es O(n) dentro del while O(n) ==> O(n2), vamos a darlos directamente ordenados
@@ -475,21 +441,31 @@ public class Damero {
 		for(Contador c : candidatos) {
 			candidatosOrdenados.offer(c);
 		}
-		
-		//Hemos sustituido la funcion de seleccion por una cola de prioridad que contiene los contadores ordenados por el criterio que 
-		//hemos elegido (el criterio de la funcion de seleccion)
-		
+				
 		while (candidatos.size() != 0) { // Solucion: hemos comprobado todos los contadores
 //			posible = contadorMayorGasto(candidatos);// Funcion de seleccion
-			posible = candidatosOrdenados.poll(); 
+			posible = candidatosOrdenados.poll();
 			candidatos.remove(posible); // Eliminamos posible de la lista de candidatos
 			//El rotura propia falla
 			if (roturaPropia(posible)) {// Devuelve true o false si el contador tiene una rotura propia o no
-				elegidos.add(posible.getId());
+				elegidos.add(posible);
 			}
 		}
 		return elegidos;
+		
 	}
+
+//		public Contador contadorMayorGasto(ArrayList<Contador> candidatos) {
+//			double max = -1;
+//			Contador maximo = new Contador();
+//			for(Contador c: candidatos) {
+//				if (c.getConsumo()>max) {
+//					max = c.getConsumo();
+//					maximo = c;
+//				}
+//			}
+//			return maximo;
+//		}
 
 	/**
 	 * @param candidatos lista de candidatos del que vamos a coger aquel 
@@ -520,9 +496,10 @@ public class Damero {
 	 */
 	public boolean roturaPropia(Contador con) { // Funcion de factibilidad
 		String[] indices = obtenerCoordenadas(con);
-		int i = Integer.parseInt(indices[0]); //Fallo parseInt
+		int i = Integer.parseInt(indices[0]);
 		int j = Integer.parseInt(indices[1]);
-		if (!comprobarRoturaPropia(con, indices)) return false; // Si la rotura no es del propio contador, ya no nos interesa
+		if (!comprobarRoturaPropia(con, indices))
+			return false; // Si la rotura no es del propio contador, ya no nos interesa
 
 		Contador media = new Contador();
 		switch (indices[2]) {
@@ -542,7 +519,8 @@ public class Damero {
 		double consumo = con.getConsumo();
 		double mediaCon = media.getConsumo();
 		// comprueba si el consumo es mayor a la media en 5 veces
-		if (consumo > mediaCon * 5) return true;
+		if (consumo > mediaCon * 5)
+			return true;
 		return false;
 	}
 
@@ -551,7 +529,7 @@ public class Damero {
 	 * @param indices salida del metodo obtenerCoordenadas
 	 * @return true si la rotura es propia, false en caso contrario
 	 */
-	public boolean comprobarRoturaPropia(Contador con, String[] indices) { // Este metodo comprueba si hay rotura																// propia
+	private boolean comprobarRoturaPropia(Contador con, String[] indices) { // Este metodo comprueba si hay rotura																// propia
 		int i = Integer.parseInt(indices[0]);
 		int j = Integer.parseInt(indices[1]);
 				
@@ -577,7 +555,8 @@ public class Damero {
 			// He cambiado las dos lineas de abajo
 			double izquierda = (this.pEdificios[i][j].getcIzquierda() != null) ? izquierda = this.pEdificios[i][j].getcIzquierda().getConsumo() : 0.0;
 			double moradoI = (i > 0 && this.pEdificios[i - 1][j].getcMorado() != null) ? this.pEdificios[i - 1][j].getcMorado().getConsumo() : 0.0;
-			if (morado > (dcha + izquierda + verde + moradoI)) return true;
+			if (morado > (dcha + izquierda + verde + moradoI))
+				return true;
 
 		} else { // Casilla general
 			double izquierda = this.pEdificios[i][j].getcIzquierda().getConsumo();
@@ -599,15 +578,18 @@ public class Damero {
 		boolean encontrado = false;
 		String tipo = "";
 		for (int i = 0; i < pEdificios.length; i++) {
-			if (encontrado) break;
+			if (encontrado)
+				break;
 			for (int j = 0; j < pEdificios[0].length; j++) {
+
 				// Le he añadido el metodo equals a la clase Contador
 				if (this.pEdificios[i][j].getcDerecha() != null && this.pEdificios[i][j].getcDerecha().equals(con)) {
 					encontrado = true;
 					tipo = "D";
 				}
 
-				if (this.pEdificios[i][j].getcIzquierda() != null && this.pEdificios[i][j].getcIzquierda().equals(con)) {
+				if (this.pEdificios[i][j].getcIzquierda() != null
+						&& this.pEdificios[i][j].getcIzquierda().equals(con)) {
 					encontrado = true;
 					tipo = "I";
 				}
