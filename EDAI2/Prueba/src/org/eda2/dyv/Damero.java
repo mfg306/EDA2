@@ -11,11 +11,8 @@ public class Damero {
 	private ArrayList<Integer> roturasContadorTroncal = new ArrayList<>();
 	private ArrayList<Integer> roturasContadorLineasD = new ArrayList<>();
 	private ArrayList<Integer> roturasContadorProblemaRecursivo = new ArrayList<>();
-
 	private ArrayList<Integer> roturaManometroProblemaRecursivo = new ArrayList<>();
-
 	private ArrayList<Integer> roturasManometroProblemaRecursivo = new ArrayList<>();
-
 	private ArrayList<Integer> roturasManometroTroncal = new ArrayList<>();
 	private ArrayList<Integer> roturasManometroLineasD = new ArrayList<>();
 	// Consumo minimo y maximo del contador general
@@ -67,10 +64,10 @@ public class Damero {
 	 */
 	public ParEdificios[] lineaTroncal() {
 		ParEdificios[] pE = new ParEdificios[pEdificios.length];
-		for (int i = 0; i < pE.length; i++) pE[i] = pEdificios[i][pEdificios[0].length - 1];
+		for (int i = 0; i < pE.length; i++)
+			pE[i] = pEdificios[i][pEdificios[0].length - 1];
 		return pE;
 	}
-	
 
 	/**
 	 * 
@@ -78,7 +75,8 @@ public class Damero {
 	 */
 	public ParEdificios[] lineaTroncalMedia() {
 		ParEdificios[] pE = new ParEdificios[pEdificios.length];
-		for (int i = 0; i < pE.length; i++) pE[i] = matrizMedias[i][pEdificios[0].length - 1];
+		for (int i = 0; i < pE.length; i++)
+			pE[i] = matrizMedias[i][pEdificios[0].length - 1];
 		return pE;
 	}
 
@@ -89,7 +87,8 @@ public class Damero {
 	 */
 	public ParEdificios[] lineasDistribucion(int i) {
 		ParEdificios[] pE = new ParEdificios[this.pEdificios[0].length - 1]; // Le quitamos la linea troncal
-		for (int j = 0; j < this.pEdificios[i].length - 1; j++) pE[j] = this.pEdificios[i][j];
+		for (int j = 0; j < this.pEdificios[i].length - 1; j++)
+			pE[j] = this.pEdificios[i][j];
 		return pE;
 	}
 
@@ -101,7 +100,8 @@ public class Damero {
 	 */
 	public ParEdificios[] lineasDistribucionMedias(int i) {
 		ParEdificios[] pE = new ParEdificios[this.matrizMedias[0].length - 1]; // Le quitamos la linea troncal
-		for (int j = 0; j < this.matrizMedias[i].length - 1; j++) pE[j] = this.matrizMedias[i][j];
+		for (int j = 0; j < this.matrizMedias[i].length - 1; j++)
+			pE[j] = this.matrizMedias[i][j];
 		return pE;
 	}
 
@@ -123,7 +123,8 @@ public class Damero {
 
 	/**
 	 * 
-	 * @return roturasContadorTroncal una lista con las roturas de los contadores de la linea troncal
+	 * @return roturasContadorTroncal una lista con las roturas de los contadores de
+	 *         la linea troncal
 	 */
 	public ArrayList<Integer> getRoturasContadorTroncal() {
 		return roturasContadorTroncal;
@@ -131,19 +132,18 @@ public class Damero {
 
 	/**
 	 * 
-	 * @return roturasContadorLineasD una lista con las roturas de los contadores de las lineas de distribucion
+	 * @return roturasContadorLineasD una lista con las roturas de los contadores de
+	 *         las lineas de distribucion
 	 */
 	public ArrayList<Integer> getRoturasContadorLineasD() {
 		return roturasContadorLineasD;
 	}
-	
+
 	/**
-<<<<<<< HEAD
 	 * @return una lista con las roturas de los manometros de la linea troncal
-=======
+	 *         =======
 	 * 
 	 * @return roturasManometroTroncal
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	public ArrayList<Integer> getRoturasManometroTroncal() {
 		return roturasManometroTroncal;
@@ -151,6 +151,7 @@ public class Damero {
 
 	/**
 	 * Establece el valor de roturasManometroTroncal
+	 * 
 	 * @param roturasManometroTroncal
 	 */
 	public void setRoturasManometroTroncal(ArrayList<Integer> roturasManometroTroncal) {
@@ -158,12 +159,10 @@ public class Damero {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * @return una lista con las roturas de los manometros de las lineas de distribucion
-=======
+	 * @return una lista con las roturas de los manometros de las lineas de
+	 *         distribucion =======
 	 * 
 	 * @return roturasManometroLineasD
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	public ArrayList<Integer> getRoturasManometroLineasD() {
 		return roturasManometroLineasD;
@@ -171,28 +170,30 @@ public class Damero {
 
 	/**
 	 * Establece el valor de roturasManometroLineasD
+	 * 
 	 * @param roturasManometroLineasD
 	 */
 	public void setRoturasManometroLineasD(ArrayList<Integer> roturasManometroLineasD) {
 		this.roturasManometroLineasD = roturasManometroLineasD;
 	}
 
-
 	// CONTADORES
 	/**
 	 * LLama al metodo Par o Impar segun el caso
 	 */
 	private void inicializarContadores(ParEdificios[][] pE) {
-		if (columnas % 2 == 0) inicializarContadoresPar(pE);
-		else inicializarContadoresImpar(pE);
+		if (columnas % 2 == 0)
+			inicializarContadoresPar(pE);
+		else
+			inicializarContadoresImpar(pE);
 	}
 
 	/**
 	 * Inicializa los datos de los contadores en el caso de que la ciudad tenga
 	 * columnas pares
 	 */
-
-	private void inicializarContadoresPar(ParEdificios[][] pE) { // Deberiamos inicializar primero los de cada edificio y a partir de ese
+	private void inicializarContadoresPar(ParEdificios[][] pE) { // Deberiamos inicializar primero los de cada edificio
+																	// y a partir de ese
 
 		// RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
 		for (int i = 0; i < pE.length; i++) {
@@ -249,41 +250,40 @@ public class Damero {
 		}
 	}
 
-<<<<<<< HEAD
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-=======
-	/**
-	 * @return string con los datos de cada casilla del damero y sus respectivas coordenadas
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString() /**
+	 * 
+	 * @return string con los datos de cada casilla del damero y sus respectivas
+	 * coordenadas
 	 */
 	public String toString() {
 		String resultado = "";
-		for(int j=0; j<pEdificios[0].length; j++) {
-			for(int i=0; i<pEdificios.length; i++) {
-				resultado +=  pEdificios[i][j].toString() + "(" + i+" ,"+j + ")" + "\t";
+		for (int j = 0; j < pEdificios[0].length; j++) {
+			for (int i = 0; i < pEdificios.length; i++) {
+				resultado += pEdificios[i][j].toString() + "(" + i + " ," + j + ")" + "\t";
 			}
-			resultado += "\n";			
+			resultado += "\n";
 		}
 		return resultado;
 	}
 
 	/**
-<<<<<<< HEAD
-	 * @return un string con los datos de lsa medias 
-=======
+	 * <<<<<<< HEAD
 	 * 
-	 * @return string con las medias de los contadores de la ciudad
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
+	 * @return un string con los datos de lsa medias =======
+	 * 
+	 * @return string con las medias de los contadores de la ciudad >>>>>>>
+	 *         1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	public String toStringMedias() {
 		String resultado = "";
-		for(int j=0; j<matrizMedias[0].length; j++) {
-			for(int i=0; i<matrizMedias.length; i++) {
-				resultado +=  matrizMedias[i][j].toString() + "(" + i+" ,"+j + ")" + "\t";
+		for (int j = 0; j < matrizMedias[0].length; j++) {
+			for (int i = 0; i < matrizMedias.length; i++) {
+				resultado += matrizMedias[i][j].toString() + "(" + i + " ," + j + ")" + "\t";
 			}
-			resultado += "\n";			
+			resultado += "\n";
 		}
 		return resultado;
 	}
@@ -294,11 +294,11 @@ public class Damero {
 	 */
 	public String toStringM() {
 		String resultado = "";
-		for(int j=0; j<pEdificios[0].length; j++) {
-			for(int i=0; i<pEdificios.length; i++) {
-				resultado +=  pEdificios[i][j].toStringManometros() + "(" + i+" ,"+j + ")" + "\t";
+		for (int j = 0; j < pEdificios[0].length; j++) {
+			for (int i = 0; i < pEdificios.length; i++) {
+				resultado += pEdificios[i][j].toStringManometros() + "(" + i + " ," + j + ")" + "\t";
 			}
-			resultado += "\n";	
+			resultado += "\n";
 		}
 		return resultado;
 	}
@@ -317,26 +317,25 @@ public class Damero {
 		return resultado;
 	}
 
-
 	/**
 	 * 
-	 * @param i la columna en la que se encuentra
-	 * @param j la fila en la que se encuentra
+	 * @param i          la columna en la que se encuentra
+	 * @param j          la fila en la que se encuentra
 	 * @param pEdificios en que estructura queremos buscar
-	 * @param cont de que tipo es 
+	 * @param cont       de que tipo es
 	 * @return el consumo de un determinado edificio
 	 */
 	public double getLitrosEdificio(int i, int j, ParEdificios[][] pEdificios, String cont) {
-		if (cont.equals("D")) return pEdificios[i][j].getcDerecha().getConsumo();
-		else if (cont.equals("I")) return pEdificios[i][j].getcIzquierda().getConsumo();
-		else if (cont.equals("V")) return pEdificios[i][j].getcVerde().getConsumo();
-		else return pEdificios[i][j].getcMorado().getConsumo();
+		if (cont.equals("D"))
+			return pEdificios[i][j].getcDerecha().getConsumo();
+		else if (cont.equals("I"))
+			return pEdificios[i][j].getcIzquierda().getConsumo();
+		else if (cont.equals("V"))
+			return pEdificios[i][j].getcVerde().getConsumo();
+		else
+			return pEdificios[i][j].getcMorado().getConsumo();
 	}
 
-<<<<<<< HEAD
-=======
-	
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	/**
 	 * 
 	 * @return el consumo de toda la ciudad sin tener en cuenta la casilla general
@@ -348,16 +347,19 @@ public class Damero {
 			for (int j = 0; j < this.pEdificios[0].length; j++) {
 				if (i == (this.pEdificios.length - 1) && j == this.pEdificios[0].length - 1)
 					resultado += this.pEdificios[i][j].getcIzquierda().getConsumo();
-				else if (columnas % 2 != 0 && i == 0) resultado += this.pEdificios[i][j].getcDerecha().getConsumo();
-				else resultado += this.pEdificios[i][j].getcDerecha().getConsumo() + this.pEdificios[i][j].getcIzquierda().getConsumo();
+				else if (columnas % 2 != 0 && i == 0)
+					resultado += this.pEdificios[i][j].getcDerecha().getConsumo();
+				else
+					resultado += this.pEdificios[i][j].getcDerecha().getConsumo()
+							+ this.pEdificios[i][j].getcIzquierda().getConsumo();
 			}
 		}
 		return resultado;
 	}
 
 	/**
-	 * @return un ArrayList de Integer en el que guardaremos el id del contador que ha generado la rotura
-	 * en la linea troncal
+	 * @return un ArrayList de Integer en el que guardaremos el id del contador que
+	 *         ha generado la rotura en la linea troncal
 	 */
 	public ArrayList<Integer> consumoExcesivoTroncal() {
 		ArrayList<Integer> resultado = new ArrayList<>();
@@ -367,21 +369,23 @@ public class Damero {
 		roturasContadorProblemaRecursivo.clear();
 		resultado = this.consumoExcesivoRec(this.lineaTroncal(), this.lineaTroncalMedia(), i, j);
 
-		if (!resultado.isEmpty()) this.roturasContadorTroncal.addAll(resultado);
+		if (!resultado.isEmpty())
+			this.roturasContadorTroncal.addAll(resultado);
 
 		return resultado;
 	}
 
 	/**
-	 * @return un ArrayList de Integer en el que guardamos el id del contador que ha generado la rotura
-	 * en las lineas de distribucion
+	 * @return un ArrayList de Integer en el que guardamos el id del contador que ha
+	 *         generado la rotura en las lineas de distribucion
 	 */
 	public ArrayList<Integer> consumoExcesivoLineasDistribucion() {
 		ArrayList<Integer> resultado = new ArrayList<>();
 		int tamMax = this.pEdificios.length;
 
 		for (int i = 0; i < tamMax; i++) { // Para cada columna llamamos al metodo consumoExcesivoRec
-			resultado = this.consumoExcesivoRec(lineasDistribucion(i), lineasDistribucionMedias(i), 0, lineasDistribucion(i).length - 1);
+			resultado = this.consumoExcesivoRec(lineasDistribucion(i), lineasDistribucionMedias(i), 0,
+					lineasDistribucion(i).length - 1);
 			if (!resultado.isEmpty()) {
 				roturasContadorLineasD.clear();
 				roturasContadorLineasD.addAll(resultado);
@@ -390,37 +394,37 @@ public class Damero {
 		return roturasContadorLineasD;
 	}
 
-
 	/**
-<<<<<<< HEAD
-	 * @param pE estructura con los datos generados aleatoriamente
+	 * @param pE    estructura con los datos generados aleatoriamente
 	 * @param media los datos de las medias con las que vamos a comparar
-	 * @param i posicion inicial a partir de la cual buscar
-	 * @param j posicion final de busqueda 
+	 * @param i     posicion inicial a partir de la cual buscar
+	 * @param j     posicion final de busqueda
 	 * @return una lista de enteros con los id de los contadores que generan roturas
-=======
-	 * Nuestro algoritmo recursivo va a dividir el problema hasta el máximo. Es
-	 * decir, vamos a coger nuestro array de parEdificios y vamos a simplificarlo
-	 * hasta quedarnos con un solo par. Sobre este par podemos ver si se dan las
-	 * condiciones necesarias para que se produzca una rotura
+	 *         Nuestro algoritmo recursivo va a dividir el problema hasta el máximo.
+	 *         Es decir, vamos a coger nuestro array de parEdificios y vamos a
+	 *         simplificarlo hasta quedarnos con un solo par. Sobre este par podemos
+	 *         ver si se dan las condiciones necesarias para que se produzca una
+	 *         rotura
 	 * 
 	 * @param pE es la estructura a la que vamos a buscarle roturas de contadores
 	 * @param i  posicion inicial a partir de la cual vamos a empezar a buscar
 	 * @param j  posicion final de la búsqueda
 	 * @return un ArrayList con todos los contadores que han presentado una rotura
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	private ArrayList<Integer> consumoExcesivoRec(ParEdificios[] pE, ParEdificios[] media, int i, int j) {
 		int mitad;
 
 		if (i == j) { // Caso base
-			if (pE[i].getcDerecha() != null && pE[i].getcDerecha().getConsumo() > 7 * media[i].getcDerecha().getConsumo()) {
+			if (pE[i].getcDerecha() != null
+					&& pE[i].getcDerecha().getConsumo() > 7 * media[i].getcDerecha().getConsumo()) {
 				roturasContadorProblemaRecursivo.add(pE[i].getcDerecha().getId());
 			}
-			if (pE[i].getcIzquierda() != null && pE[i].getcIzquierda().getConsumo() > 7 * media[i].getcIzquierda().getConsumo()) {
+			if (pE[i].getcIzquierda() != null
+					&& pE[i].getcIzquierda().getConsumo() > 7 * media[i].getcIzquierda().getConsumo()) {
 				roturasContadorProblemaRecursivo.add(pE[i].getcIzquierda().getId());
 			}
-			if (pE[i].getcMorado() != null && pE[i].getcMorado().getConsumo() > 7 * media[i].getcMorado().getConsumo()) {
+			if (pE[i].getcMorado() != null
+					&& pE[i].getcMorado().getConsumo() > 7 * media[i].getcMorado().getConsumo()) {
 				roturasContadorProblemaRecursivo.add(pE[i].getcMorado().getId());
 			}
 			if (pE[i].getcVerde() != null && pE[i].getcVerde().getConsumo() > 7 * media[i].getcVerde().getConsumo()) {
@@ -443,28 +447,32 @@ public class Damero {
 		// Obtenemos el ID del contador y lo buscamos en nuestra matriz
 		if (!consumo.isEmpty()) {
 			for (Integer id : consumo) {
-					for (int i = 0; i < this.pEdificios.length; i++) {
-						for (int j = 0; j < this.pEdificios[i].length; j++) {
-							if (pEdificios[i][j].containsContadorID(id)) {
-								String tipo = pEdificios[i][j].getTipo(id);
-								if (tipo.equals("D"))
-									cadena += "* Casilla: [" + i + ", " + j + "]. El contador derecho ha provocado la rotura\n";
-								else if (tipo.equals("I"))
-									cadena += "* Casilla: [" + i + ", " + j + "]. El contador izquierdo ha provocado la rotura\n";
-								else if (tipo.equals("M"))
-									cadena += "* Casilla: [" + i + ", " + j + "]. El contador morado ha provocado la rotura\n";
-								else if (tipo.equals("V"))
-									cadena += "* Casilla: [" + i + ", " + j + "]. El contador verde ha provocado la rotura\n";
-							}
+				for (int i = 0; i < this.pEdificios.length; i++) {
+					for (int j = 0; j < this.pEdificios[i].length; j++) {
+						if (pEdificios[i][j].containsContadorID(id)) {
+							String tipo = pEdificios[i][j].getTipo(id);
+							if (tipo.equals("D"))
+								cadena += "* Casilla: [" + i + ", " + j
+										+ "]. El contador derecho ha provocado la rotura\n";
+							else if (tipo.equals("I"))
+								cadena += "* Casilla: [" + i + ", " + j
+										+ "]. El contador izquierdo ha provocado la rotura\n";
+							else if (tipo.equals("M"))
+								cadena += "* Casilla: [" + i + ", " + j
+										+ "]. El contador morado ha provocado la rotura\n";
+							else if (tipo.equals("V"))
+								cadena += "* Casilla: [" + i + ", " + j
+										+ "]. El contador verde ha provocado la rotura\n";
 						}
 					}
 				}
 			}
-		return (cadena.isEmpty()) ? "No hay roturas.\n " : cadena;
 		}
-	
+		return (cadena.isEmpty()) ? "No hay roturas.\n " : cadena;
+	}
+
 	// MANOMETROS
-	
+
 	/**
 	 * Inicializa los datos de los manometros de la ciudad
 	 */
@@ -473,7 +481,7 @@ public class Damero {
 		int alto = pEdificios[0].length - 1;
 		double pAnterior, error;
 		double x;
-		
+
 		for (int j = pEdificios[0].length - 1; j >= 1; j--) {
 			for (int i = pEdificios.length - 1; i >= 0; i--) {
 				if (i == ancho && j == alto) { // Manómetro general
@@ -482,118 +490,112 @@ public class Damero {
 				}
 				// Obtenemos el valor de la presion del manometro anterior para obtener el
 				// siguiente a partir de él
-				if (j == alto) pAnterior = this.pEdificios[i + 1][j].getMan().getPresion();
-				else pAnterior = this.pEdificios[i][j + 1].getMan().getPresion();
+				if (j == alto)
+					pAnterior = this.pEdificios[i + 1][j].getMan().getPresion();
+				else
+					pAnterior = this.pEdificios[i][j + 1].getMan().getPresion();
 
-				x = Math.random() * (13 - 55 + 1) + 55; //cantidad a disminuir
-				
-				//si se ha perdido más de un 50%, entonces es porque ha habido algun problema tecnico en el 
-				//manometro i, y no ha podido llegar la presion al manometro i+1
-				
-				if(x > 50) { //INVOCANDO EL CASO DEL REVENTON
+				x = Math.random() * (13 - 55 + 1) + 55; // cantidad a disminuir
+
+				// si se ha perdido más de un 50%, entonces es porque ha habido algun problema
+				// tecnico en el
+				// manometro i, y no ha podido llegar la presion al manometro i+1
+
+				if (x > 50) { // INVOCANDO EL CASO DEL REVENTON
 					this.pEdificios[i][j].setMan(new Manometro(0.0));
 				} else {
-					error = pAnterior - (pAnterior * x / 100); //presionAnterior disminuida una cantidad x/100
-<<<<<<< HEAD
-
-=======
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
+					error = pAnterior - (pAnterior * x / 100); // presionAnterior disminuida una cantidad x/100
 					this.pEdificios[i][j].setMan(new Manometro((Math.random() * (error - pAnterior + 1) + pAnterior)));
 				}
-				
 
 			}
 		}
 	}
-	
+
 	/**
 	 * @param i columna del ParEdificio al que queremos acceder
 	 * @param j fila del ParEdificio al que queremos acceder
-	 * @return la presion 
+	 * @return la presion
 	 */
 	public double getPresionPar(int i, int j) {
 		return this.pEdificios[i][j].getMan().getPresion();
 	}
-	
+
 	/**
-	 * @return una lista con los IDS de los manometros que presentan una rotura de 
-	 * primer grado en la linea troncal
+	 * @return una lista con los IDS de los manometros que presentan una rotura de
+	 *         primer grado en la linea troncal
 	 */
-	public ArrayList<Integer> perdidaExcesivaPresionTroncal(){
+	public ArrayList<Integer> perdidaExcesivaPresionTroncal() {
 		ArrayList<Integer> resultado = new ArrayList<>();
 		ParEdificios[] pE = this.lineaTroncal();
 		this.roturasManometroTroncal.clear();
-		
-		resultado = this.perdidaExcesivaPresionRec(pE, 0, pE.length-1);
-		
-		if(!resultado.isEmpty()) {
+
+		resultado = this.perdidaExcesivaPresionRec(pE, 0, pE.length - 1);
+
+		if (!resultado.isEmpty()) {
 			this.roturasManometroTroncal.addAll(resultado);
 		}
-		
+
 		return resultado;
 	}
-	
+
 	/**
-	 * @return una lista con los IDS de los manometros que presentan una rotura de 
-	 * primer grado en las lineas de distribucion
+	 * @return una lista con los IDS de los manometros que presentan una rotura de
+	 *         primer grado en las lineas de distribucion
 	 */
-	public ArrayList<Integer> perdidaExcesivaPresionLineasDistribucion(){
+	public ArrayList<Integer> perdidaExcesivaPresionLineasDistribucion() {
 		ArrayList<Integer> resultado = new ArrayList<>();
 		int tamMax = this.pEdificios.length;
-		
-		
+
 		ParEdificios[] pE = new ParEdificios[this.pEdificios[0].length];
-			
-		for(int i=0; i<tamMax; i++) {
-			//Tenemos que quitarle la primera fila porque no hay manometros
+
+		for (int i = 0; i < tamMax; i++) {
+			// Tenemos que quitarle la primera fila porque no hay manometros
 			pE = this.elminarPrimeraFila(this.lineasDistribucion(i));
-			resultado = this.perdidaExcesivaPresionRec(pE, 0, pE.length-1);
-			
-			if(!resultado.isEmpty()) {
+			resultado = this.perdidaExcesivaPresionRec(pE, 0, pE.length - 1);
+
+			if (!resultado.isEmpty()) {
 				roturasManometroLineasD.clear();
 				roturasManometroLineasD.addAll(resultado);
 			}
 		}
 		return roturasManometroLineasD;
 	}
-	
-	
 
 	/**
 	 * @param pE array de ParEdificios al que queremos eliminarle la primera fila
-	 * @return el array sin la primera fila, puesto que los manometros son nulos, los quitamos
+	 * @return el array sin la primera fila, puesto que los manometros son nulos,
+	 *         los quitamos
 	 */
 	public ParEdificios[] elminarPrimeraFila(ParEdificios[] pE) {
-		ParEdificios[] resultado = new ParEdificios[pE.length-1];
-		for(int i=0; i<resultado.length; i++) {
-			resultado[i] = pE[i+1];
+		ParEdificios[] resultado = new ParEdificios[pE.length - 1];
+		for (int i = 0; i < resultado.length; i++) {
+			resultado[i] = pE[i + 1];
 		}
-		
+
 		return resultado;
 	}
-		
 
 	/**
 	 * @param pE estructura donde vamos a buscar las roturas
-	 * @param i posicion donde empezar a buscar
-	 * @param j posicion donde dejar de buscar
-	 * @return una lista con los id de los manometros que presentan rotura 
+	 * @param i  posicion donde empezar a buscar
+	 * @param j  posicion donde dejar de buscar
+	 * @return una lista con los id de los manometros que presentan rotura
 	 */
-	private ArrayList<Integer> perdidaExcesivaPresionRec(ParEdificios[] pE, int i, int j){
+	private ArrayList<Integer> perdidaExcesivaPresionRec(ParEdificios[] pE, int i, int j) {
 		int mitad;
-		if(j-i == 1) {
-			if(pE[i].getMan().getPresion() < (pE[j].getMan().getPresion() - 0.1*pE[j].getMan().getPresion())) {
+		if (j - i == 1) {
+			if (pE[i].getMan().getPresion() < (pE[j].getMan().getPresion() - 0.1 * pE[j].getMan().getPresion())) {
 				this.roturasManometroProblemaRecursivo.add(pE[i].getMan().getId());
 			}
 		} else {
-			mitad = (i + j)/2;
+			mitad = (i + j) / 2;
 			perdidaExcesivaPresionRec(pE, i, mitad);
 			perdidaExcesivaPresionRec(pE, mitad, j);
 		}
-		return this.roturasManometroProblemaRecursivo;		
+		return this.roturasManometroProblemaRecursivo;
 	}
-	
-	
+
 	/**
 	 * @param roturas la lista con las roturas encontradas
 	 * @return una cadena con las casillas en las que hay roturas
@@ -611,9 +613,4 @@ public class Damero {
 		}
 		return cadena;
 	}
-<<<<<<< HEAD
-	
 }
-=======
-}
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085

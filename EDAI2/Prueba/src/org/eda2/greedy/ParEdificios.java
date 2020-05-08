@@ -101,4 +101,7 @@ public class ParEdificios {
 		return "I " + this.getcIzquierda() + " | D " + this.getcDerecha() + " | M " + this.getcMorado() + " | V " + this.getcVerde() ;
 	}
 	
+	
+	
+	
 }

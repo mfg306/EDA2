@@ -1,6 +1,9 @@
 package org.eda2.dyv;
 
-
+/**
+ * @author marta
+ *
+ */
 public class Contador {
 
 	private double consumo;
@@ -8,11 +11,8 @@ public class Contador {
 	private int id;
 
 	/**
-<<<<<<< HEAD
 	 * Constructor vacio
-=======
 	 * Constructor por defecto de la clase Contador
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	public Contador() { 
 		this.consumo = (Math.random() * (108 - 162 + 1) + 162); // Consumo diario
@@ -21,13 +21,11 @@ public class Contador {
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * @param consumo el consumo que queremos asignarle al contador
 =======
 	 * Constructor de la clase Contador que asigna el consumo
 	 * pasado por par�metro como consumo del contador creado
 	 * @param consumo
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	public Contador(double consumo) {
 		this.consumo = consumo;
@@ -73,5 +71,5 @@ public class Contador {
 	public String toString() {
 		return "(" +this.id+ ")" + this.consumo;
 	}
-
+	
 }

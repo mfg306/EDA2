@@ -1,7 +1,7 @@
 package org.eda2.greedy;
-
 import java.util.ArrayList;
 import java.util.PriorityQueue;
+
 
 public class Damero {
 
@@ -762,17 +762,43 @@ public class Damero {
 	 * 
 	 */
 
-	public ArrayList<Contador> resolverConsumidoresGreedy() {
-		ArrayList<Contador> candidatos = obtenerCandidatosConsumidores(); // todos los manometros
-		ArrayList<Contador> elegidos = new ArrayList<>();
+	
+	
+	/*
+	 * 		ArrayList<Contador> candidatos = obtenerCandidatosContadores(); // todos los contadores
+		ArrayList<Integer> elegidos = new ArrayList<>();
 		Contador posible;
+		PriorityQueue<Contador> candidatosOrdenados = new PriorityQueue<>(new ComparadorContadores());
+		
+		for(Contador c : candidatos) {
+			candidatosOrdenados.offer(c);
+		}
+		
+		while (candidatos.size() != 0) { // Solucion: hemos comprobado todos los contadores
+			posible = candidatosOrdenados.poll(); 
+			candidatos.remove(posible); // Eliminamos posible de la lista de candidatos
+			//El rotura propia falla
+			if (roturaPropia(posible)) {// Devuelve true o false si el contador tiene una rotura propia o no
+				elegidos.add(posible.getId());
+			}
+		}
+		return elegidos;*/
+	public ArrayList<Integer> resolverConsumidoresGreedy() {
+		ArrayList<Contador> candidatos = obtenerCandidatosConsumidores(); // todos los manometros
+		ArrayList<Integer> elegidos = new ArrayList<>();
+		Contador posible;
+		PriorityQueue<Contador> candidatosOrdenados = new PriorityQueue<>(new ComparadorContadores());
+
+		for(Contador c : candidatos) {
+			candidatosOrdenados.offer(c);
+		}
 
 		while (!candidatos.isEmpty()) { // Solucion: hemos comprobado todos los manometros
-
-			posible = contadorMayorGasto(candidatos);// Funci�n de selecci�n
+			posible = candidatosOrdenados.poll(); 
+//			posible = contadorMayorGasto(candidatos);// Funci�n de selecci�n
 			candidatos.remove(posible); // Eliminamos posible de la lista de candidatos
 			if (roturaContador(posible)) {// Devuelve true o false si el manometro tiene una rotura o no
-				elegidos.add(posible);
+				elegidos.add(posible.getId());
 			}
 		}
 		return elegidos;

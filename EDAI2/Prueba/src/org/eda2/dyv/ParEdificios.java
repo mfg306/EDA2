@@ -13,16 +13,12 @@ public class ParEdificios {
 	private Manometro man;
 	
 	/**
-<<<<<<< HEAD
 	 * Constructor vacio
-=======
 	 * Constructor por defecto de la clase ParEdificios
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	public ParEdificios() {
 
 	}
-<<<<<<< HEAD
 		
 	/**
 	 * @param cDerecha el contador de la casilla derecha
@@ -30,7 +26,6 @@ public class ParEdificios {
 	 * @param cVerde el contador verde
 	 * @param cMorado el contador morado
 	 * @param man el manometro que hay por cada dos casillas
-=======
 	
 	/**
 	 * Constructor de la clase ParEdificios que establece el valor de todos los
@@ -40,7 +35,6 @@ public class ParEdificios {
 	 * @param cVerde
 	 * @param cMorado
 	 * @param man
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	public ParEdificios(Contador cDerecha, Contador cIzquierda, Contador cVerde, Contador cMorado, Manometro man) {
 		this.cDerecha = cDerecha;
@@ -135,15 +129,12 @@ public class ParEdificios {
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * @param id el id que queremos buscar de un contador
 	 * @return si se encuentra o no
-=======
 	 * 
 	 * @param id
 	 * @return true si el ParEdificios contiene el contador con la
 	 * id pasada por parámetro
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	public boolean containsContadorID(int id) {
 		if(this.cDerecha!=null && Integer.compare(id, this.cDerecha.getId())==0) return true;
@@ -154,32 +145,22 @@ public class ParEdificios {
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * @param id el id que queremos buscar de un contador
 	 * @return si se encuentra o no
-=======
 	 * 
 	 * @param id
 	 * @return true si el manómetro del ParEdificios tiene
 	 * la id pasada por parámetro
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	public boolean containsManometroID(int id) {
 		if(this.man.getId() == id) return true;
 		return false;
 	}
 	
-<<<<<<< HEAD
-	/**
-	 * @param id el id del contador que queremos saber su tipo
-	 * @return el tipo
-=======
 	/** 
-	 * 
 	 * @param id
 	 * @return tipo del contador con la id pasada por parámetro
 	 * si existe en el ParEdificios
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	public String getTipo(int id) {
 		if(Integer.compare(id, this.cDerecha.getId())==0) return "D";

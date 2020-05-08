@@ -6,19 +6,17 @@ public class ParEdificios {
 	private Contador cIzquierda;
 	private Contador cVerde;
 	private Contador cMorado;
-	private Manometro man;
 	
 	//Constructor vacío
 	public ParEdificios() {
 
 	}
 		
-	public ParEdificios(Contador cDerecha, Contador cIzquierda, Contador cVerde, Contador cMorado, Manometro man) {
+	public ParEdificios(Contador cDerecha, Contador cIzquierda, Contador cVerde, Contador cMorado) {
 		this.cDerecha = cDerecha;
 		this.cIzquierda = cIzquierda;
 		this.cMorado = cMorado;
 		this.cVerde = cVerde;
-		this.man = man;
 	}
 	
 	public Contador getcDerecha() {
@@ -53,24 +51,11 @@ public class ParEdificios {
 		this.cMorado = cMorado;
 	}
 	
-	public Manometro getMan() {
-		return man;
-	}
-
-	public void setMan(Manometro man) {
-		this.man = man;
-	}
-	
 	public boolean containsContadorID(int id) {
 		if(this.cDerecha!=null && Integer.compare(id, this.cDerecha.getId())==0) return true;
 		else if(this.cIzquierda!=null && Integer.compare(id, this.cIzquierda.getId())==0) return true;
 		else if(this.cVerde!=null && Integer.compare(id, this.cVerde.getId())==0) return true;
 		else if(this.cMorado!=null && Integer.compare(id, this.cMorado.getId())==0) return true;
-		return false;
-	}
-	
-	public boolean containsManometroID(int id) {
-		if(this.man.getId() == id) return true;
 		return false;
 	}
 	
@@ -90,11 +75,7 @@ public class ParEdificios {
 	}
 	
 	public String toString() {
-		return "I " + this.getcIzquierda() + " | D " + this.getcDerecha() + " | M " + this.getcMorado() + " | V " + this.getcVerde() + " Man" + this.getMan() ;
-	}
-	
-	public String toStringManometros() {
-		return "Man: " + this.getMan();
+		return "I " + this.getcIzquierda() + " | D " + this.getcDerecha() + " | M " + this.getcMorado() + " | V " + this.getcVerde();
 	}
 	
 	public String toStringContadores() {
