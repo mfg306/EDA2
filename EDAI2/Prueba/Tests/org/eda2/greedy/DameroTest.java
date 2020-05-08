@@ -137,7 +137,7 @@ public class DameroTest {
 	
 	
 	@Test
-	public void TestContadorVerdeSumaIzquierdaYDerechaSituacionPar() {
+	public void TestContadorVerdeSumaIzquierdaYDerechaSituacionPar() { //Este test fallaba (ya esta arreglado). Si la rotura es propia no tiene por que sumar
 		Damero damero = new Damero(4,4);
 		ParEdificios[][] pE = damero.getDamero();
 		boolean resultado = true;
@@ -147,13 +147,18 @@ public class DameroTest {
 			for(int j=1; j<pE[i].length; j++) {
 				if (j==1) {
 					if(pE[i][j].getcVerde().getConsumo() != (pE[i][j].getcDerecha().getConsumo() + pE[i][j].getcIzquierda().getConsumo() + pE[i][j-1].getcDerecha().getConsumo() + pE[i][j-1].getcIzquierda().getConsumo())) {
-						resultado = false;
-						break;
+						if (!damero.comprobarRoturaPropia(pE[i][j].getcVerde(),damero.obtenerCoordenadas(pE[i][j].getcVerde()))) {
+							resultado = false;
+							break;
+						}
+						
 					}
 				} else {
 					if(pE[i][j].getcVerde() != null && pE[i][j].getcVerde().getConsumo() != (pE[i][j].getcDerecha().getConsumo() + pE[i][j].getcIzquierda().getConsumo() + pE[i][j-1].getcVerde().getConsumo())) {
-						resultado = false;
-						break;
+						if (!damero.comprobarRoturaPropia(pE[i][j].getcVerde(),damero.obtenerCoordenadas(pE[i][j].getcVerde()))) {
+							resultado = false;
+							break;
+						}
 					}
 				}
 			}
@@ -305,7 +310,9 @@ public class DameroTest {
 		d.setParEdificio(1, 2, new Contador(0), "I");
 		d.setParEdificio(1, 2, new Contador(0), "D");
 
-		Assert.assertTrue((d.comprobarRoturaPropia(c , d.obtenerCoordenadas(c))));
+		String[] coordenadas = d.obtenerCoordenadas(c);
+		boolean resultado = d.comprobarRoturaPropia(c, coordenadas);
+		Assert.assertTrue(resultado);
 		
 	}
 	

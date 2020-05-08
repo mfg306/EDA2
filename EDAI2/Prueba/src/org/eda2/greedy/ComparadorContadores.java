@@ -13,10 +13,13 @@ public class ComparadorContadores implements Comparator<Contador> {
 		//Para que sea mas sencillo voy a hacerlo con contadores directamente, por lo tanto a cada contador le he metido tambien
 		//como atributo su media 
 		
-		double diferencia1 = c1.getConsumo()/c1.getMedia().getConsumo();
-		double diferencia2 = c2.getConsumo()/c2.getMedia().getConsumo();
+		//double diferencia1 = c1.getConsumo()/c1.getMedia().getConsumo();
+		//double diferencia2 = c2.getConsumo()/c2.getMedia().getConsumo();
 		
-		return (diferencia1 > diferencia2) ?  1 : (diferencia1 == diferencia2) ? 0 : -1; 
+		double diferencia1 = c1.getConsumo() - c1.getMedia().getConsumo();
+		double diferencia2 = c2.getConsumo() - c2.getMedia().getConsumo();
+		
+		return (diferencia1 > diferencia2) ?  -1 : (diferencia1 == diferencia2) ? 0 : 1; 
 		
 		
 		
