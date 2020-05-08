@@ -13,11 +13,7 @@ public class Manometro {
 	private int id;
 	
 	/**
-<<<<<<< HEAD
 	 * Constructor vacio
-=======
-	 * Constructor por defecto de la clase Manómetro
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	public Manometro() {
 		this.presion = 0;
@@ -25,13 +21,10 @@ public class Manometro {
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * @param presion a asignar a un manometro
-=======
-	 * Constructor de la clase Manómetro que asigna la presión
-	 * pasada por parámetro como presión del manómetro creado
+	 * Constructor de la clase Manï¿½metro que asigna la presiï¿½n
+	 * pasada por parï¿½metro como presiï¿½n del manï¿½metro creado
 	 * @param presion
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	public Manometro (double presion) {
 		this.presion = presion;
@@ -48,7 +41,7 @@ public class Manometro {
 	}
 	
 	/**
-	 * Establece la presión del manómetro
+	 * Establece la presiï¿½n del manï¿½metro
 	 * @param presion
 	 */
 	public void setPresion(double presion) {
@@ -64,28 +57,23 @@ public class Manometro {
 	}
 
 	/**
-	 * Establece la id del manómetro
+	 * Establece la id del manï¿½metro
 	 * @param id
 	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
-<<<<<<< HEAD
 	
 	/**
-	 * Reiniciar los id a 0
-=======
-	/**
 	 * Reinicia el valor del contador a 0
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
 	public static void reiniciarID() {
 		contador = 0;
 	}
 	
 	/**
-	 * @return cadena con la presion del manómetro
+	 * @return cadena con la presion del manï¿½metro
 	 */
 	@Override
 	public String toString() {
