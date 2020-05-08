@@ -1,12 +1,6 @@
 package org.eda2.dyv;
 
-<<<<<<< HEAD
-/**
- * @author marta
- *
- */
-=======
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
+
 public class Contador {
 
 	private double consumo;
@@ -31,7 +25,7 @@ public class Contador {
 	 * @param consumo el consumo que queremos asignarle al contador
 =======
 	 * Constructor de la clase Contador que asigna el consumo
-	 * pasado por parámetro como consumo del contador creado
+	 * pasado por parï¿½metro como consumo del contador creado
 	 * @param consumo
 >>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 	 */
@@ -79,15 +73,5 @@ public class Contador {
 	public String toString() {
 		return "(" +this.id+ ")" + this.consumo;
 	}
-<<<<<<< HEAD
-	
-	/**
-	 * Reinicia el contador a 0
-	 */
-	public static void reiniciarId() {
-		Contador.contador = 0;
-	}
 
-=======
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
 }

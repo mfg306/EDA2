@@ -11,11 +11,11 @@ public class Damero {
 	private ArrayList<Integer> roturasContadorTroncal = new ArrayList<>();
 	private ArrayList<Integer> roturasContadorLineasD = new ArrayList<>();
 	private ArrayList<Integer> roturasContadorProblemaRecursivo = new ArrayList<>();
-<<<<<<< HEAD
+
 	private ArrayList<Integer> roturaManometroProblemaRecursivo = new ArrayList<>();
-=======
+
 	private ArrayList<Integer> roturasManometroProblemaRecursivo = new ArrayList<>();
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
+
 	private ArrayList<Integer> roturasManometroTroncal = new ArrayList<>();
 	private ArrayList<Integer> roturasManometroLineasD = new ArrayList<>();
 	// Consumo minimo y maximo del contador general
@@ -191,12 +191,9 @@ public class Damero {
 	 * Inicializa los datos de los contadores en el caso de que la ciudad tenga
 	 * columnas pares
 	 */
-<<<<<<< HEAD
-	private void inicializarContadoresPar(ParEdificios[][] pE) { // Deberiamos inicializar primero los de cada edificio y a partir de ese
-=======
-	private void inicializarContadoresPar(ParEdificios[][] pE) { 
 
->>>>>>> 1d4b4021b062169bf1d925dcfe3af65e0bf84085
+	private void inicializarContadoresPar(ParEdificios[][] pE) { // Deberiamos inicializar primero los de cada edificio y a partir de ese
+
 		// RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
 		for (int i = 0; i < pE.length; i++) {
 			for (int j = 0; j < pE[0].length; j++) {
