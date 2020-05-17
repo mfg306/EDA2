@@ -16,11 +16,10 @@ public class ComparadorContadores implements Comparator<Contador> {
 		//double diferencia1 = c1.getConsumo()/c1.getMedia().getConsumo();
 		//double diferencia2 = c2.getConsumo()/c2.getMedia().getConsumo();
 		
-		double diferencia1 = c1.getConsumo() - 
-				c1.getMedia().getConsumo();
+		double diferencia1 = c1.getConsumo() - c1.getMedia().getConsumo();
 		double diferencia2 = c2.getConsumo() - c2.getMedia().getConsumo();
 		
-		return (diferencia1 > diferencia2) ?  -1 : (diferencia1 == diferencia2) ? 0 : 1; 
+		return (diferencia1 > diferencia2) ?  1 : (diferencia1 == diferencia2) ? 0 : -1; 
 		
 		
 		

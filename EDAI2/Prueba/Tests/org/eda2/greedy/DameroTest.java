@@ -387,29 +387,25 @@ public class DameroTest {
 		Assert.assertTrue(contiene);	
 	}
 	
-	@Test
-	public void TestConsumidoresGreedy() {
-		Damero damero = new Damero(4,4);
-		
-		damero.setParEdificio(0, 0, new Contador(1), "D");
-		damero.setParEdificio(0, 1, new Contador(2), "D");
-		damero.setParEdificio(0, 2, new Contador(3), "D");
-		
-		damero.setParEdificio(0, 0, new Contador(10), "I");
-		damero.setParEdificio(0, 1, new Contador(11), "I");
-		damero.setParEdificio(0, 2, new Contador(12), "I");
-		
-		damero.setParEdificio(1, 0, new Contador(4), "I");
-		damero.setParEdificio(1, 1, new Contador(5), "I");
-		damero.setParEdificio(1, 2, new Contador(6), "I");
-		
-		damero.setParEdificio(1, 0, new Contador(7), "D");
-		damero.setParEdificio(1, 1, new Contador(8), "D");
-		damero.setParEdificio(1, 2, new Contador(9), "D");
-		
-		
-		damero.resolverConsumidoresGreedy();
-	}
+//	@Test
+//	public void TestConsumidoresGreedy() {
+//		Damero damero = new Damero(3,3);
+//		
+//		damero.setParEdificio(0, 0, new Contador(1), "D");
+//		damero.setParEdificio(0, 1, new Contador(2), "D");
+//		damero.setParEdificio(0, 2, new Contador(3), "D");
+//		
+//		damero.setParEdificio(1, 0, new Contador(4), "I");
+//		damero.setParEdificio(1, 1, new Contador(5), "I");
+//		damero.setParEdificio(1, 2, new Contador(6), "I");
+//		
+//		damero.setParEdificio(1, 0, new Contador(7), "D");
+//		damero.setParEdificio(1, 1, new Contador(8), "D");
+//		damero.setParEdificio(1, 2, new Contador(9), "D");
+//		
+//		
+//		damero.resolverConsumidoresGreedy();
+//	}
 
 
 }
