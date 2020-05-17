@@ -482,7 +482,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestTiemposResolverContadoresGreedy() {
-		int n=100; //Con los pares no encuentra nunca roturas propias
+		int n=3; //Con los pares no encuentra nunca roturas propias MAX:1025
 		long inicio = 0, fin = 0, sumaTiempos = 0; 
 		int contador = 0;
 		ArrayList<Integer> resultado = new ArrayList<>();
@@ -502,27 +502,27 @@ public class DameroTest {
 	}
 	
 
-//	@Test
-//	public void TestTiemposResolverConsumidoresGreedy() { //FUNCIONA -> ES MUUUUY LENTO
-//		int n=800;
-//		long inicio = 0, fin = 0, sumaTiempos = 0; 
-//		int contador = 0;
-//		ArrayList<Integer> resultado = new ArrayList<>();
-//		
-//		while(contador != 10) {
-//			Damero d = new Damero(n,n,n*1000, n*10000);
-//			inicio = System.nanoTime();
-//			resultado = d.resolverConsumidoresGreedy();
-//			fin = System.nanoTime();
-//			if(!resultado.isEmpty()) { //Vamos a descartar aquellos casos en los que no haya roturas
-//				sumaTiempos += (fin-inicio);
-//				contador++;
-//			}
-//			
-//		}
-//		
-//		System.out.println(sumaTiempos/10);
-//	}
+	@Test
+	public void TestTiemposResolverConsumidoresGreedy() { //FUNCIONA -> ES MUUUUY LENTO
+		int n=3; //MAX: 1024
+		long inicio = 0, fin = 0, sumaTiempos = 0; 
+		int contador = 0;
+		ArrayList<Integer> resultado = new ArrayList<>();
+		
+		while(contador != 10) {
+			Damero d = new Damero(n,n,n*1000, n*10000);
+			inicio = System.nanoTime();
+			resultado = d.resolverConsumidoresGreedy();
+			fin = System.nanoTime();
+			if(!resultado.isEmpty()) { //Vamos a descartar aquellos casos en los que no haya roturas
+				sumaTiempos += (fin-inicio);
+				contador++;
+			}
+			
+		}
+		
+		System.out.println(sumaTiempos/10);
+	}
 	
 	
 	@Test
