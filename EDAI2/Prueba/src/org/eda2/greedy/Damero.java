@@ -515,6 +515,11 @@ public class Damero {
 		return this.pEdificios[i][j].getMan().getPresion();
 	}
 	
+	
+	
+	
+	
+	
 
 	/**
 	 * PROBLEMA a.2
@@ -637,6 +642,9 @@ public class Damero {
 		return candidatos;
 	}
 
+	
+	
+	
 	// 1a Manometros con un consumo mayor a 10%
 
 	/**
@@ -695,6 +703,9 @@ public class Damero {
 
 	}
 
+	
+	
+	
 	// b
 	
 	/**
