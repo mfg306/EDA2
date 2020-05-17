@@ -348,7 +348,7 @@ public class DameroTest {
 	}
 	
 	@Test
-	public void TestResolverContadoresGreedy() { //De esto se podra hacer mas situaciones
+	public void TestResolverContadoresGreedy() { //De esto se podra hacer mas situaciones A VECES FALLA
 		Damero d = new Damero(3,3);
 		Contador c1 = new Contador(25000,0,2,"M");
 		Contador c2 = new Contador(14000,1,1,"V");

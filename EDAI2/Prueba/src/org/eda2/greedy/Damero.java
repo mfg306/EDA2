@@ -18,8 +18,25 @@ import java.util.TreeSet;
  *  - HE METIDO TAMBIEN LA LISTA DE MANZANAS A LOS QUE HAY QUE ENVIAR EL AVISO DE CONSUMO EXCESIVO 
  *  
  * - LO UNICO QUE FALTA ES ESTO:   Se generan dos listas de tramos a estudiar por parte de los técnicos de la compañía. Se
-		detallarán los tramos, indicando la ubicación en la trama urbana - inicio y final, según
-		las coordenadas (avenida,calle) -.
+ *	detallarán los tramos, indicando la ubicación en la trama urbana - inicio y final, según
+ *	las coordenadas (avenida,calle) 
+ *
+ *
+ *
+ *
+ * - AÑADO UN MÉTODO PARA OBTENER LAS COORDENADAS DE UN MANÓMETRO DETERMINADO (CREO Q NO HAY OTRA FORMA DE ENCONTRARLO) 
+ * 		
+ * - AÑADO EL MÉTODO generarListaTramosManometros, QUE GENERA LA LISTA PARA EL PROBLEMA A.1
+ * 	 VOY A HACER LOS MÉTODOS POR SEPARADO PORQUE, AUNQUE LA IDEA ES LA MISMA, COMO UNOS SON
+ *   CONTADORES Y OTROS MANÓMETROS SE TRATAN DE FORMA DIFERENTE
+ *   
+ *  - HE CAMBIADO EL METODO DE OBTENER COORDENADAS PARA QUE DEVUELVA UN INT[], LO QUE FACILITA EL PROCESADO
+ *  
+ *  - AÑADO EL METODO generarListaTramosContadores, QUE HACE LO MISMO QUE EL DE LOS MANOMETROS. ME HE DADO CUENTA DE QUE SON 
+ *  EXACTAMENTE IGUALES ASIQ SE PUEDEN COMBINAR EN UNO SOLO. POR AHORA LOS DEJO SEPARADOS. EN LA CLASE PRUEBA TE DEJO UN EJEMPLO
+ *  DE COMO FUNCIONA (SOLO TIENES QUE EJECUTARLO)
+ *  
+ *  - HE AÑADIDO (OTRA VEZ) AL GENERADOR DE CONTADORES LO DE LA PROBABILIDAD DE QUE HAYA UNA ROTURA, PORQUE NO SALIA NINGUNA CASI NUNCA.
  * 
  * */
 
@@ -292,10 +309,13 @@ public class Damero {
 		double con = 0;
 		for (int i = 0; i < this.pEdificios.length; i++) {
 			for (int j = 1; j < this.pEdificios[0].length; j++) {
+				double p = Math.random();
+				System.out.println(p);
 				if (i == pEdificios.length - 1 && j == this.pEdificios[0].length - 1) {
 					con += this.pEdificios[i][j].getcIzquierda().getConsumo();
 					con += this.pEdificios[i][j - 1].getcVerde().getConsumo();
 					con += this.pEdificios[i - 1][j].getcMorado().getConsumo();
+					if (p>0.8) con += 10000;
 					this.pEdificios[i][j].setcDerecha(new Contador(con,this.matrizMedias[i][j].getcDerecha(),i,j,"D")); // CONTADOR GENERAL
 					continue;
 				}
@@ -305,17 +325,20 @@ public class Damero {
 					con += this.pEdificios[i][j].getcIzquierda().getConsumo();
 					if (i != 0)
 						con += this.pEdificios[i - 1][j].getcMorado().getConsumo();
+					if (p>0.8) con += 10000;
 					this.pEdificios[i][j].setcMorado(new Contador(con, this.matrizMedias[i][j].getcMorado(),i,j,"M"));
 				} else if (this.pEdificios[i][j - 1].getcVerde() == null) { // final de la linea de distribucion por abajo
 					con += this.pEdificios[i][j].getcDerecha().getConsumo();
 					con += this.pEdificios[i][j].getcIzquierda().getConsumo();
 					con += this.pEdificios[i][j - 1].getcDerecha().getConsumo();
 					con += this.pEdificios[i][j - 1].getcIzquierda().getConsumo();
+					if (p>0.8) con += 10000;
 					this.pEdificios[i][j].setcVerde(new Contador(con, this.matrizMedias[i][j].getcVerde(),i,j,"V"));
 				} else { // caso base
 					con += this.pEdificios[i][j].getcDerecha().getConsumo();
 					con += this.pEdificios[i][j].getcIzquierda().getConsumo();
 					con += this.pEdificios[i][j - 1].getcVerde().getConsumo();
+					if (p>0.8) con += 10000;
 					this.pEdificios[i][j].setcVerde(new Contador(con, this.matrizMedias[i][j].getcVerde(),i,j,"V"));
 				}
 				con = 0;
@@ -550,9 +573,6 @@ public class Damero {
 	 *         contrario
 	 */
 	public boolean roturaPropia(Contador con) { // Funcion de factibilidad
-//		String[] indices = obtenerCoordenadas(con);
-//		int i = Integer.parseInt(indices[0]); 
-//		int j = Integer.parseInt(indices[1]);
 		Integer i = con.getI();
 		Integer j = con.getJ();
 		String[] indices = {i.toString(),j.toString(), con.getTipo()};
@@ -642,7 +662,21 @@ public class Damero {
 		return candidatos;
 	}
 
-	
+	public String generarListaTramosContadores(ArrayList<Integer> elegidos) {
+		String cadena = "LISTA DE ROTURAS DE LOS CONTADORES \n";
+		int[] coordenadas = new int[2];
+		for (Integer e : elegidos) {
+			coordenadas = obtenerCoordenadasDadoId(e);
+			int i = coordenadas[0];
+			int j = coordenadas[1];
+			if (j == this.pEdificios[0].length - 1) { // TRONCAL FALLO ENTRE [i,j] Y [i+1,j]
+				cadena += "- Rotura en el tramo troncal: (" + ((i+1)*2) + "," + j + ")-(" + (((i+1)*2)+1) + ", " + j + ") \n";
+			} else { // DISTRIBUCION FALLO ENTRE [i,j] Y [i,j+1]
+				cadena += "- Rotura en el tramo de distribución: (" + ((i+1)*2) + "," + j + ")-(" + ((i+1)*2) + ", " + (j+1) + ") \n";
+			}
+		}
+		return cadena;
+	}
 	
 	
 	// 1a Manometros con un consumo mayor a 10%
@@ -703,8 +737,48 @@ public class Damero {
 
 	}
 
+	/* Tenemos una lista con las Id de los manometros que han dado fallo
+	 * Queremos generar un String con los tramos de roturas
+	 * La rotura se produce entre el manometro del que tenemos la id y:
+	 * 		- Si el manómetro es de la troncal: el manómetro de su derecha (i+1)
+	 * 		- Si el manómetro es de una de distribución: el manómetro de encima (j+1)
+	 * 
+	 * Para traducir las coordenadas de nuestro sistema al de la ciudad, le sumamos 1 a la i y la 
+	 * multiplicamos por dos. Los manómetros están situados en las tuberías, que se encuentran solo
+	 * en las avenidas pares, por lo que con esto será suficiente.
+	 * 
+	 */
+	public String generarListaTramosManometros(ArrayList<Integer> elegidos) {
+		String cadena = "LISTA DE ROTURAS \n";
+		int[] coordenadas = new int[2];
+		for (Integer e : elegidos) {
+			coordenadas = obtenerCoordenadasManometro(e);
+			int i = coordenadas[0];
+			int j = coordenadas[1];
+			if (j == this.pEdificios[0].length - 1) { // TRONCAL FALLO ENTRE [i,j] Y [i+1,j]
+				cadena += "- Rotura en el tramo troncal: (" + ((i+1)*2) + "," + j + ")-(" + (((i+1)*2)+1) + ", " + j + ") \n";
+			} else { // DISTRIBUCION FALLO ENTRE [i,j] Y [i,j+1]
+				cadena += "- Rotura en el tramo de distribución: (" + ((i+1)*2) + "," + j + ")-(" + ((i+1)*2) + ", " + (j+1) + ") \n";
+			}
+		}
+		return cadena;
+	}
 	
-	
+	public int[] obtenerCoordenadasManometro(Integer Id) {
+		int[] coord = new int[2];
+		for (int i = 0;i<pEdificios.length;i++) {
+			for (int j = 0;j<pEdificios[0].length;j++) {
+				if (pEdificios[i][j].getMan() != null) {
+					if (pEdificios[i][j].getMan().getId() == Id) {
+						coord[0] = i;
+						coord[1] = j;
+					}
+				}
+				
+			}
+		}
+		return coord;
+	}
 	
 	// b
 	
@@ -728,25 +802,25 @@ public class Damero {
 		return elegidos;
 	}
 	
-	public String[] obtenerCoordenadasDadoId(Integer id) {
-		String[] coords = new String[2];
+	public int[] obtenerCoordenadasDadoId(Integer id) {
+		int[] coords = new int[2];
 		for(int i=0; i<this.pEdificios.length; i++) {
 			for(int j=0; j<this.pEdificios[i].length; j++) {
 				if(this.pEdificios[i][j].getcDerecha() != null && this.pEdificios[i][j].getcDerecha().getId() == id) {
-					coords[0] = Integer.toString(this.pEdificios[i][j].getcDerecha().getI());
-					coords[1] = Integer.toString(this.pEdificios[i][j].getcDerecha().getJ());
+					coords[0] = this.pEdificios[i][j].getcDerecha().getI();
+					coords[1] = this.pEdificios[i][j].getcDerecha().getJ();
 				}
 				if(this.pEdificios[i][j].getcIzquierda() != null && this.pEdificios[i][j].getcIzquierda().getId() == id) {
-					coords[0] = Integer.toString(this.pEdificios[i][j].getcIzquierda().getI());
-					coords[1] = Integer.toString(this.pEdificios[i][j].getcIzquierda().getJ());
+					coords[0] = this.pEdificios[i][j].getcIzquierda().getI();
+					coords[1] = this.pEdificios[i][j].getcIzquierda().getJ();
 				}
 				if(this.pEdificios[i][j].getcMorado() != null && this.pEdificios[i][j].getcMorado().getId() == id) {
-					coords[0] = Integer.toString(this.pEdificios[i][j].getcMorado().getI());
-					coords[1] = Integer.toString(this.pEdificios[i][j].getcMorado().getJ());
+					coords[0] = this.pEdificios[i][j].getcMorado().getI();
+					coords[1] = this.pEdificios[i][j].getcMorado().getJ();
 				}
 				if(this.pEdificios[i][j].getcVerde() != null && this.pEdificios[i][j].getcVerde().getId() == id) {
-					coords[0] = Integer.toString(this.pEdificios[i][j].getcVerde().getI());
-					coords[1] = Integer.toString(this.pEdificios[i][j].getcVerde().getJ());
+					coords[0] = this.pEdificios[i][j].getcVerde().getI();
+					coords[1] = this.pEdificios[i][j].getcVerde().getJ();
 				}
 			}
 		}
@@ -783,7 +857,7 @@ public class Damero {
 	 			//,consumoActual, division)
 	public TreeMap<String, ArrayList<Double>> manzanasConsumoExcesivo(ArrayList<Integer> cRoturas){
 		ArrayList<Integer> contadoresRoturas = new ArrayList<>(cRoturas); //Queremos una copia no editar la otra
-		String[] coords = new String[2];
+		int[] coords = new int[2];
 		TreeMap<String, ArrayList<Double>> result = new TreeMap<>();
 		Contador c = null;
 		
