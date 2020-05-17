@@ -8,11 +8,12 @@ public class Programa {
 		
 		Damero d = new Damero(6,6);
 		
-		ArrayList<Contador> a = d.resolverContadoresRoturaPropiaGreedy();
-		System.out.println(a);
-		System.out.println(a.size());
+		ArrayList<Integer> resultado = d.resolverConsumidoresGreedy();
+		
 		System.out.println(d.toStringC());
 		System.out.println("");
 		System.out.println(d.toStringMedias());
+		System.out.println("");
+		System.out.println(resultado.toString());
 	}
 }

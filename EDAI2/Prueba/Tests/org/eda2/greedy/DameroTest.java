@@ -1,5 +1,7 @@
 package org.eda2.greedy;
 
+import java.util.ArrayList;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -255,7 +257,7 @@ public class DameroTest {
 	}
 	
 	@Test 
-	public void TestComprobarRoturaPropiaVerde() {
+	public void TestComprobarRoturaPropiaVerde() { //TEST A.2
 		
 		//Vamos a hacer un damero personalizado en el que sepamos que hay rotura propia y luego llamamos al metodo para que lo compruebe
 		
@@ -285,7 +287,7 @@ public class DameroTest {
 	}
 	
 	@Test 
-	public void TestComprobarRoturaPropiaMorado() {
+	public void TestComprobarRoturaPropiaMorado() { //TEST A.2
 		
 		//Vamos a hacer un damero personalizado en el que sepamos que hay rotura propia y luego llamamos al metodo para que lo compruebe
 		
@@ -333,9 +335,80 @@ public class DameroTest {
 	
 	@Test
 	public void TestResolverContadoresGreedy() {
-		Damero damero = new Damero(5,5); //NO ESTA CONTEMPLADO EL CASO IMPAR --> ahora si
+		Damero damero = new Damero(5,5);
 		
 		damero.resolverContadoresRoturaPropiaGreedy();
+	}
+	
+	@Test
+	public void TestManometrosGreedy() { //TEST A.1
+		Damero damero = new Damero(3,3);
+		Manometro m1 = new Manometro(42); //DA FALLO
+		Manometro m2 = new Manometro(44); //DA FALLO
+		
+		Manometro m3 = new Manometro(50); //NO DA FALLO
+		Manometro m4 = new Manometro(47); //NO DA FALLO
+		
+		damero.getDamero()[1][2].setMan(m3); // CASILLA GENERAL
+		damero.getDamero()[0][2].setMan(m4); // LINEA GENERAL
+		damero.getDamero()[1][1].setMan(m2); //DEBAJO CASILLA GENERAL
+		damero.getDamero()[0][1].setMan(m1); //DEBAJO LINEA GENERAL
+		
+		
+		ArrayList<Manometro> resultado = damero.resolverManometrosGreedy();
+		boolean contiene = resultado.contains(m1) && resultado.contains(m2);
+		boolean noContiene1 = !resultado.contains(m3) && !resultado.contains(m4);
+		
+		
+		Assert.assertTrue(noContiene1); //Comprobamos que los manometros que no dan fallo no estan en la lista
+		Assert.assertTrue(contiene); //Comprobamos que los manometros que dan fallo estan en la lista	
+	}
+	
+	@Test
+	public void TestManometrosGreedy2() { //TEST A.1 AHORA LA ROTURA ESTÁ EN LA LINEA GENERAL
+		Damero damero = new Damero(3,3);
+		
+		Manometro m1 = new Manometro(50); //NO DA FALLO
+		Manometro m2 = new Manometro(44); //DA FALLO
+		Manometro m3 = new Manometro(45); //NO DA FALLO
+		Manometro m4 = new Manometro(42); //NO DA FALLO
+		
+		damero.getDamero()[1][2].setMan(m1); // CASILLA GENERAL
+		damero.getDamero()[0][2].setMan(m2); // LINEA GENERAL
+		damero.getDamero()[1][1].setMan(m3); //DEBAJO CASILLA GENERAL
+		damero.getDamero()[0][1].setMan(m4); //DEBAJO LINEA GENERAL
+		
+		
+		ArrayList<Manometro> resultado = damero.resolverManometrosGreedy();
+		boolean contiene = resultado.contains(m2);
+		boolean noContiene = !resultado.contains(m1) && !resultado.contains(m3) && !resultado.contains(m4);
+		
+		Assert.assertTrue(noContiene);
+		Assert.assertTrue(contiene);	
+	}
+	
+	@Test
+	public void TestConsumidoresGreedy() {
+		Damero damero = new Damero(4,4);
+		
+		damero.setParEdificio(0, 0, new Contador(1), "D");
+		damero.setParEdificio(0, 1, new Contador(2), "D");
+		damero.setParEdificio(0, 2, new Contador(3), "D");
+		
+		damero.setParEdificio(0, 0, new Contador(10), "I");
+		damero.setParEdificio(0, 1, new Contador(11), "I");
+		damero.setParEdificio(0, 2, new Contador(12), "I");
+		
+		damero.setParEdificio(1, 0, new Contador(4), "I");
+		damero.setParEdificio(1, 1, new Contador(5), "I");
+		damero.setParEdificio(1, 2, new Contador(6), "I");
+		
+		damero.setParEdificio(1, 0, new Contador(7), "D");
+		damero.setParEdificio(1, 1, new Contador(8), "D");
+		damero.setParEdificio(1, 2, new Contador(9), "D");
+		
+		
+		damero.resolverConsumidoresGreedy();
 	}
 
 

@@ -680,7 +680,7 @@ public class Damero {
 		return candidatos;
 	}
 
-	// 1a Manometros con un consumo mayor a 10%
+	// a.1 Manometros con un consumo mayor a 10%
 	/*
 	 * PSEUDOCODIGO candidatos elegidos posible
 	 * 
