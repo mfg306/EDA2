@@ -527,7 +527,7 @@ public class DameroTest {
 	
 	@Test
 	public void TesTiempostResolverManometrosGreedy() { //FUNCIONA BIEN
-		int n=3;
+		int n=3; //MAX: 1024
 		long inicio = 0, fin = 0, sumaTiempos = 0; 
 		int contador = 0;
 		ArrayList<Integer> resultado = new ArrayList<>();
