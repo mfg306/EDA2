@@ -1,6 +1,6 @@
-package org.eda2.greedy;
+package org.eda2.greedyAlternativa;
 
-public class Contador {
+public class Contador extends Medidor {
 
 	private double consumo;
 	private static int contador = 0; 

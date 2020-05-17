@@ -1,4 +1,4 @@
-package org.eda2.greedy;
+package org.eda2.greedyAlternativa;
 
 import java.util.Comparator;
 

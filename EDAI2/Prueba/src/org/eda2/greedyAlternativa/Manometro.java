@@ -1,4 +1,4 @@
-package org.eda2.greedy;
+package org.eda2.greedyAlternativa;
 
 import java.util.Locale;
 
@@ -6,7 +6,7 @@ import java.util.Locale;
  * @author marta
  *
  */
-public class Manometro {
+public class Manometro extends Medidor {
 
 	private double presion;
 	private static int contador = 0; 

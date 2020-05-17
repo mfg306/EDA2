@@ -1,6 +1,7 @@
 package org.eda2.greedy;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -139,7 +140,7 @@ public class DameroTest {
 	
 	
 	@Test
-	public void TestContadorVerdeSumaIzquierdaYDerechaSituacionPar() { //Este test fallaba (ya esta arreglado). Si la rotura es propia no tiene por que sumar
+	public void TestContadorVerdeSumaIzquierdaYDerechaSituacionPar() {
 		Damero damero = new Damero(4,4);
 		ParEdificios[][] pE = damero.getDamero();
 		boolean resultado = true;
@@ -149,18 +150,13 @@ public class DameroTest {
 			for(int j=1; j<pE[i].length; j++) {
 				if (j==1) {
 					if(pE[i][j].getcVerde().getConsumo() != (pE[i][j].getcDerecha().getConsumo() + pE[i][j].getcIzquierda().getConsumo() + pE[i][j-1].getcDerecha().getConsumo() + pE[i][j-1].getcIzquierda().getConsumo())) {
-						if (!damero.comprobarRoturaPropia(pE[i][j].getcVerde(),damero.obtenerCoordenadas(pE[i][j].getcVerde()))) {
-							resultado = false;
-							break;
-						}
-						
+						resultado = false;
+						break;
 					}
 				} else {
 					if(pE[i][j].getcVerde() != null && pE[i][j].getcVerde().getConsumo() != (pE[i][j].getcDerecha().getConsumo() + pE[i][j].getcIzquierda().getConsumo() + pE[i][j-1].getcVerde().getConsumo())) {
-						if (!damero.comprobarRoturaPropia(pE[i][j].getcVerde(),damero.obtenerCoordenadas(pE[i][j].getcVerde()))) {
-							resultado = false;
-							break;
-						}
+						resultado = false;
+						break;
 					}
 				}
 			}
@@ -242,81 +238,99 @@ public class DameroTest {
 		Assert.assertTrue(condicion);		
 	}
 	
+	
+	@Test 
+	public void TestComprobarRoturaPropiaVerde() {
+		
+		//Vamos a hacer un damero personalizado en el que sepamos que hay rotura propia y luego llamamos al metodo para que lo compruebe
+		
+		Damero d = new Damero(3,3);
+		Contador c = new Contador(5000,1,1,"V");
+		
+		
+		d.setParEdificioContador(0, 0, new Contador(0,0,0,"D"));
+		
+		d.setParEdificioContador(0, 1, new Contador(0,0,1,"D"));
+		d.setParEdificioContador(0, 1, new Contador(0,0,1,"V"));
+		
+		d.setParEdificioContador(0, 2, new Contador(0,0,2,"D"));
+		d.setParEdificioContador(0, 2, new Contador(0,0,2,"M"));
+		
+		d.setParEdificioContador(1, 0, new Contador(20,1,0,"I"));
+		d.setParEdificioContador(1, 0, new Contador(20,1,0,"D"));
+		
+		d.setParEdificioContador(1, 1, new Contador(20,1,1,"I"));
+		d.setParEdificioContador(1, 1, new Contador(20,1,1,"D"));
+		d.setParEdificioContador(1, 1, c);
+		
+		d.setParEdificioContador(1, 2, new Contador(0,1,2,"I"));
+		d.setParEdificioContador(1, 2, new Contador(0,1,2,"D"));
+		
+		String[] coords = {Integer.toString(c.getI()), Integer.toString(c.getJ()), c.getTipo()};
+
+		
+		Assert.assertTrue((d.comprobarRoturaPropia(c , coords)));
+	}
+	
+	@Test 
+	public void TestComprobarRoturaPropiaMorado() {
+		
+		//Vamos a hacer un damero personalizado en el que sepamos que hay rotura propia y luego llamamos al metodo para que lo compruebe
+		
+		Damero d = new Damero(3,3);
+		Contador c = new Contador(5000,0,2,"M");
+		//columna, fila
+		d.setParEdificioContador(0, 0, new Contador(0,0,0,"D"));
+		
+		d.setParEdificioContador(0, 1, new Contador(0,0,1,"D"));
+		d.setParEdificioContador(0, 1, new Contador(20,0,1,"V"));
+		
+		d.setParEdificioContador(0, 2, new Contador(20,0,2,"D"));
+		d.setParEdificioContador(0, 2, c);
+		
+		d.setParEdificioContador(1, 0, new Contador(0,1,0,"I"));
+		d.setParEdificioContador(1, 0, new Contador(0,1,0,"D"));
+		
+		d.setParEdificioContador(1, 1, new Contador(0,1,1,"I"));
+		d.setParEdificioContador(1, 1, new Contador(0,1,1,"D"));
+		d.setParEdificioContador(1, 1, new Contador(0,1,1,"V"));
+		
+		d.setParEdificioContador(1, 2, new Contador(0,1,2,"I") );
+		d.setParEdificioContador(1, 2, new Contador(0,1,2,"D"));
+
+		String[] coords = {Integer.toString(c.getI()), Integer.toString(c.getJ()), c.getTipo()};
+		
+		Assert.assertTrue((d.comprobarRoturaPropia(c , coords)));
+		
+	}
+	
+	
 	@Test
-	public void TestObtenerCoordenadas() {
+	public void TestRoturaPropia() {
 		Damero d = new Damero(3,3);
-		String[] expected = {"0","1", "D"};
-		Contador c = new Contador(5000);
+		Contador c = new Contador(25000,0,2,"M");
+		//columna, fila
+		d.setParEdificioContador(0, 0, new Contador(0,0,0,"D"));
 		
-		d.setParEdificio(0, 1, c, "D");
+		d.setParEdificioContador(0, 1, new Contador(0,0,1,"D"));
+		d.setParEdificioContador(0, 1, new Contador(20,0,1,"V"));
 		
-		String[] result = d.obtenerCoordenadas(c);
+		d.setParEdificioContador(0, 2, new Contador(20,0,2,"D"));
+		d.setParEdificioContador(0, 2, c);
 		
-		Assert.assertArrayEquals(expected, result);
-
+		d.setParEdificioContador(1, 0, new Contador(0,1,0,"I"));
+		d.setParEdificioContador(1, 0, new Contador(0,1,0,"D"));
+		
+		d.setParEdificioContador(1, 1, new Contador(0,1,1,"I"));
+		d.setParEdificioContador(1, 1, new Contador(0,1,1,"D"));
+		d.setParEdificioContador(1, 1, new Contador(0,1,1,"V"));
+		
+		d.setParEdificioContador(1, 2, new Contador(0,1,2,"I"));
+		d.setParEdificioContador(1, 2, new Contador(0,1,2,"D"));
+		
+		Assert.assertTrue(d.roturaPropia(c));
 	}
 	
-	@Test 
-	public void TestComprobarRoturaPropiaVerde() { //TEST A.2
-		
-		//Vamos a hacer un damero personalizado en el que sepamos que hay rotura propia y luego llamamos al metodo para que lo compruebe
-		
-		Damero d = new Damero(3,3);
-		Contador c = new Contador(5000);
-		//columna, fila
-		d.setParEdificio(0, 0, new Contador(0), "D");
-		
-		d.setParEdificio(0, 1, new Contador(0), "D");
-		d.setParEdificio(0, 1, new Contador(0), "V");
-		
-		d.setParEdificio(0, 2, new Contador(0), "D");
-		d.setParEdificio(0, 2, new Contador(0), "M");
-		
-		d.setParEdificio(1, 0, new Contador(20), "I");
-		d.setParEdificio(1, 0, new Contador(20), "D");
-		
-		d.setParEdificio(1, 1, new Contador(20), "I");
-		d.setParEdificio(1, 1, new Contador(20), "D");
-		d.setParEdificio(1, 1, c, "V");
-		
-		d.setParEdificio(1, 2, new Contador(0), "I");
-		d.setParEdificio(1, 2, new Contador(0), "D");
-
-		Assert.assertTrue((d.comprobarRoturaPropia(c , d.obtenerCoordenadas(c))));
-		
-	}
-	
-	@Test 
-	public void TestComprobarRoturaPropiaMorado() { //TEST A.2
-		
-		//Vamos a hacer un damero personalizado en el que sepamos que hay rotura propia y luego llamamos al metodo para que lo compruebe
-		
-		Damero d = new Damero(3,3);
-		Contador c = new Contador(5000);
-		//columna, fila
-		d.setParEdificio(0, 0, new Contador(0), "D");
-		
-		d.setParEdificio(0, 1, new Contador(0), "D");
-		d.setParEdificio(0, 1, new Contador(20), "V");
-		
-		d.setParEdificio(0, 2, new Contador(20), "D");
-		d.setParEdificio(0, 2, c, "M");
-		
-		d.setParEdificio(1, 0, new Contador(0), "I");
-		d.setParEdificio(1, 0, new Contador(0), "D");
-		
-		d.setParEdificio(1, 1, new Contador(0), "I");
-		d.setParEdificio(1, 1, new Contador(0), "D");
-		d.setParEdificio(1, 1, new Contador(0), "V");
-		
-		d.setParEdificio(1, 2, new Contador(0), "I");
-		d.setParEdificio(1, 2, new Contador(0), "D");
-
-		String[] coordenadas = d.obtenerCoordenadas(c);
-		boolean resultado = d.comprobarRoturaPropia(c, coordenadas);
-		Assert.assertTrue(resultado);
-		
-	}
 	
 	
 	@Test 
@@ -334,78 +348,204 @@ public class DameroTest {
 	}
 	
 	@Test
-	public void TestResolverContadoresGreedy() {
-		Damero damero = new Damero(5,5);
+	public void TestResolverContadoresGreedy() { //De esto se podra hacer mas situaciones
+		Damero d = new Damero(3,3);
+		Contador c1 = new Contador(25000,0,2,"M");
+		Contador c2 = new Contador(14000,1,1,"V");
+		ArrayList<Integer> expectedResult = new ArrayList<>();
+		Integer id1 = c1.getId();
+		Integer id2 = c2.getId();
 		
-		damero.resolverContadoresRoturaPropiaGreedy();
+		expectedResult.add(id1);
+		expectedResult.add(id2);
+		
+		d.setParEdificioContador(0, 0, new Contador(0,0,0,"D"));
+		
+		d.setParEdificioContador(0, 1, new Contador(0,0,1,"D"));
+		d.setParEdificioContador(0, 1, new Contador(20,0,1,"V"));
+		
+		d.setParEdificioContador(0, 2, new Contador(20,0,2,"D"));
+		d.setParEdificioContador(0, 2, c1);
+		
+		d.setParEdificioContador(1, 0, new Contador(0,1,0,"I"));
+		d.setParEdificioContador(1, 0, new Contador(0,1,0,"D"));
+		
+		d.setParEdificioContador(1, 1, new Contador(0,1,1,"I"));
+		d.setParEdificioContador(1, 1, new Contador(0,1,1,"D"));
+		d.setParEdificioContador(1, 1, c2);
+		
+		d.setParEdificioContador(1, 2, new Contador(0,1,2,"I"));
+		d.setParEdificioContador(1, 2, new Contador(0,1,2,"D"));
+		
+		Assert.assertEquals(d.resolverContadoresRoturaPropiaGreedy(), expectedResult);	
+		
 	}
 	
 	@Test
-	public void TestManometrosGreedy() { //TEST A.1
-		Damero damero = new Damero(3,3);
-		Manometro m1 = new Manometro(42); //DA FALLO
-		Manometro m2 = new Manometro(44); //DA FALLO
+	public void TestResolverManometrosGreedyLineasDistribucion() { 
+		Damero d = new Damero(3,3);
+		ArrayList<Integer> expected = new ArrayList<>();
 		
-		Manometro m3 = new Manometro(50); //NO DA FALLO
-		Manometro m4 = new Manometro(47); //NO DA FALLO
+		Manometro m1 = new Manometro();
+		Manometro m2 = new Manometro();
+		Manometro m3 = new Manometro();
+		Manometro m4 = new Manometro();
+		Manometro m5 = new Manometro();
+		Manometro m6 = new Manometro();
 		
-		damero.getDamero()[1][2].setMan(m3); // CASILLA GENERAL
-		damero.getDamero()[0][2].setMan(m4); // LINEA GENERAL
-		damero.getDamero()[1][1].setMan(m2); //DEBAJO CASILLA GENERAL
-		damero.getDamero()[0][1].setMan(m1); //DEBAJO LINEA GENERAL
+		m1.setPresion(200.0);
+		m2.setPresion(90.0); //ROTURA
+		m3.setPresion(200.0); 
+		m4.setPresion(198.5);
+		m5.setPresion(197.0);
+		m6.setPresion(196.9);
 		
-		
-		ArrayList<Manometro> resultado = damero.resolverManometrosGreedy();
-		boolean contiene = resultado.contains(m1) && resultado.contains(m2);
-		boolean noContiene1 = !resultado.contains(m3) && !resultado.contains(m4);
-		
-		
-		Assert.assertTrue(noContiene1); //Comprobamos que los manometros que no dan fallo no estan en la lista
-		Assert.assertTrue(contiene); //Comprobamos que los manometros que dan fallo estan en la lista	
-	}
-	
-	@Test
-	public void TestManometrosGreedy2() { //TEST A.1 AHORA LA ROTURA ESTÁ EN LA LINEA GENERAL
-		Damero damero = new Damero(3,3);
-		
-		Manometro m1 = new Manometro(50); //NO DA FALLO
-		Manometro m2 = new Manometro(44); //DA FALLO
-		Manometro m3 = new Manometro(45); //NO DA FALLO
-		Manometro m4 = new Manometro(42); //NO DA FALLO
-		
-		damero.getDamero()[1][2].setMan(m1); // CASILLA GENERAL
-		damero.getDamero()[0][2].setMan(m2); // LINEA GENERAL
-		damero.getDamero()[1][1].setMan(m3); //DEBAJO CASILLA GENERAL
-		damero.getDamero()[0][1].setMan(m4); //DEBAJO LINEA GENERAL
-		
-		
-		ArrayList<Manometro> resultado = damero.resolverManometrosGreedy();
-		boolean contiene = resultado.contains(m2);
-		boolean noContiene = !resultado.contains(m1) && !resultado.contains(m3) && !resultado.contains(m4);
-		
-		Assert.assertTrue(noContiene);
-		Assert.assertTrue(contiene);	
-	}
-	
-//	@Test
-//	public void TestConsumidoresGreedy() {
-//		Damero damero = new Damero(3,3);
-//		
-//		damero.setParEdificio(0, 0, new Contador(1), "D");
-//		damero.setParEdificio(0, 1, new Contador(2), "D");
-//		damero.setParEdificio(0, 2, new Contador(3), "D");
-//		
-//		damero.setParEdificio(1, 0, new Contador(4), "I");
-//		damero.setParEdificio(1, 1, new Contador(5), "I");
-//		damero.setParEdificio(1, 2, new Contador(6), "I");
-//		
-//		damero.setParEdificio(1, 0, new Contador(7), "D");
-//		damero.setParEdificio(1, 1, new Contador(8), "D");
-//		damero.setParEdificio(1, 2, new Contador(9), "D");
-//		
-//		
-//		damero.resolverConsumidoresGreedy();
-//	}
+		expected.add(m2.getId());
 
+		d.setParEdificioManometro(0, 0, m2);
+		d.setParEdificioManometro(0, 1, m1);
+		d.setParEdificioManometro(0, 2, m3);
+		d.setParEdificioManometro(1, 0, m4);
+		d.setParEdificioManometro(1, 1, m5);
+		d.setParEdificioManometro(1, 2, m6);
+		
+		Assert.assertEquals(d.resolverManometrosGreedy(), expected);
+
+	}
+	
+	@Test
+	public void TestResolverManometrosGreedyLineaTroncal() { 
+		Damero d = new Damero(3,3);
+		ArrayList<Integer> expected = new ArrayList<>();
+		
+		Manometro m1 = new Manometro();
+		Manometro m2 = new Manometro();
+		Manometro m3 = new Manometro();
+		Manometro m4 = new Manometro();
+		Manometro m5 = new Manometro();
+		Manometro m6 = new Manometro();
+		
+		m1.setPresion(200.0);
+		m2.setPresion(199.0); 
+		m3.setPresion(50.0); //ROTURA
+		m4.setPresion(198.5);
+		m5.setPresion(197.0);
+		m6.setPresion(196.9);
+		
+		expected.add(m3.getId());
+
+		d.setParEdificioManometro(0, 0, m2);
+		d.setParEdificioManometro(0, 1, m1);
+		d.setParEdificioManometro(0, 2, m3);
+		d.setParEdificioManometro(1, 0, m4);
+		d.setParEdificioManometro(1, 1, m5);
+		d.setParEdificioManometro(1, 2, m6);
+		
+		Assert.assertEquals(d.resolverManometrosGreedy(), expected);
+	}
+	
+	
+	@Test
+	public void TestResolverConsumidoresGreedy() {
+		Damero d = new Damero(3,3);
+		Contador c1 = new Contador(10000,1,0,"D");
+		Contador c2 = new Contador(140000,1,1,"I");
+		ArrayList<Integer> expectedResult = new ArrayList<>();
+		Integer id1 = c1.getId();
+		Integer id2 = c2.getId();
+		
+		expectedResult.add(id2);
+		expectedResult.add(id1);
+
+		
+		d.setParEdificioContador(0, 0, new Contador(0,0,0,"D"));
+		
+		d.setParEdificioContador(0, 1, new Contador(0,0,1,"D"));
+		d.setParEdificioContador(0, 1, new Contador(20,0,1,"V"));
+		
+		d.setParEdificioContador(0, 2, new Contador(20,0,2,"D"));
+		d.setParEdificioContador(0, 2, new Contador(20,0,2,"M"));
+		
+		d.setParEdificioContador(1, 0, new Contador(0,1,0,"I"));
+		d.setParEdificioContador(1, 0, c1);
+		
+		d.setParEdificioContador(1, 1, c2);
+		d.setParEdificioContador(1, 1, new Contador(0,1,1,"D"));
+		d.setParEdificioContador(1, 1, new Contador(20,1,1,"V")); //ROTURA
+		
+		d.setParEdificioContador(1, 2, new Contador(0,1,2,"I"));
+		d.setParEdificioContador(1, 2, new Contador(0,1,2,"D"));
+		d.resolverConsumidoresGreedy();
+		
+		Assert.assertTrue(expectedResult.equals(d.resolverConsumidoresGreedy()));
+	}
+	
+	@Test
+	public void TestTiemposResolverContadoresGreedy() {
+		int n=100; //Con los pares no encuentra nunca roturas propias
+		long inicio = 0, fin = 0, sumaTiempos = 0; 
+		int contador = 0;
+		ArrayList<Integer> resultado = new ArrayList<>();
+		
+		while(contador != 10) {
+			Damero d = new Damero(n,n);
+			inicio = System.nanoTime();
+			resultado = d.resolverContadoresRoturaPropiaGreedy();
+			fin = System.nanoTime();
+			if(!resultado.isEmpty()) { //Vamos a descartar aquellos casos en los que no haya roturas
+				sumaTiempos += (fin-inicio);
+				contador++;
+			}
+		}
+		
+		System.out.println(sumaTiempos/10);
+	}
+	
+
+	@Test
+	public void TestTiemposResolverConsumidoresGreedy() { //FUNCIONA -> ES MUUUUY LENTO
+		int n=800;
+		long inicio = 0, fin = 0, sumaTiempos = 0; 
+		int contador = 0;
+		ArrayList<Integer> resultado = new ArrayList<>();
+		
+		while(contador != 10) {
+			Damero d = new Damero(n,n,n*1000, n*10000);
+			inicio = System.nanoTime();
+			resultado = d.resolverConsumidoresGreedy();
+			fin = System.nanoTime();
+			if(!resultado.isEmpty()) { //Vamos a descartar aquellos casos en los que no haya roturas
+				sumaTiempos += (fin-inicio);
+				contador++;
+			}
+			
+		}
+		
+		System.out.println(sumaTiempos/10);
+	}
+	
+	
+	@Test
+	public void TesTiempostResolverManometrosGreedy() { //FUNCIONA BIEN
+		int n=3;
+		long inicio = 0, fin = 0, sumaTiempos = 0; 
+		int contador = 0;
+		ArrayList<Integer> resultado = new ArrayList<>();
+		
+		while(contador != 10) {
+			Damero d = new Damero(n,n);
+			inicio = System.nanoTime();
+			resultado = d.resolverManometrosGreedy();
+			fin = System.nanoTime();
+			if(!resultado.isEmpty()) { //Vamos a descartar aquellos casos en los que no haya roturas
+				sumaTiempos += (fin-inicio);
+				contador++;
+			}
+		}
+		
+		System.out.println(sumaTiempos/10);
+		
+	}
+	
 
 }

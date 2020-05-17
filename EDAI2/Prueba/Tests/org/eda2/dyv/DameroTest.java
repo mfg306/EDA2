@@ -3,11 +3,10 @@ package org.eda2.dyv;
 import org.junit.Assert;
 import org.junit.Test;
 import java.util.ArrayList;
-import org.eda2.dyv.*;
 
 public class DameroTest {
 	
-	//TESTS DE INICICALIZACIÓN
+	//TESTS DE INICICALIZACIï¿½N
 	@Test
 	public void TestInicializarContadoresDameroPar() {
 		Damero damero = new Damero(4,4);//Si es par de 4x4, no puede haber ninguna manzana que sea nula
@@ -16,7 +15,7 @@ public class DameroTest {
 		
 		for(int i=0; i<pE.length; i++) {
 			for(int j=0; j<pE[i].length; j++) {
-				//Esto no debería de pasar
+				//Esto no deberï¿½a de pasar
 				if(pE[i][j].getcDerecha() == null || pE[i][j].getcIzquierda() == null) resultado = false; 
 			}
 		}
@@ -71,7 +70,7 @@ public class DameroTest {
 	}
 	
 	
-	//TESTS DE COMPROBACIÓN DE CONTADORES
+	//TESTS DE COMPROBACIï¿½N DE CONTADORES
 	@Test
 	public void TestPerdidaDemasiadoGrandeSeEscapaLaPresion() {
 		//El test de si hay un reventon se queda a 0
@@ -277,7 +276,7 @@ public class DameroTest {
 		ParEdificios[] media;
 		
 		//Vamos a hacer lo mismo que antes. Vamos a buscar las roturas de forma bruta. Si encontramos al menos una, 
-		//entonces nuetro algoritmo tiene que haber encontrado también al menos una.
+		//entonces nuetro algoritmo tiene que haber encontrado tambiï¿½n al menos una.
 		
 		for(int i=0; i<numeroLineas; i++) {
 			dist = damero.lineasDistribucion(i);
@@ -320,7 +319,7 @@ public class DameroTest {
 		ParEdificios[] media;
 		
 		//Vamos a hacer lo mismo que antes. Vamos a buscar las roturas de forma bruta. Si encontramos al menos una, 
-		//entonces nuetro algoritmo tiene que haber encontrado también al menos una.
+		//entonces nuetro algoritmo tiene que haber encontrado tambiï¿½n al menos una.
 		
 		
 		for(int i=0; i<numeroLineas; i++) {
@@ -357,7 +356,7 @@ public class DameroTest {
 		}
 	}
 	
-	//TESTS COMPROBACIÓN MANÓMETROS
+	//TESTS COMPROBACIï¿½N MANï¿½METROS
 	@Test
 	public void TestIntervaloPresionCasillaGeneral() {
 		Damero damero = new Damero(4,4);
@@ -424,7 +423,7 @@ public class DameroTest {
 	
 	@Test 
 	public void TestDiminuyeLaPresion() {
-		//Tiene que salir menos presión de la que entra 
+		//Tiene que salir menos presiï¿½n de la que entra 
 		Damero damero = new Damero(100,100);
 		
 		int filas = damero.getDamero().length-1;
@@ -618,12 +617,15 @@ public class DameroTest {
 		ArrayList<Integer> problemaLineas; 
 		
 		while(contador != 10) { //Vamos a hacer 10 veces cada i, pero buscando las roturas
-			Damero damero = new Damero(100,100);
+			Damero damero = new Damero(300,300);
 			inicio = System.nanoTime();
 			problemaTroncal = damero.consumoExcesivoTroncal();
 			problemaLineas = damero.consumoExcesivoLineasDistribucion();
 		
 			fin = System.nanoTime();
+			if(problemaTroncal.isEmpty()) System.out.println("1");
+			if(problemaLineas.isEmpty()) System.out.println("2");
+
 			if(!problemaTroncal.isEmpty() || !problemaLineas.isEmpty()) { //El problema puede tener roturas en una u otro
 				sumaTiempos += (fin-inicio);
 				contador ++;
