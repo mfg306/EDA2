@@ -702,13 +702,16 @@ public class Damero {
 		//Para cada contador que tenga rotura, vamos a buscar su correspondiente contador de la matriz de medias -> ip
 		//buscamos tambien su contador previo -> bc
 		
-		for(Contador c : listaRoturas) {
+		for(Contador c : listaRoturas) {  //CREO Q LO DE LAS COORDENADAS ESTÁ MAL, EL PREVIO NO ES J-1, ES J+1 
 			coords = this.obtenerCoordenadas(c);
 			media = getContadorMediaDeUnContador(coords); //aqui ya va O(n3)
 			ip = c.getConsumo()/media.getConsumo();
 			//¿EL CONSUMO ULTIMO ES EL CONSUMO DEL CONTADOR QUE HA PROVOCADO LA ROTURA O DEL PREVIO?? 
 			//SUPONGO QUE DEL PREVIO ASIQ...
 			i = Integer.parseInt(coords[0]);
+			
+			
+			//ESTO CREO Q ESTÁ MAL, SERÍA +1
 			j = Integer.parseInt(coords[1])-1; //EL DE ARRIBA
 			//SUPONGO QUE SI LA ROTURA ESTABA EN UN CONTADOR VERDE TENEMOS QUE GUARDAR EL ANTERIOR TAMBIÉN VERDE SUPONGO
 			
@@ -742,7 +745,7 @@ public class Damero {
 	 * @return el dt
 	 */
 	public double calcularDT(double ip, double bc) {
-		return 5*bc + 12*(ip-7);
+		return 5*bc + 12*(ip-7); //AQUI PODRIAMOS AÑADIR DIRECTAMENTE EL TIEMPO BASE
 	}
 	
 
