@@ -1,6 +1,6 @@
 package org.eda2.greedyAlternativa;
 
-public class Contador extends Medidor {
+public class Contador implements Comparable<Contador> {
 
 	private double consumo;
 	private static int contador = 0; 
@@ -93,6 +93,11 @@ public class Contador extends Medidor {
 	public boolean equals(Object other) {
 		Contador otro = (Contador)other;
 		return this.id == otro.id;
+	}
+
+	@Override
+	public int compareTo(Contador o) {
+		return Double.compare(this.consumo, o.consumo);
 	}
 
 }

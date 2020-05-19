@@ -1,8 +1,6 @@
 package org.eda2.greedy;
 
 import java.util.ArrayList;
-import java.util.Collections;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -482,7 +480,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestTiemposResolverContadoresGreedy() {
-		int n=100; //Con los pares no encuentra nunca roturas propias
+		int n=3; //Con los pares no encuentra nunca roturas propias
 		long inicio = 0, fin = 0, sumaTiempos = 0; 
 		int contador = 0;
 		ArrayList<Integer> resultado = new ArrayList<>();
@@ -504,7 +502,7 @@ public class DameroTest {
 
 	@Test
 	public void TestTiemposResolverConsumidoresGreedy() { //FUNCIONA -> ES MUUUUY LENTO
-		int n=800;
+		int n=3;
 		long inicio = 0, fin = 0, sumaTiempos = 0; 
 		int contador = 0;
 		ArrayList<Integer> resultado = new ArrayList<>();

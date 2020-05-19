@@ -1,13 +1,13 @@
 package org.eda2.greedyAlternativa;
 
 import java.util.ArrayList;
-import java.util.PriorityQueue;
-import java.util.TreeMap;
+//import java.util.HashMap;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.TreeSet;
 
 
-//Puesto que lo que mas vamos a hacer es buscar, lo mejor es usar una estructura basada en arboles. Vamos a usar un TreeMap
+//Puesto que lo que mas vamos a hacer es buscar, lo mejor es usar una estructura basada en arboles. Vamos a usar un HashMap
 //La clave sera un string que representa las coordenadas donde estaria ubicado si estuviese en la matriz que usamos en dyv
 //el valor sera un ParEdificio que representa las dos casillas 
 
@@ -16,8 +16,8 @@ public class Damero {
 	private int filas;
 	private int columnas; 
 	
-	private TreeMap<String, ParEdificios> pEdificios;
-	private TreeMap<String, ParEdificios> matrizMedias;
+	private HashMap<String, ParEdificios> pEdificios;
+	private HashMap<String, ParEdificios> matrizMedias;
 	
 	// Consumo minimo y maximo del contador general
 	public final static double CONSUMO_MINIMO_GENERAL = 300000;
@@ -33,11 +33,23 @@ public class Damero {
 		Contador.reiniciarId();
 		this.filas = filas;
 		this.columnas = columnas;
-		pEdificios = new TreeMap<>();
-		matrizMedias = new TreeMap<>();
+		pEdificios = new HashMap<>();
+		matrizMedias = new HashMap<>();
 		
 		this.inicializarContadoresMedia(1000, 100);
 		this.inicializarContadores(9000, 900);
+	}
+	
+	
+	public Damero(int columnas, int filas, double cantInicial, double cantFinal) {
+		Contador.reiniciarId();
+		this.filas = filas;
+		this.columnas = columnas;
+		pEdificios = new HashMap<>();
+		matrizMedias = new HashMap<>();
+		
+		this.inicializarContadoresMedia(1000, 100);
+		this.inicializarContadores(cantInicial, cantFinal);
 	}
 	
 		
@@ -207,11 +219,11 @@ public class Damero {
 		}
 	} 
 	
-	public TreeMap<String, ParEdificios> getParEdificios(){
+	public HashMap<String, ParEdificios> getParEdificios(){
 		return this.pEdificios;
 	}
 	
-	public TreeMap<String, ParEdificios> getMediaParEdificios(){
+	public HashMap<String, ParEdificios> getMediaParEdificios(){
 		return this.matrizMedias;
 	}
 	
@@ -375,7 +387,6 @@ public class Damero {
 			candidatosOrdenados.remove(posible); // Eliminamos posible de la lista de candidatos
 			if (roturaPropia(posible)) {// Devuelve true o false si el contador tiene una rotura propia o no
 				elegidos.add(posible.getId());
-				System.out.println("Si");
 			}
 		}
 		return elegidos;

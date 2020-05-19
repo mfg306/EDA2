@@ -477,7 +477,7 @@ public class DameroTest {
 		Damero d = new Damero(3,3);
 		Contador c1 = new Contador(250000,0,2,"M");
 		Contador c2 = new Contador(140000,1,1,"V");
-		ArrayList<Integer> expectedResult = new ArrayList<>();
+		TreeSet<Integer> expectedResult = new TreeSet<>();
 		Integer id1 = c1.getId();
 		Integer id2 = c2.getId();
 		
@@ -507,7 +507,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestTiemposResolverContadoresGreedy() {
-		int n=200; //Con los pares no encuentra nunca roturas propias
+		int n=500; //Con los pares no encuentra nunca roturas propias
 		long inicio = 0, fin = 0, sumaTiempos = 0; 
 		int contador = 0;
 		ArrayList<Integer> resultado = new ArrayList<>();
@@ -518,13 +518,11 @@ public class DameroTest {
 			//Cuesta mucho encontrar una rotura, por eso tarda tanto
 			//Cuanto mas tamaño, mas cuesta --> Vamos a favorecer la inicializacion de los datos para que siempre haya roturas 
 
-			Damero d = new Damero(n,n);
-			System.out.println("INICIO");
+			Damero d = new Damero(n,n, n*1000, n*10000);
 			inicio = System.nanoTime();
 			resultado = d.resolverContadoresRoturaPropiaGreedy();
 			System.out.println(resultado.toString());
 			fin = System.nanoTime();
-			System.out.println("FIN");
 			if(!resultado.isEmpty()) { //Vamos a descartar aquellos casos en los que no haya roturas
 				sumaTiempos += (fin-inicio);
 				contador++;
@@ -544,11 +542,9 @@ public class DameroTest {
 		
 		while(contador != 10) {
 			Damero d = new Damero(n,n);
-			System.out.println("A");
 			inicio = System.nanoTime();
 			resultado = d.resolverConsumidoresGreedy();
 			fin = System.nanoTime();
-			System.out.println("B");
 			if(!resultado.isEmpty()) { //Vamos a descartar aquellos casos en los que no haya roturas
 				sumaTiempos += (fin-inicio);
 				contador++;
