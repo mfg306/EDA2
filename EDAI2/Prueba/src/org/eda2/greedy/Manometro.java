@@ -3,7 +3,7 @@ package org.eda2.greedy;
 import java.util.Locale;
 
 /**
- * @author marta
+ * @author marta y alex
  *
  */
 public class Manometro {
@@ -70,30 +70,34 @@ public class Manometro {
 		this.id = id;
 	}
 	
+	/**
+	 * @return coordenada i 
+	 */
 	public int getI() {
 		return i;
 	}
 
+	/**
+	 * @param i la coordenada i que queremos establecer
+	 */
 	public void setI(int i) {
 		this.i = i;
 	}
 
+	/**
+	 * @return la coordenada j 
+	 */
 	public int getJ() {
 		return j;
 	}
 
+	/**
+	 * @param j coordenada j que queremos establecer
+	 */
 	public void setJ(int j) {
 		this.j = j;
 	}
 	
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
 	
 	/**
 	 * Reinicia el valor del contador a 0
@@ -110,6 +114,10 @@ public class Manometro {
 		return "" + String.format(Locale.US, "%.2f", this.presion);
 	}	
 	
+	/**
+	 * @param m manometro con el que queremos comparar
+	 * @return el resultado 
+	 */
 	public int compareTo(Manometro m) {
 		return Double.compare(this.presion, m.presion);
 	}

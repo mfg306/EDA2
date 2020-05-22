@@ -19,7 +19,7 @@ public class Damero {
 	public final static double PRESION_MAXIMA = 150;
 	public final static double PRESION_MINIMA = 110;
 	public final static double BA = 60; //minutos;
-	public final static int WTT = 4800; //minutos;
+	public final static int WTT = 8800; //minutos;
 
 
 	/**
@@ -48,7 +48,7 @@ public class Damero {
 			}
 		}
 		this.inicializarContadoresMedia();
-		this.inicializarContadores(700,7000);
+		this.inicializarContadores(700,2000);
 	}
 	
 	public Damero(int columnas, int filas, double canMinima, double canMaxima) {
@@ -509,7 +509,68 @@ public class Damero {
 		}
 		return false;
 	}
+	public String[] obtenerCoordenadas(Contador con) {
+		String[] coordenadas = new String[3];
+		boolean encontrado = false;
+		String tipo = "";
+		for (int i = 0; i < pEdificios.length; i++) {
+			if (encontrado) break;
+			for (int j = 0; j < pEdificios[0].length; j++) {
+				// Le he añadido el metodo equals a la clase Contador
+				if (this.pEdificios[i][j].getcDerecha() != null && this.pEdificios[i][j].getcDerecha().equals(con)) {
+					encontrado = true;
+					tipo = "D";
+				}
+
+				if (this.pEdificios[i][j].getcIzquierda() != null && this.pEdificios[i][j].getcIzquierda().equals(con)) {
+					encontrado = true;
+					tipo = "I";
+				}
+
+				if (this.pEdificios[i][j].getcMorado() != null && this.pEdificios[i][j].getcMorado().equals(con)) {
+					encontrado = true;
+					tipo = "M";
+				}
+
+				if (this.pEdificios[i][j].getcVerde() != null && this.pEdificios[i][j].getcVerde().equals(con)) {
+					encontrado = true;
+					tipo = "V";
+				}
+
+				// comprobamos si alguno de los contadores coincide
+				if (encontrado) {
+					coordenadas[0] = i + "";
+					coordenadas[1] = j + "";
+					coordenadas[2] = tipo;
+					break;
+				}
+			}
+		}
+		return coordenadas;
+	}
 	
+	/**
+	 * @param coords salida de ObtenerCoordenadas
+	 * @return su correspondiente contador media
+	 */
+	public Contador getContadorMediaDeUnContador(String[] coords) {
+		Integer i = Integer.parseInt(coords[0]);
+		Integer j = Integer.parseInt(coords[1]);
+		String tipo = coords[2];
+		
+		switch(tipo) {
+		case "V":
+			return this.matrizMedias[i][j].getcVerde();
+		case "M":
+			return this.matrizMedias[i][j].getcVerde();
+		case "D":
+			return this.matrizMedias[i][j].getcDerecha();
+		case "I":
+			return this.matrizMedias[i][j].getcIzquierda();
+		default : throw new RuntimeException("Fallo");
+		} 
+
+	}
 	
 	
 	//PROGRAMACION DINAMICA
@@ -526,15 +587,17 @@ public class Damero {
 		double ip,bc,dt;
 		TreeMap<Contador, ArrayList<Double>> manzanasRoturas = this.manzanasConsumoExcesivo(listaRoturas);
 		TreeMap<Contador, Double> resultado = new TreeMap<>();
-		
-		
+
+		//Ir recorriendo las manzanas con roturas e ir introduciendo en resultado el contador que produce la rotura con su rotura
 		for(Entry<Contador, ArrayList<Double>> c : manzanasRoturas.entrySet()) {
 			bc = c.getValue().get(0);
 			ip = c.getValue().get(2);
 			dt = this.calcularDT(ip, bc);
 			c.getKey().setAt(dt+BA);
+//			System.out.println(dt+BA);
 			resultado.put(c.getKey(), dt+BA);
 		}
+		
 		return resultado;
 	}
 	
@@ -554,8 +617,7 @@ public class Damero {
 		TreeMap<Contador, ArrayList<Double>> manzanasFugas = this.manzanasConsumoExcesivo(this.resolverConsumidoresGreedy());
 		TreeMap<Contador, Double> resultado = new TreeMap<>();
 		double op;
-		
-		
+
 		for(Contador c : manzanasFugas.keySet()) {  
 			op = Math.random() * (1000 - 4000 + 1) + 4000;
 			c.setOp(op);
@@ -585,21 +647,19 @@ public class Damero {
 		// Peso del contador = AT
 		
 		
-		//PASO 1. Hay que ordenar en funcion del peso -> En un TreeMap
+		//PASO 1. Hay que ordenar en funcion del peso
 		//PASO 2. Rellenar la tabla d
 		
-		
-		int numContadores = this.resolverConsumidoresGreedy().size();
+		ArrayList<Contador> listaContadores = new ArrayList<>(this.resolverConsumidoresVersionContadores());
+		if(listaContadores.isEmpty()) return null;
+		int numContadores = listaContadores.size();
 		int cota = WTT;
 		double[][] table = new double[numContadores][cota];
 		
 		
 		//En esta misma lista tenemos los beneficios y los pesos (estan en las propiedades del contador) 
-		ArrayList<Contador> listaContadores = new ArrayList<>(this.resolverConsumidoresVersionContadores());
 		//Ordenamos la lista en funcion del peso  (AT)
 		listaContadores.sort(new ComparadorContadoresAT());
-		
-		
 		
 		//Ahora podemos empezar a rellenar la tabla 
 		
@@ -609,17 +669,25 @@ public class Damero {
 		}
 				
 		for(int i=1; i<numContadores; i++) {
-			System.out.println("PESO: " + (listaContadores.get(i).getAt()-1));
+			//En el momento en el que encontremos un peso que sea mayor que el tamaño de la mochila lo descartamos
+			if(listaContadores.get(i).getAt() > cota) continue; //No cabe en la mochila
+			
+			//Si tenemos un objeto de peso 5, desde j = 0 hasta j = 4 no podemos meterlo, por lo que cogemos lo que ya teniamos metido antes
 			for(int j=0; j<listaContadores.get(i).getAt()-1; j++) {
 				table[i][j] = table[i-1][j]; //El de arriba
 			}
 			
-			for(int k = (int)listaContadores.get(i).getAt(); k<cota; k++) { //no se como va a salir el casting :( 
-				System.out.println(listaContadores.get(i).getAt());
-				table[i][k] = Math.max(table[i-1][k-(int)listaContadores.get(i).getAt() + (int)listaContadores.get(i).getOp()], table[i-1][k]);
+			for(int k = (int)listaContadores.get(i).getAt(); k<cota; k++) { 
+				//El beneficio de lo que ya teniamos añadiendo el objeto vs sin añadirlo
+				double prev = table[i-1][k-(int)listaContadores.get(i).getAt()]+ (int)listaContadores.get(i).getOp();
+				table[i][k] = Math.max(prev, table[i-1][k]);
 			}
 		}
-
+		
+		
+		//Aqui deberia de estar el maximo -> PERO SALE 0.0
+		System.out.println(table[numContadores-1][cota-1]);
+		
 		return table;		
 		
 	}

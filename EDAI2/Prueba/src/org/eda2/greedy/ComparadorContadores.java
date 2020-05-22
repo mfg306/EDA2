@@ -2,6 +2,10 @@ package org.eda2.greedy;
 
 import java.util.Comparator;
 
+/**
+ * @author marta y alex
+ *
+ */
 public class ComparadorContadores implements Comparator<Contador> {
 
 	/* (non-Javadoc)

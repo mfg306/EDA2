@@ -158,13 +158,15 @@ public class DameroTest {
 	@Test
 	public void TestMaximizarDineroDadoWTT() {
 		
-		Damero d = new Damero(5,5);
+		Damero d = new Damero(3,3);
 		
 		d.establecerListaATRoturas();
 		d.generarOP();
 		
-		d.maximizarDineroDadoWTT();
+		
+		double[][] table = d.maximizarDineroDadoWTT();
 		
 	}
-
+	
+	
 }

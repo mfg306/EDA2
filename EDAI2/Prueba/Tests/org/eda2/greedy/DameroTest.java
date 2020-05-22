@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * @author alex y marta
+ *
+ */
 public class DameroTest {
 	
 	//TESTS DE INICICALIZACIÓN
@@ -346,7 +350,7 @@ public class DameroTest {
 	}
 	
 	@Test
-	public void TestResolverContadoresGreedy() { //De esto se podra hacer mas situaciones
+	public void TestResolverContadoresGreedy() { 
 		Damero d = new Damero(3,3);
 		Contador c1 = new Contador(25000,0,2,"M");
 		Contador c2 = new Contador(14000,1,1,"V");
@@ -374,6 +378,9 @@ public class DameroTest {
 		
 		d.setParEdificioContador(1, 2, new Contador(0,1,2,"I"));
 		d.setParEdificioContador(1, 2, new Contador(0,1,2,"D"));
+		
+		System.out.println(d.resolverContadoresRoturaPropiaGreedy());
+		System.out.println(expectedResult);
 		
 		Assert.assertEquals(d.resolverContadoresRoturaPropiaGreedy(), expectedResult);	
 		
@@ -501,7 +508,7 @@ public class DameroTest {
 	
 
 	@Test
-	public void TestTiemposResolverConsumidoresGreedy() { //FUNCIONA -> ES MUUUUY LENTO
+	public void TestTiemposResolverConsumidoresGreedy() {
 		int n=3;
 		long inicio = 0, fin = 0, sumaTiempos = 0; 
 		int contador = 0;
@@ -524,8 +531,8 @@ public class DameroTest {
 	
 	
 	@Test
-	public void TesTiempostResolverManometrosGreedy() { //FUNCIONA BIEN
-		int n=3;
+	public void TesTiempostResolverManometrosGreedy() { 
+		int n=3; //MAX: 1024
 		long inicio = 0, fin = 0, sumaTiempos = 0; 
 		int contador = 0;
 		ArrayList<Integer> resultado = new ArrayList<>();

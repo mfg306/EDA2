@@ -2,43 +2,11 @@ package org.eda2.greedy;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-/*
- * CAMBIOS QUE HE HECHO: 
- * - HE QUITADO LOS METODOS OBTENERCOORDENAS PARA CONTADORES Y MANOMETROS PORQUE TENIA UN ORDEN CUADRATICO. LO QUE HE HECHO HA SIDO EN LA 
- * INICIALIZACION COMO YA VAMOS TENIENDO LOS INDICES PUES SE LO ASIGNAMOS COMO PROPIEDAD A LOS CONTADORES Y MANOMETROS Y ASI TENEMOS UN ORDEN 
- * CONSTANTE (TAMBIEN LE HE METIDO EL TIPO "D", "I", ETC)
- * 
- * - EN LOS ALGORITMOS GREEDY PUSE UNA PRIORITYQUEUE PORQUE ERA MAS RAPIDO PERO ME HE DADO CUENTA DE QUE UN ARRAYLIST ES TODAVIA MAS RAPIDO PORQUE 
- * PARA OBTENERLO EL ORDEN ES CONSTANTE Y CON LA PRIORITYQUE CREO QUE ERA NLOGN 
- * 
- * - HE HECHO UN NUEVO CONSTRUCTOR DONDE LE PASAMOS COMO PARAMETRO TAMBIEN EL RANGO DE CAUCE PORQUE HE PENSADO QUE POR EJEMPLO PARA UN TAMAÑO DE 
- * 1000X1000 SI LE LLEGAN 0,0001 LITROS PUES VA A SER MUY DIFICIL ENCONTRAR UNA ROTURA 
- * 
- *  - HE METIDO TAMBIEN LA LISTA DE MANZANAS A LOS QUE HAY QUE ENVIAR EL AVISO DE CONSUMO EXCESIVO 
- *  
- * - LO UNICO QUE FALTA ES ESTO:   Se generan dos listas de tramos a estudiar por parte de los técnicos de la compañía. Se
- *	detallarán los tramos, indicando la ubicación en la trama urbana - inicio y final, según
- *	las coordenadas (avenida,calle) 
- *
- *
- *
- *
- * - AÑADO UN MÉTODO PARA OBTENER LAS COORDENADAS DE UN MANÓMETRO DETERMINADO (CREO Q NO HAY OTRA FORMA DE ENCONTRARLO) 
- * 		
- * - AÑADO EL MÉTODO generarListaTramosManometros, QUE GENERA LA LISTA PARA EL PROBLEMA A.1
- * 	 VOY A HACER LOS MÉTODOS POR SEPARADO PORQUE, AUNQUE LA IDEA ES LA MISMA, COMO UNOS SON
- *   CONTADORES Y OTROS MANÓMETROS SE TRATAN DE FORMA DIFERENTE
- *   
- *  - HE CAMBIADO EL METODO DE OBTENER COORDENADAS PARA QUE DEVUELVA UN INT[], LO QUE FACILITA EL PROCESADO
- *  
- *  - AÑADO EL METODO generarListaTramosContadores, QUE HACE LO MISMO QUE EL DE LOS MANOMETROS. ME HE DADO CUENTA DE QUE SON 
- *  EXACTAMENTE IGUALES ASIQ SE PUEDEN COMBINAR EN UNO SOLO. POR AHORA LOS DEJO SEPARADOS. EN LA CLASE PRUEBA TE DEJO UN EJEMPLO
- *  DE COMO FUNCIONA (SOLO TIENES QUE EJECUTARLO)
- *  
- *  - HE AÑADIDO (OTRA VEZ) AL GENERADOR DE CONTADORES LO DE LA PROBABILIDAD DE QUE HAYA UNA ROTURA, PORQUE NO SALIA NINGUNA CASI NUNCA.
- * 
- * */
 
+/**
+ * @author marta y alex
+ *
+ */
 public class Damero {
 
 	private int filas;
@@ -85,6 +53,12 @@ public class Damero {
 		this.inicializarManometros();
 	}
 	
+	/**
+	 * @param columnas numero de colunmnas
+	 * @param filas numero de filas
+	 * @param canMinima cantidad mminima de cauce para los contadores
+	 * @param canMaxima cantidad maxima de cauce para los contadores
+	 */
 	public Damero(int columnas, int filas, double canMinima, double canMaxima) {
 		Contador.reiniciarId();
 		this.filas = filas;
@@ -173,6 +147,11 @@ public class Damero {
 	
 	
 	//columna, fila
+	/**
+	 * @param i coordenada i donde queremos ubicar el contador
+	 * @param j coordenada j donde queremos ubicar el contador
+	 * @param c contador que queremos ubicar
+	 */
 	public void setParEdificioContador(int i, int j, Contador c) {
 		c.setMedia(this.matrizMedias[i][j].getcDerecha());
 		c.setI(i);
@@ -197,6 +176,11 @@ public class Damero {
 		}
 	} 
 	
+	/**
+	 * @param i coordenada i donde queremos ubicar el manometro
+	 * @param j coordenada j donde queremos ubicar el manometro
+	 * @param m el manometro que queremos ubicar
+	 */
 	public void setParEdificioManometro(int i, int j, Manometro m) {
 		m.setI(i);
 		m.setJ(j);
@@ -206,6 +190,9 @@ public class Damero {
 	
 
 	// CONTADORES
+	/**
+	 * Inicializacion de los contadoeres
+	 */
 	private void inicializarContadoresMedia() {
 		if (columnas % 2 == 0)
 			inicializarContadoresParMedia();
@@ -218,13 +205,6 @@ public class Damero {
 	 * columnas pares
 	 */
 	private void inicializarContadoresParMedia() {
-		
-		//NOVEDAD::
-		
-
-		// CUANDO CREO UN CONTADOR BUSCO SU CORRESPONDIENDE CONTADOR EN LA MATRIZ MEDIAS (QUE YA ESTA INICIALIZADA, (HE SEPARADO LOS METODOS), Y SE LO PASO POR 
-		// PARAMETRO EN EL CONSTRUCTOR --> PARA EL COMPARADOCONTADORES (el comparadorcontadores es para el metodo de resolvercontadores para tenerlos ordenados)
-		
 		
 		// RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
 		for (int i = 0; i < this.matrizMedias.length; i++) {
@@ -309,6 +289,7 @@ public class Damero {
 		for (int i = 0; i < this.pEdificios.length; i++) {
 			for (int j = 1; j < this.pEdificios[0].length; j++) {
 				double p = Math.random();
+				System.out.println(p);
 				if (i == pEdificios.length - 1 && j == this.pEdificios[0].length - 1) {
 					con += this.pEdificios[i][j].getcIzquierda().getConsumo();
 					con += this.pEdificios[i][j - 1].getcVerde().getConsumo();
@@ -355,6 +336,9 @@ public class Damero {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		String resultado = "";
 		for (int j = 0; j < pEdificios[0].length; j++) {
@@ -366,6 +350,9 @@ public class Damero {
 		return resultado;
 	}
 
+	/**
+	 * @return devuelve una cadena con la matriz de medias
+	 */
 	public String toStringMedias() {
 		String resultado = "";
 		for (int j = 0; j < this.matrizMedias[0].length; j++) {
@@ -392,6 +379,9 @@ public class Damero {
 		return resultado;
 	}
 	
+	/**
+	 * @return un string que contiene los datos de todos los manometros de la ciudad del damero de medias
+	 */
 	public String toStringManometrosMedia() {
 		String resultado = "";
 		for (int j = 0; j < this.matrizMedias[0].length; j++) {
@@ -419,10 +409,10 @@ public class Damero {
 
 	/**
 	 * 
-	 * @param i
-	 * @param j
-	 * @param pEdificios
-	 * @param cont
+	 * @param i coordenada i en la que queremos buscar
+	 * @param j coordenada j en la que queremos buscar
+	 * @param pEdificios estructura en la que queremos buscar (ya que puede ser en la de las medias)
+	 * @param cont es el tipo (Derecha, Izquierda, Verde, Morado)
 	 * @return el consumo de un determinado edificio
 	 */
 	public double getLitrosEdificio(int i, int j, ParEdificios[][] pEdificios, String cont) { // columnas, filas
@@ -535,10 +525,6 @@ public class Damero {
 	public double getPresionPar(int i, int j) {
 		return this.pEdificios[i][j].getMan().getPresion();
 	}
-	
-	
-	
-	
 	
 	
 
@@ -660,6 +646,10 @@ public class Damero {
 		return candidatos;
 	}
 
+	/**
+	 * @param elegidos contadoreres de los que vamos a generar la lista
+	 * @return una lista con los tramos
+	 */
 	public String generarListaTramosContadores(ArrayList<Integer> elegidos) {
 		String cadena = "LISTA DE ROTURAS DE LOS CONTADORES \n";
 		int[] coordenadas = new int[2];
@@ -762,6 +752,10 @@ public class Damero {
 		return cadena;
 	}
 	
+	/**
+	 * @param Id del manometro que queremos buscar
+	 * @return el manometro buscado
+	 */
 	public int[] obtenerCoordenadasManometro(Integer Id) {
 		int[] coord = new int[2];
 		for (int i = 0;i<pEdificios.length;i++) {
@@ -800,6 +794,10 @@ public class Damero {
 		return elegidos;
 	}
 	
+	/**
+	 * @param id del contador que queremos buscar
+	 * @return una matriz con las coordenadas
+	 */
 	public int[] obtenerCoordenadasDadoId(Integer id) {
 		int[] coords = new int[2];
 		for(int i=0; i<this.pEdificios.length; i++) {
