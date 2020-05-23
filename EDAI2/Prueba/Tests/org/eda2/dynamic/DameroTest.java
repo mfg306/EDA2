@@ -167,20 +167,24 @@ public class DameroTest {
 		double[][] table = d.maximizarDineroDadoWTT();
 		int filas = d.resolverConsumidoresGreedy().size();
 		int columnas = Damero.WTT;
-
 		
 		//vamos a buscar el valor maximo 
 		
-		for(int i=0; i<filas; i++) {
-			for(int j=0; j<columnas; j++) {
+		for(int i=0; i<table.length; i++) {
+			for(int j=0; j<table[i].length; j++) {
+				System.out.printf(table[i][j] + "\t");
 				if(table[i][j] > max) {
 					max = table[i][j];
 				}
 			}
+			System.out.println();
 		}
 		
-		System.out.println(max);
-		System.out.println(table[filas][columnas]);
+		//
+		
+		
+		System.out.println("Max " + max);
+		System.out.println("Coords " + table[filas][columnas]);
 		Assert.assertTrue(table[filas][columnas] == max);
 		
 	}

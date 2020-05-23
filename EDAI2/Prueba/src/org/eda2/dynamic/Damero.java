@@ -671,6 +671,11 @@ public class Damero {
 		//Ordenamos la lista en funcion del peso  (AT)
 		listaContadores.sort(new ComparadorContadoresAT());
 		
+		for(Contador c : listaContadores) {
+			if(c.getAt() > WTT) continue;
+			System.out.println(c + " -> " + c.getAt() + ", " + c.getOp()); 
+		}
+		
 		//Ahora podemos empezar a rellenar la tabla 
 		
 		//Primera fila de 0
