@@ -3,7 +3,6 @@ package org.eda2.dynamic;
 import org.junit.Assert;
 import org.junit.Test;
 import java.util.TreeMap;
-import java.util.ArrayList;
 
 public class DameroTest {
 
@@ -172,22 +171,17 @@ public class DameroTest {
 		
 		for(int i=0; i<table.length; i++) {
 			for(int j=0; j<table[i].length; j++) {
-				System.out.printf(table[i][j] + "\t");
 				if(table[i][j] > max) {
 					max = table[i][j];
 				}
 			}
-			System.out.println();
 		}
 		
-		//
-		
-		
-		System.out.println("Max " + max);
-		System.out.println("Coords " + table[filas][columnas]);
 		Assert.assertTrue(table[filas][columnas] == max);
-		
 	}
+	
+	
+	
 	
 	
 }

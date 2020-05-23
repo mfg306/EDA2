@@ -9,6 +9,7 @@ public class Damero {
 	private int columnas;
 	private ParEdificios[][] pEdificios;
 	private ParEdificios[][] matrizMedias;
+	private ArrayList<Integer> listaClientesA = new ArrayList<>();
 	// Consumo minimo y maximo del contador general
 	public final static double CONSUMO_MINIMO_GENERAL = 300000;
 	public final static double CONSUMO_MAXIMO_GENERAL = 500000;
@@ -20,6 +21,7 @@ public class Damero {
 	public final static double PRESION_MINIMA = 110;
 	public final static double BA = 60; //minutos;
 	public static int WTT = 8800; //minutos;
+	
 
 
 	/**
@@ -671,11 +673,6 @@ public class Damero {
 		//Ordenamos la lista en funcion del peso  (AT)
 		listaContadores.sort(new ComparadorContadoresAT());
 		
-		for(Contador c : listaContadores) {
-			if(c.getAt() > WTT) continue;
-			System.out.println(c + " -> " + c.getAt() + ", " + c.getOp()); 
-		}
-		
 		//Ahora podemos empezar a rellenar la tabla 
 		
 		//Primera fila de 0
@@ -708,6 +705,12 @@ public class Damero {
 		
 		
 		return table;		
+		
+	}
+	
+	//ESTE NO LO ENTIENDO
+	public ArrayList<Double> interpretarSolucionMaximizarDineroDadoWTT() {
+		
 		
 	}
 	
