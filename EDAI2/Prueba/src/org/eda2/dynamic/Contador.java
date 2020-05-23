@@ -20,6 +20,10 @@ public class Contador implements Comparable<Contador>{
 		Contador.contador++;
 	}
 	
+	public Contador(double consumo) {
+		this.consumo = consumo;
+	}
+	
 	public Contador(double consumo, int i, int j, String tipo) {
 		this.consumo = consumo;
 		this.id = Contador.contador;

@@ -158,13 +158,30 @@ public class DameroTest {
 	@Test
 	public void TestMaximizarDineroDadoWTT() {
 		
-		Damero d = new Damero(3,3);
-		
+		Damero d = new Damero(3,3,1,7, 150);
+		double max = 0;
 		d.establecerListaATRoturas();
 		d.generarOP();
 		
 		
 		double[][] table = d.maximizarDineroDadoWTT();
+		int filas = d.resolverConsumidoresGreedy().size();
+		int columnas = Damero.WTT;
+
+		
+		//vamos a buscar el valor maximo 
+		
+		for(int i=0; i<filas; i++) {
+			for(int j=0; j<columnas; j++) {
+				if(table[i][j] > max) {
+					max = table[i][j];
+				}
+			}
+		}
+		
+		System.out.println(max);
+		System.out.println(table[filas][columnas]);
+		Assert.assertTrue(table[filas][columnas] == max);
 		
 	}
 	

@@ -1,0 +1,21 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007fc38e904401, pid=10417, tid=10435
+#
+# JRE version: OpenJDK Runtime Environment (11.0.7+10) (build 11.0.7+10-post-Ubuntu-2ubuntu218.04)
+# Java VM: OpenJDK 64-Bit Server VM (11.0.7+10-post-Ubuntu-2ubuntu218.04, mixed mode, sharing, tiered, compressed oops, g1 gc, linux-amd64)
+# Problematic frame:
+# C  [libjimage.so+0x2401]
+#
+# Core dump will be written. Default location: Core dumps may be processed with "/lib/systemd/systemd-coredump %P %u %g %s %t 9223372036854775808 %e" (or dumping to /home/marta/EDA/EDAI2/Prueba/core.10417)
+#
+# If you would like to submit a bug report, please visit:
+#   https://bugs.launchpad.net/ubuntu/+source/openjdk-lts
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -agentlib:jdwp=transport=dt_socket,suspend=y,address=localhost:40681 -javaagent:/home/marta/Descargas/eclipse/configuration/org.eclipse.osgi/232/0/.cp/lib/javaagent-shaded.jar -Dfile.encoding=UTF-8 org.eda2.dynamic.Prueba
+
+Host: 

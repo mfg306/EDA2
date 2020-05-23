@@ -19,7 +19,7 @@ public class Damero {
 	public final static double PRESION_MAXIMA = 150;
 	public final static double PRESION_MINIMA = 110;
 	public final static double BA = 60; //minutos;
-	public final static int WTT = 8800; //minutos;
+	public static int WTT = 8800; //minutos;
 
 
 	/**
@@ -47,11 +47,11 @@ public class Damero {
 				matrizMedias[a][b] = new ParEdificios();
 			}
 		}
-		this.inicializarContadoresMedia();
+		this.inicializarContadoresMedia(100,1000);
 		this.inicializarContadores(700,2000);
 	}
 	
-	public Damero(int columnas, int filas, double canMinima, double canMaxima) {
+	public Damero(int columnas, int filas, double canMinima, double canMaxima, int WTT) {
 		Contador.reiniciarId();
 		this.filas = filas;
 		this.columnas = columnas;
@@ -69,8 +69,9 @@ public class Damero {
 				matrizMedias[a][b] = new ParEdificios();
 			}
 		}
-		this.inicializarContadoresMedia();
+		this.inicializarContadoresMedia(canMinima/7, canMaxima/7);
 		this.inicializarContadores(canMinima, canMaxima);
+		Damero.WTT = WTT;
 	}
 
 	/**
@@ -164,18 +165,18 @@ public class Damero {
 	
 
 	// CONTADORES
-	private void inicializarContadoresMedia() {
+	private void inicializarContadoresMedia(double canMax, double canMin) {
 		if (columnas % 2 == 0)
-			inicializarContadoresParMedia();
+			inicializarContadoresParMedia(canMax, canMin);
 		else
-			inicializarContadoresImparMedia();
+			inicializarContadoresImparMedia(canMax, canMin);
 	}
 
 	/**
 	 * Inicializa los datos de los contadores en el caso de que la ciudad tenga
 	 * columnas pares
 	 */
-	private void inicializarContadoresParMedia() {
+	private void inicializarContadoresParMedia(double canMax, double canMin) {
 		
 		//NOVEDAD::
 		
@@ -188,8 +189,8 @@ public class Damero {
 		for (int i = 0; i < this.matrizMedias.length; i++) {
 			for (int j = 0; j < this.matrizMedias[0].length; j++) {
 				if (i != this.matrizMedias.length - 1 || j != this.matrizMedias[0].length - 1) // CASILLA GENERAL
-					this.matrizMedias[i][j].setcDerecha(new Contador(Math.random() * (100 - 1000 + 1) + 1000, i,j,"D"));
-				this.matrizMedias[i][j].setcIzquierda(new Contador(Math.random() * (100 - 1000 + 1) + 1000, i,j,"I"));
+					this.matrizMedias[i][j].setcDerecha(new Contador(Math.random() * (canMin - canMax + 1) + canMax, i,j,"D"));
+				this.matrizMedias[i][j].setcIzquierda(new Contador(Math.random() * (canMin - canMax + 1) + canMax, i,j,"I"));
 			}
 		}
 		// INICIALIZAMOS LO CONTADORES VERDES Y MORADOS Y EL GENERAL
@@ -231,8 +232,8 @@ public class Damero {
 	 * Inicializa los datos de los contadores en el caso de que la ciudad tenga
 	 * columnas impares
 	 */
-	private void inicializarContadoresImparMedia() {
-		inicializarContadoresParMedia();
+	private void inicializarContadoresImparMedia(double canMax, double canMin) {
+		inicializarContadoresParMedia(canMax, canMin);
 		for (int j = 0; j < this.matrizMedias[0].length; j++) {
 			this.matrizMedias[0][j].setcIzquierda(null);
 		}
@@ -650,10 +651,19 @@ public class Damero {
 		//PASO 1. Hay que ordenar en funcion del peso
 		//PASO 2. Rellenar la tabla d
 		
-		ArrayList<Contador> listaContadores = new ArrayList<>(this.resolverConsumidoresVersionContadores());
-		if(listaContadores.isEmpty()) return null;
+		ArrayList<Contador> resolverConsumidoresVersionContadores = new ArrayList<>(this.resolverConsumidoresVersionContadores());
+		ArrayList<Contador> listaContadores = new ArrayList<>();
+		
+		//Este contador es un contador auxiliar. Empezamos a considerar los contadores a partir de la posicion 1
+		Contador aux = new Contador(0.0);
+		aux.setAt(0.0);
+
+		listaContadores.add(aux);
+		listaContadores.addAll(resolverConsumidoresVersionContadores);
+		
+		if(listaContadores.size() == 1) return null;
 		int numContadores = listaContadores.size();
-		int cota = WTT;
+		int cota = WTT+1; //Puesto que consideramos el 0
 		double[][] table = new double[numContadores][cota];
 		
 		
@@ -670,23 +680,27 @@ public class Damero {
 				
 		for(int i=1; i<numContadores; i++) {
 			//En el momento en el que encontremos un peso que sea mayor que el tamaño de la mochila lo descartamos
-			if(listaContadores.get(i).getAt() > cota) continue; //No cabe en la mochila
 			
-			//Si tenemos un objeto de peso 5, desde j = 0 hasta j = 4 no podemos meterlo, por lo que cogemos lo que ya teniamos metido antes
-			for(int j=0; j<listaContadores.get(i).getAt()-1; j++) {
-				table[i][j] = table[i-1][j]; //El de arriba
+			//Si nuestro objeto no cabe en la mochila, tenemos que hacer una copia de la fila de arriba 
+			if(listaContadores.get(i).getAt() > cota) { //ESTO NO VIENE EN LOS APUNTES, LO HE INTRODUCIDO YO, SI NO, DA FALLO
+				for(int j = 0; j<cota; j++) {
+					table[i][j] = table[i-1][j];
+				}
+				continue;
 			}
 			
-			for(int k = (int)listaContadores.get(i).getAt(); k<cota; k++) { 
+			//Si tenemos un objeto de peso 5, desde j = 0 hasta j = 4 no podemos meterlo, por lo que cogemos lo que ya teniamos metido antes
+			for(int j=0; j<listaContadores.get(i).getAt(); j++) {
+				table[i][j] = table[i-1][j]; //El de arriba
+			}
+						
+			for(int k = (int)listaContadores.get(i).getAt(); k<cota; k++) {
 				//El beneficio de lo que ya teniamos añadiendo el objeto vs sin añadirlo
 				double prev = table[i-1][k-(int)listaContadores.get(i).getAt()]+ (int)listaContadores.get(i).getOp();
 				table[i][k] = Math.max(prev, table[i-1][k]);
 			}
 		}
 		
-		
-		//Aqui deberia de estar el maximo -> PERO SALE 0.0
-		System.out.println(table[numContadores-1][cota-1]);
 		
 		return table;		
 		
