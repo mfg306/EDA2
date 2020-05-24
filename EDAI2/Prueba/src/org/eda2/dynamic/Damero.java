@@ -395,16 +395,16 @@ public class Damero {
 	 * @return una lista con el id de aquellos contadores que presentan un consumo excesivo (mas del 700% con respecto a la media) 
 	 */
 	public ArrayList<Integer> resolverConsumidoresGreedy() {
-		ArrayList<Contador> candidatos = obtenerCandidatosConsumidores(); // todos los manometros
+		ArrayList<Contador> candidatos = obtenerCandidatosConsumidores(); // todos los contadores derecha e izquierda
 		ArrayList<Integer> elegidos = new ArrayList<>();
 		Contador posible;
 		ArrayList<Contador> candidatosOrdenados = new ArrayList<>(candidatos);
 		candidatosOrdenados.sort(new ComparadorContadores());
 
-		while (!candidatosOrdenados.isEmpty()) { // Solucion: hemos comprobado todos los manometros
+		while (!candidatosOrdenados.isEmpty()) { // Solucion: hemos comprobado todos los contadores
 			posible = candidatosOrdenados.get(0); 
 			candidatosOrdenados.remove(posible); // Eliminamos posible de la lista de candidatos
-			if (roturaContador(posible)) {// Devuelve true o false si el manometro tiene una rotura o no
+			if (roturaContador(posible)) {// Devuelve true o false si el contadores tiene una rotura o no
 				elegidos.add(posible.getId());
 			}
 		}
@@ -412,16 +412,16 @@ public class Damero {
 	}
 	
 	public ArrayList<Contador> resolverConsumidoresVersionContadores(){
-		ArrayList<Contador> candidatos = obtenerCandidatosConsumidores(); // todos los manometros
+		ArrayList<Contador> candidatos = obtenerCandidatosConsumidores(); // todos los contadores derecha e izquierda
 		ArrayList<Contador> elegidos = new ArrayList<>();
 		Contador posible;
 		ArrayList<Contador> candidatosOrdenados = new ArrayList<>(candidatos);
 		candidatosOrdenados.sort(new ComparadorContadores());
 
-		while (!candidatosOrdenados.isEmpty()) { // Solucion: hemos comprobado todos los manometros
+		while (!candidatosOrdenados.isEmpty()) { // Solucion: hemos comprobado todos los contadores
 			posible = candidatosOrdenados.get(0); 
 			candidatosOrdenados.remove(posible); // Eliminamos posible de la lista de candidatos
-			if (roturaContador(posible)) {// Devuelve true o false si el manometro tiene una rotura o no
+			if (roturaContador(posible)) {// Devuelve true o false si el contador tiene una rotura o no
 				elegidos.add(posible);
 			}
 		}
@@ -664,6 +664,7 @@ public class Damero {
 		listaContadores.addAll(resolverConsumidoresVersionContadores);
 		
 		if(listaContadores.size() == 1) return null;
+		
 		int numContadores = listaContadores.size();
 		int cota = WTT+1; //Puesto que consideramos el 0
 		double[][] table = new double[numContadores][cota];

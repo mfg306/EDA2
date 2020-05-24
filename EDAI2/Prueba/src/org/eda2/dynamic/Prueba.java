@@ -35,24 +35,23 @@ public class Prueba {
 		listaContadores.addAll(resolverConsumidoresVersionContadores);
 		if (listaContadores.size() == 1) return null;
 		int numContadores = listaContadores.size();
-		int cota = WTT;
-		double[][] table = new double[numContadores][cota+1];
+		double[][] table = new double[numContadores][WTT+1];
 
 		listaContadores.sort(new ComparadorContadoresAT());
 		
 
-		for (int i = 0; i < cota; i++) {
+		for (int i = 0; i < WTT; i++) {
 			table[0][i] = 0;
 		}
 
 		for (int i = 1; i < numContadores; i++) {
-			if (listaContadores.get(i).getAt() > cota) continue; // No cabe en la mochila
+			if (listaContadores.get(i).getAt() > WTT) continue; // No cabe en la mochila
 
 			for (int j = 0; j < listaContadores.get(i).getAt(); j++) {
 				table[i][j] = table[i - 1][j]; // El de arriba
 			}
 
-			for (int k = (int) listaContadores.get(i).getAt(); k < cota+1; k++) {
+			for (int k = (int) listaContadores.get(i).getAt(); k < WTT+1; k++) {
 				double prev = table[i - 1][k - (int) listaContadores.get(i).getAt()] + listaContadores.get(i).getOp();
 				table[i][k] = Math.max(prev, table[i - 1][k]);
 			}
