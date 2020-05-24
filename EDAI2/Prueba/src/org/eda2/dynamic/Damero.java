@@ -710,7 +710,8 @@ public class Damero {
 	
 	//ESTE NO LO ENTIENDO
 	public ArrayList<Double> interpretarSolucionMaximizarDineroDadoWTT() {
-		
+		ArrayList<Double> solucion = new ArrayList<Double>();
+		return solucion;
 		
 	}
 	
