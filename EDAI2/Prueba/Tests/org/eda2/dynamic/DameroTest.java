@@ -4,6 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import java.util.TreeMap;
 
+import javax.sound.midi.Soundbank;
+
+import java.util.ArrayList;
+
 public class DameroTest {
 
 	// TESTS DE INICICALIZACIÓN
@@ -123,7 +127,7 @@ public class DameroTest {
 
 
 	@Test
-	public void TestListaDTRoturas() {
+	public void TestListaATRoturas() {
 		TreeMap<Contador, Double> expected = new TreeMap<>();
 		Damero d = new Damero(3, 3);
 		Contador c = new Contador(800000, 1, 0, "I");
@@ -149,25 +153,28 @@ public class DameroTest {
 		expected.put(c, (5*c.getConsumo() + 12*((c.getConsumo()/c.getMedia().getConsumo())-7))+ Damero.BA);
 		
 		
-		Assert.assertEquals(expected, d.establecerListaATRoturas());
+		Assert.assertEquals(expected, d.establecerListaATRoturas(d.resolverConsumidoresGreedy()));
 	}
+	
+
 	
 	@Test
 	public void TestMaximizarDineroDadoWTT() {
 		
 		Damero d = new Damero(3,3,1,7, 150);
 		double max = 0;
-		d.establecerListaATRoturas();
-		d.generarOP();
+		ArrayList<Integer> listaRoturas = d.resolverConsumidoresGreedy();
+		d.establecerListaATRoturas(listaRoturas);
+		d.generarOP(listaRoturas);
 		
 		
-		double[][] table = d.maximizarDineroDadoWTT();
+		double[][] table = d.maximizarDineroDadoWTT(d.resolverConsumidoresVersionContadores());
 		int filas = d.resolverConsumidoresGreedy().size();
 		int columnas = Damero.WTT;
 		
 		//vamos a buscar el valor maximo
-		if (table!=null) {
-			for(int i=0; i<table.length; i++) { //DA NULLPOINTER PORQUE PARECE QUE LA TABLA NO SE INICIALIZA
+		if (table!=null) { //Si hay solucion
+			for(int i=0; i<table.length; i++) {
 				for(int j=0; j<table[i].length; j++) {
 					if(table[i][j] > max) {
 						max = table[i][j];
@@ -179,7 +186,73 @@ public class DameroTest {
 	}
 	
 	
+	@Test
+	public void TestTiemposMaximizarDineroDadoWTT() {
+		
+		//En este problema tenemos dos parametros: el WTT y el numero de contadores con roturas, para hacer el test
+		//vamos a considerar una lista que supuestamente tiene roturas, asi podemos ir incrementandola en cada iteracion 
+
+		
+		Damero d = new Damero(3,3,1,7, 100);
+		long ini = 0, fin = 0, suma = 0;
+		int n = Damero.WTT;
+		ArrayList<Contador> listaRoturasContador = new ArrayList<>();
+		int contador = 0;
+		
+		while(contador != 10) {
+			
+			//Creamos una lista de contadores que tenga el mismo tamaño que WTT
+			while(listaRoturasContador.size() != n) {
+				Contador c = new Contador();
+				c.setMedia(new Contador());
+				listaRoturasContador.add(c);
+			}
+			
+			//A esta lista le metemos los AT y OP			
+			d.establecerListaATRoturasTest(listaRoturasContador);
+			d.generarOPTest(listaRoturasContador);
+			
+			//Resolvemos el problema con esta lista
+			ini = System.nanoTime();
+			double[][] table = d.maximizarDineroDadoWTT(listaRoturasContador);
+			fin = System.nanoTime();
+			
+			if(table != null) {
+				suma += (fin - ini);
+				contador++;
+			}
+		}
+		
+		//De esta forma, tenemos un estudio teorico mas controlado de ambos parametros. Antes, no sabiamos cuantas roturas podian 
+		//aparecer puerto que surgian de forma aleatoria. Ahora vamos a estudiar problemas de nxn
+		
+		
+		System.out.println(suma/10);
+		
+	}
 	
+	@Test
+	public void TestInterpretarSolucionMaximizarDineroDadoWTT() {
+		Damero d = new Damero(3,3,2,7, 150);
+		ArrayList<Integer> listaRoturas = d.resolverConsumidoresGreedy();
+		d.establecerListaATRoturas(listaRoturas);
+		d.generarOP(listaRoturas);
+		
+		double[][] table = d.maximizarDineroDadoWTT(d.resolverConsumidoresVersionContadores());
+		
+		for(int i=0; i<table.length;i++) {
+			for(int j=0; j<table[i].length; j++) {
+				System.out.printf(table[i][j] + "\t");
+			}
+			System.out.println();
+		}
+		
+		
+		ArrayList<Integer> lista = d.interpretarSolucionMaximizarDineroDadoWTT();
+		
+		System.out.println(lista.toString());
+		
+	}
 	
 	
 }

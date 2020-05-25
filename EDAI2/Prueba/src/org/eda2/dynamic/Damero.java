@@ -19,8 +19,11 @@ public class Damero {
 	// Presiones para la casilla general
 	public final static double PRESION_MAXIMA = 150;
 	public final static double PRESION_MINIMA = 110;
-	public final static double BA = 60; //minutos;
-	public static int WTT = 8800; //minutos;
+	public final static double BA = 1; //hora;
+	public static int WTT = 146; //hora;
+	
+	private double[][] table;
+	private ArrayList<Contador> beneficiosYPesos;
 	
 
 
@@ -49,6 +52,7 @@ public class Damero {
 				matrizMedias[a][b] = new ParEdificios();
 			}
 		}
+				
 		this.inicializarContadoresMedia(100,1000);
 		this.inicializarContadores(700,2000);
 	}
@@ -390,7 +394,6 @@ public class Damero {
 
 
 
-	
 	/**
 	 * @return una lista con el id de aquellos contadores que presentan un consumo excesivo (mas del 700% con respecto a la media) 
 	 */
@@ -461,7 +464,7 @@ public class Damero {
 		TreeMap<Contador, ArrayList<Double>> result = new TreeMap<>();
 		Contador c = null;
 		ArrayList<Double> datos;
-		
+
 		for(Integer id : contadoresRoturas) {
 			datos = new ArrayList<>();
 			c = this.obtenerContadorDadoId(id);
@@ -471,6 +474,28 @@ public class Damero {
 			datos.add(c.getConsumo()/c.getMedia().getConsumo());
 			
 			if(c != null) result.put(c, datos);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Este metodo es como el manzanasConsumoExcesivo pero para conjunto de roturas aislados que no pertenezcan a un damero. 
+	 * Asi, en el test podemos generar casos controlados de roturas
+	 * @param cRoturas
+	 * @return
+	 */
+	public TreeMap<Contador, ArrayList<Double>> manzanasConsumoExcesivoParaTest(ArrayList<Contador> cRoturas){
+		ArrayList<Contador> contadoresRoturas = new ArrayList<>(cRoturas); //Queremos una copia no editar la otra
+		TreeMap<Contador, ArrayList<Double>> result = new TreeMap<>();
+		ArrayList<Double> datos = new ArrayList<>();
+
+		for(Contador cont: contadoresRoturas) {
+			datos.add(cont.getConsumo());
+			datos.add(cont.getMedia().getConsumo());
+			datos.add(cont.getConsumo()/cont.getMedia().getConsumo());
+			
+			if(cont != null) result.put(cont, datos);
 		}
 		
 		return result;
@@ -584,8 +609,7 @@ public class Damero {
 	/**
 	 * @return un treemap con cada contador con su rotura
 	 */
-	public TreeMap<Contador, Double> establecerListaATRoturas(){ 
-		ArrayList<Integer> listaRoturas = this.resolverConsumidoresGreedy();
+	public TreeMap<Contador, Double> establecerListaATRoturas(ArrayList<Integer> listaRoturas){ 
 		if(listaRoturas.isEmpty()) return null;
 		double ip,bc,dt;
 		TreeMap<Contador, ArrayList<Double>> manzanasRoturas = this.manzanasConsumoExcesivo(listaRoturas);
@@ -597,7 +621,24 @@ public class Damero {
 			ip = c.getValue().get(2);
 			dt = this.calcularDT(ip, bc);
 			c.getKey().setAt(dt+BA);
-//			System.out.println(dt+BA);
+			resultado.put(c.getKey(), dt+BA);
+		}
+		
+		return resultado;
+	}
+	
+	public TreeMap<Contador, Double> establecerListaATRoturasTest(ArrayList<Contador> listaRoturas){ 
+		if(listaRoturas.isEmpty()) return null;
+		double ip,bc,dt;
+		TreeMap<Contador, ArrayList<Double>> manzanasRoturas = this.manzanasConsumoExcesivoParaTest(listaRoturas);
+		TreeMap<Contador, Double> resultado = new TreeMap<>();
+
+		//Ir recorriendo las manzanas con roturas e ir introduciendo en resultado el contador que produce la rotura con su rotura
+		for(Entry<Contador, ArrayList<Double>> c : manzanasRoturas.entrySet()) {
+			bc = c.getValue().get(0);
+			ip = c.getValue().get(2);
+			dt = this.calcularDT(ip, bc);
+			c.getKey().setAt(dt+BA);
 			resultado.put(c.getKey(), dt+BA);
 		}
 		
@@ -616,8 +657,22 @@ public class Damero {
 	/**
 	 * Genera un valor OP a cada manzana con fuga 
 	 */
-	public TreeMap<Contador, Double> generarOP() {
-		TreeMap<Contador, ArrayList<Double>> manzanasFugas = this.manzanasConsumoExcesivo(this.resolverConsumidoresGreedy());
+	public TreeMap<Contador, Double> generarOP(ArrayList<Integer> listaRoturas) {
+		TreeMap<Contador, ArrayList<Double>> manzanasFugas = this.manzanasConsumoExcesivo(listaRoturas);
+		TreeMap<Contador, Double> resultado = new TreeMap<>();
+		double op;
+
+		for(Contador c : manzanasFugas.keySet()) {  
+			op = Math.random() * (1000 - 4000 + 1) + 4000;
+			c.setOp(op);
+			resultado.put(c, op);
+		}
+		
+		return resultado;
+	}
+	
+	public TreeMap<Contador, Double> generarOPTest(ArrayList<Contador> listaRoturas) {
+		TreeMap<Contador, ArrayList<Double>> manzanasFugas = this.manzanasConsumoExcesivoParaTest(listaRoturas);
 		TreeMap<Contador, Double> resultado = new TreeMap<>();
 		double op;
 
@@ -635,7 +690,7 @@ public class Damero {
 	 * Este metodo consiste en buscar la suma maxima de dinero sin superar el tiempo
 	 * @return
 	 */
-	public double[][]  maximizarDineroDadoWTT() {
+	public double[][]  maximizarDineroDadoWTT(ArrayList<Contador> resolverConsumidoresVersionContadores) {
 		
 		//Parece un problema similar al de la mochila
 		//Tenemos una cantidad maxima WTT que son las horas de trabajo
@@ -653,7 +708,6 @@ public class Damero {
 		//PASO 1. Hay que ordenar en funcion del peso
 		//PASO 2. Rellenar la tabla d
 		
-		ArrayList<Contador> resolverConsumidoresVersionContadores = new ArrayList<>(this.resolverConsumidoresVersionContadores());
 		ArrayList<Contador> listaContadores = new ArrayList<>();
 		
 		//Este contador es un contador auxiliar. Empezamos a considerar los contadores a partir de la posicion 1
@@ -673,6 +727,15 @@ public class Damero {
 		//En esta misma lista tenemos los beneficios y los pesos (estan en las propiedades del contador) 
 		//Ordenamos la lista en funcion del peso  (AT)
 		listaContadores.sort(new ComparadorContadoresAT());
+		
+		System.out.println(Damero.WTT);
+		for(Contador c : listaContadores) {
+			System.out.println(c.getConsumo() + " PESO -> " + c.getAt() + " BENEFICIO -> " + c.getOp());
+		}
+		
+		this.beneficiosYPesos = listaContadores;
+		
+		System.out.println(this.beneficiosYPesos.toString());
 		
 		//Ahora podemos empezar a rellenar la tabla 
 		
@@ -704,19 +767,44 @@ public class Damero {
 			}
 		}
 		
-		
+		this.table = table;
 		return table;		
-		
 	}
 	
-	//ESTE NO LO ENTIENDO
-	public ArrayList<Double> interpretarSolucionMaximizarDineroDadoWTT() {
-		ArrayList<Double> solucion = new ArrayList<Double>();
-		return solucion;
+	public ArrayList<Integer> interpretarSolucionMaximizarDineroDadoWTT() {
+		//tabla de programacion dinamica
+		//peso de la mochila
+	
+		int numContadores = this.resolverConsumidoresGreedy().size();
+		if(numContadores == 0) return null;
 		
+		return test(numContadores, Damero.WTT);
 	}
-	
-	
-	
-	
+
+	private ArrayList<Integer> test(int j, double c){
+		ArrayList<Integer> resultado = new ArrayList<>();
+		
+		if(j<0) throw new RuntimeException("Debe introducir un indice valido.");
+		
+		if(j>0) {
+			if(c<this.beneficiosYPesos.get(j).getAt()) { //Si el objeto j no cabe en la mochila
+				test(j-1, c); //Probamos con un objeto de peso menor
+			} else {
+				//Esto esta saliendo mal porque al hacer el casting no es el indice al que queremos acceder. Mañana intento arreglarlo. 
+				//Intentare que todos nuestros datos sean enteros
+				if(this.table[j-1][(int)(c-this.beneficiosYPesos.get(j).getAt())] + this.beneficiosYPesos.get(j).getOp() > this.table[j-1][(int)c]) {
+					//Si hay beneficio con este objeto, entonces es solucion
+					//Llamamos a un objeto mas pequeño y al añadir el objeto a la mochila ahora tenemos menos capacidad
+					resultado.add(j);
+					test(j-1, c-this.beneficiosYPesos.get(j).getAt());
+				} else {
+					//Si no hay beneficio, no lo metemos y probamos con uno mas pequeño tambien
+					test(j-1,c);
+				}
+			}
+		}
+
+		return resultado; 
+	}
 }
+	
