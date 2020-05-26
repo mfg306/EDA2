@@ -1,4 +1,4 @@
-package org.eda2.dynamic;
+package org.eda2.backtracking;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -112,8 +112,7 @@ public class DameroTest {
 		}
 		Assert.assertTrue(resultado);
 	}
-	
-	
+
 	@Test
 	public void TestComprobarCasillaGeneral() {
 		Damero damero = new Damero(3, 3);
@@ -122,141 +121,8 @@ public class DameroTest {
 
 		Assert.assertTrue(consumoCasillaGeneral >= resultadoSuma);
 	}
-	
-	@Test
-	public void TestObtenerContadorDadoId() {
-		Damero d = new Damero(3,3);
-		Contador c = new Contador();
-		c.setTipo("D");
-		int id = c.getId();
-		d.setParEdificioContador(0, 0, c);
 
-		Assert.assertEquals(c, d.obtenerContadorDadoId(id));
-	}
-	
-		
-	@Test
-	public void TestResolverConsumidoresGreedy() {
-		Damero d = new Damero(3,3);
-		Contador c1 = new Contador(10000,1,0,"D");
-		Contador c2 = new Contador(140000,1,1,"I");
-		ArrayList<Integer> expectedResult = new ArrayList<>();
-		Integer id1 = c1.getId();
-		Integer id2 = c2.getId();
-		
-		expectedResult.add(id1);
-		expectedResult.add(id2);
 
-		d.setParEdificioContador(0, 0, new Contador(0,0,0,"D"));
-		
-		d.setParEdificioContador(0, 1, new Contador(0,0,1,"D"));
-		d.setParEdificioContador(0, 1, new Contador(20,0,1,"V"));
-		
-		d.setParEdificioContador(0, 2, new Contador(20,0,2,"D"));
-		d.setParEdificioContador(0, 2, new Contador(20,0,2,"M"));
-		
-		d.setParEdificioContador(1, 0, new Contador(0,1,0,"I"));
-		d.setParEdificioContador(1, 0, c1);
-		
-		d.setParEdificioContador(1, 1, c2);
-		d.setParEdificioContador(1, 1, new Contador(0,1,1,"D"));
-		d.setParEdificioContador(1, 1, new Contador(20,1,1,"V")); //ROTURA
-		
-		d.setParEdificioContador(1, 2, new Contador(0,1,2,"I"));
-		d.setParEdificioContador(1, 2, new Contador(0,1,2,"D"));
-		d.resolverConsumidoresGreedy();
-		
-		Assert.assertTrue(expectedResult.equals(d.resolverConsumidoresGreedy()));
-	}
-	
-	
-	@Test
-	public void TestResolverConsumidoresGreedyVersionContadores() {
-		Damero d = new Damero(3,3);
-		Contador c1 = new Contador(10000,1,0,"D");
-		Contador c2 = new Contador(140000,1,1,"I");
-		ArrayList<Contador> expectedResult = new ArrayList<>();
-		Contador id1 = c1;
-		Contador id2 = c2;
-		
-		expectedResult.add(id1);
-		expectedResult.add(id2);
-
-		d.setParEdificioContador(0, 0, new Contador(0,0,0,"D"));
-		
-		d.setParEdificioContador(0, 1, new Contador(0,0,1,"D"));
-		d.setParEdificioContador(0, 1, new Contador(20,0,1,"V"));
-		
-		d.setParEdificioContador(0, 2, new Contador(20,0,2,"D"));
-		d.setParEdificioContador(0, 2, new Contador(20,0,2,"M"));
-		
-		d.setParEdificioContador(1, 0, new Contador(0,1,0,"I"));
-		d.setParEdificioContador(1, 0, c1);
-		
-		d.setParEdificioContador(1, 1, c2);
-		d.setParEdificioContador(1, 1, new Contador(0,1,1,"D"));
-		d.setParEdificioContador(1, 1, new Contador(20,1,1,"V")); //ROTURA
-		
-		d.setParEdificioContador(1, 2, new Contador(0,1,2,"I"));
-		d.setParEdificioContador(1, 2, new Contador(0,1,2,"D"));
-		
-		Assert.assertEquals(expectedResult,d.resolverConsumidoresVersionContadores());
-	}
-	
-	
-	@Test
-	public void TestManzanasConsumoExcesivo() {
-		
-		Damero d = new Damero(3,3);
-		boolean condicion = true;
-		Contador c1 = new Contador();
-		c1.setTipo("D");
-		c1.setMedia(new Contador());
-		Integer id1 = c1.getId();
-		
-		d.setParEdificioContador(0, 0, c1);
-		
-		ArrayList<Integer> cRoturas = new ArrayList<>();
-		cRoturas.add(id1);
-		
-		TreeMap<Contador, ArrayList<Double>> manzanas = d.manzanasConsumoExcesivo(cRoturas);
-		
-		for(ArrayList<Double> c : manzanas.values()) {
-			if(!c.get(0).equals(c1.getConsumo())) condicion = false;
-			if(!c.get(1).equals(c1.getMedia().getConsumo())) condicion = false;
-			if(!c.get(2).equals(c1.getConsumo()/c1.getMedia().getConsumo())) condicion = false;
-		}
-		
-		Assert.assertTrue(condicion);
-		
-	}
-	
-	@Test
-	public void TestManzanasConsumoExcesivoParaTest() {
-		
-		Damero d = new Damero(3,3);
-		boolean condicion = true;
-		Contador c1 = new Contador();
-		c1.setTipo("D");
-		c1.setMedia(new Contador());
-		
-		d.setParEdificioContador(0, 0, c1);
-		
-		ArrayList<Contador> cRoturas = new ArrayList<>();
-		cRoturas.add(c1);
-		
-		TreeMap<Contador, ArrayList<Double>> manzanas = d.manzanasConsumoExcesivoParaTest(cRoturas);
-		
-		for(ArrayList<Double> c : manzanas.values()) {
-			if(!c.get(0).equals(c1.getConsumo())) condicion = false;
-			if(!c.get(1).equals(c1.getMedia().getConsumo())) condicion = false;
-			if(!c.get(2).equals(c1.getConsumo()/c1.getMedia().getConsumo())) condicion = false;
-		}
-		
-		Assert.assertTrue(condicion);
-		
-	}
-	
 	@Test
 	public void TestListaATRoturas() {
 		TreeMap<Contador, Double> expected = new TreeMap<>();
@@ -282,6 +148,7 @@ public class DameroTest {
 		d.setParEdificioContador(1, 2, new Contador(0, 1, 2, "D"));
 		
 		expected.put(c, (5*c.getConsumo() + 12*((c.getConsumo()/c.getMedia().getConsumo())-7))+ Damero.BA);
+		
 		
 		Assert.assertEquals(expected, d.establecerListaATRoturas(d.resolverConsumidoresGreedy()));
 	}
@@ -321,7 +188,7 @@ public class DameroTest {
 		
 		//En este problema tenemos dos parametros: el WTT y el numero de contadores con roturas, para hacer el test
 		//vamos a considerar una lista que supuestamente tiene roturas, asi podemos ir incrementandola en cada iteracion 
-		Damero d = new Damero(3,3,1,7, 100);
+		Damero d = new Damero(3,3,1,7, 8000);
 		long ini = 0, fin = 0, suma = 0;
 		int n = Damero.WTT;
 		ArrayList<Contador> listaRoturasContador = new ArrayList<>();
@@ -375,27 +242,5 @@ public class DameroTest {
 
 	}
 	
-	@Test
-	public void TestTiemposResolverConsumidoresGreedy() {
-		int n=3;
-		long inicio = 0, fin = 0, sumaTiempos = 0; 
-		int contador = 0;
-		ArrayList<Integer> resultado = new ArrayList<>();
-		
-		while(contador != 10) {
-			Damero d = new Damero(n,n,n*1000, n*10000,  150);
-			inicio = System.nanoTime();
-			resultado = d.resolverConsumidoresGreedy();
-			fin = System.nanoTime();
-			if(!resultado.isEmpty()) { //Vamos a descartar aquellos casos en los que no haya roturas
-				sumaTiempos += (fin-inicio);
-				contador++;
-			}
-			
-		}
-		
-		System.out.println(sumaTiempos/10);
-	}
-		
 	
 }

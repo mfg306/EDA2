@@ -1,4 +1,4 @@
-package org.eda2.dynamic;
+package org.eda2.backtracking;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.Map.Entry;
@@ -183,6 +183,12 @@ public class Damero {
 	 * columnas pares
 	 */
 	private void inicializarContadoresParMedia(double canMax, double canMin) {
+		
+		//NOVEDAD::
+		
+
+		// CUANDO CREO UN CONTADOR BUSCO SU CORRESPONDIENDE CONTADOR EN LA MATRIZ MEDIAS (QUE YA ESTA INICIALIZADA, (HE SEPARADO LOS METODOS), Y SE LO PASO POR 
+		// PARAMETRO EN EL CONSTRUCTOR --> PARA EL COMPARADOCONTADORES (el comparadorcontadores es para el metodo de resolvercontadores para tenerlos ordenados)
 		
 		
 		// RECORREMOS EL ARRAY INICIALIZANDO LOS CONTADORES ROJOS
@@ -408,9 +414,6 @@ public class Damero {
 		return elegidos;
 	}
 	
-	/**
-	 * @return una lista con los contadores que presentan un consumo excesivo (mas del 700% con respecto a la media)
-	 */
 	public ArrayList<Contador> resolverConsumidoresVersionContadores(){
 		ArrayList<Contador> candidatos = obtenerCandidatosConsumidores(); // todos los contadores derecha e izquierda
 		ArrayList<Contador> elegidos = new ArrayList<>();
@@ -429,10 +432,6 @@ public class Damero {
 	}
 	
 	
-	/**
-	 * @param id del contador que queremos buscar 
-	 * @return el contador dado el id
-	 */
 	public Contador obtenerContadorDadoId(Integer id) {
 		Contador c = null; 
 		
@@ -457,12 +456,9 @@ public class Damero {
 	}
 	
 	//LISTADO CON LAS MANZANAS A LAS QUE HAY QUE ENVIARLE EL AVISO 
-	//Clave del TreeMap -> coordenadas de la rotura del contador (destino)
-	//Valor -> TreeSet donde guardamos en el siguiente orden (conusmo medio, consumoActual, division)
-	/**
-	 * @param cRoturas una lista con los contadores con roturas
-	 * @return
-	 */
+	//Clave del TreeMap -> coordenadas de la rotura del contador (destino= 
+	//Valor -> TreeSet donde guardamos en el siguiente orden (conusmo medio,
+	 			//,consumoActual, division)
 	public TreeMap<Contador, ArrayList<Double>> manzanasConsumoExcesivo(ArrayList<Integer> cRoturas){
 		ArrayList<Integer> contadoresRoturas = new ArrayList<>(cRoturas); //Queremos una copia no editar la otra
 		TreeMap<Contador, ArrayList<Double>> result = new TreeMap<>();
@@ -541,12 +537,6 @@ public class Damero {
 		}
 		return false;
 	}
-	
-	
-	/**
-	 * @param con contador que queremos ubicar en el damero
-	 * @return las coordenadas y el tipo
-	 */
 	public String[] obtenerCoordenadas(Contador con) {
 		String[] coordenadas = new String[3];
 		boolean encontrado = false;
@@ -665,8 +655,7 @@ public class Damero {
 	}
 	
 	/**
-	 * @param listaRoturas lista de roturas con sus id
-	 * @return un treemap con el contador y su ip
+	 * Genera un valor OP a cada manzana con fuga 
 	 */
 	public TreeMap<Contador, Double> generarOP(ArrayList<Integer> listaRoturas) {
 		TreeMap<Contador, ArrayList<Double>> manzanasFugas = this.manzanasConsumoExcesivo(listaRoturas);
@@ -682,11 +671,6 @@ public class Damero {
 		return resultado;
 	}
 	
-	/**
-	 * @param listaRoturas lista de roturas (aqui pasamos el contador en vez del id, asi en el test podemos proporcionar listas hechas, si 
-	 * pasamos el id, luego hay que ubicarlo en el damero y es mas tedioso para el test)
-	 * @return  un treemap con el contador y su OP
-	 */
 	public TreeMap<Contador, Double> generarOPTest(ArrayList<Contador> listaRoturas) {
 		TreeMap<Contador, ArrayList<Double>> manzanasFugas = this.manzanasConsumoExcesivoParaTest(listaRoturas);
 		TreeMap<Contador, Double> resultado = new TreeMap<>();
@@ -780,9 +764,6 @@ public class Damero {
 		return table;		
 	}
 	
-	/**
-	 * @return una cadena con los pisos a los que se deberia enviar la oferta
-	 */
 	public String interpretarSolucionMaximizarDineroDadoWTT() {
 		String objetos = "HAY QUE ENVIAR  LA OFERTA A: \n";
 		String[] coords;
@@ -799,11 +780,6 @@ public class Damero {
 		return objetos;
 	}
 
-	/**
-	 * @param j indice del objeto del que partir
-	 * @param c tamaño de la mochila
-	 * @return una lista con los numeros de los objetos que nos han llevado a la solucion optima
-	 */
 	private ArrayList<Integer> test(int j, double c){
 		
 		if(j<0) throw new RuntimeException("Debe introducir un indice valido.");

@@ -4,6 +4,8 @@
 eclipse.preferences.version=1
 encoding//Tests/org/eda2/greedy/DameroTest.java=UTF-8
 encoding//Tests/org/eda2/greedyAlternativa/DameroTest.java=UTF-8
+encoding//src/org/eda2/backtracking/Damero.java=UTF-8
+encoding//src/org/eda2/backtracking/ParEdificios.java=UTF-8
 encoding//src/org/eda2/dynamic/Damero.java=UTF-8
 encoding//src/org/eda2/dynamic/ParEdificios.java=UTF-8
 encoding//src/org/eda2/dyv/Contador.java=UTF-8
