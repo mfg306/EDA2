@@ -3,10 +3,8 @@ package org.eda2.dynamic;
 import org.junit.Assert;
 import org.junit.Test;
 import java.util.TreeMap;
-
-import javax.sound.midi.Soundbank;
-
 import java.util.ArrayList;
+import java.util.Random;
 
 public class DameroTest {
 
@@ -226,32 +224,36 @@ public class DameroTest {
 		//De esta forma, tenemos un estudio teorico mas controlado de ambos parametros. Antes, no sabiamos cuantas roturas podian 
 		//aparecer puerto que surgian de forma aleatoria. Ahora vamos a estudiar problemas de nxn
 		
-		
 		System.out.println(suma/10);
 		
 	}
 	
 	@Test
 	public void TestInterpretarSolucionMaximizarDineroDadoWTT() {
-		Damero d = new Damero(3,3,2,7, 150);
+		Damero d = new Damero(3,3,1,7, 150);
+		System.out.println(d.toString());
+		System.out.println(d.toStringMedias());
 		ArrayList<Integer> listaRoturas = d.resolverConsumidoresGreedy();
 		d.establecerListaATRoturas(listaRoturas);
 		d.generarOP(listaRoturas);
 		
-		double[][] table = d.maximizarDineroDadoWTT(d.resolverConsumidoresVersionContadores());
-		
-		for(int i=0; i<table.length;i++) {
-			for(int j=0; j<table[i].length; j++) {
-				System.out.printf(table[i][j] + "\t");
+		if(!listaRoturas.isEmpty()) {
+			double[][] table = d.maximizarDineroDadoWTT(d.resolverConsumidoresVersionContadores());
+			
+			for(int i=0; i<table.length;i++) {
+				for(int j=0; j<table[i].length; j++) {
+					System.out.printf(table[i][j] + "\t");
+				}
+				System.out.println();
 			}
-			System.out.println();
+			
+			ArrayList<Integer> lista = d.interpretarSolucionMaximizarDineroDadoWTT();
+			
+			System.out.println(lista.toString());
+		} else {
+			System.out.println("No hay roturas.");
 		}
-		
-		
-		ArrayList<Integer> lista = d.interpretarSolucionMaximizarDineroDadoWTT();
-		
-		System.out.println(lista.toString());
-		
+
 	}
 	
 	

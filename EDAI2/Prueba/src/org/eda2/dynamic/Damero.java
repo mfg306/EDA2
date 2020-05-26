@@ -782,7 +782,6 @@ public class Damero {
 	}
 
 	private ArrayList<Integer> test(int j, double c){
-		ArrayList<Integer> resultado = new ArrayList<>();
 		
 		if(j<0) throw new RuntimeException("Debe introducir un indice valido.");
 		
@@ -795,7 +794,7 @@ public class Damero {
 				if(this.table[j-1][(int)(c-this.beneficiosYPesos.get(j).getAt())] + this.beneficiosYPesos.get(j).getOp() > this.table[j-1][(int)c]) {
 					//Si hay beneficio con este objeto, entonces es solucion
 					//Llamamos a un objeto mas pequeño y al añadir el objeto a la mochila ahora tenemos menos capacidad
-					resultado.add(j);
+					this.listaClientesA.add(j);
 					test(j-1, c-this.beneficiosYPesos.get(j).getAt());
 				} else {
 					//Si no hay beneficio, no lo metemos y probamos con uno mas pequeño tambien
@@ -804,7 +803,6 @@ public class Damero {
 			}
 		}
 
-		return resultado; 
+		return this.listaClientesA; 
 	}
 }
-	
