@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import java.util.TreeMap;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class DameroTest {
 
@@ -189,9 +188,7 @@ public class DameroTest {
 		
 		//En este problema tenemos dos parametros: el WTT y el numero de contadores con roturas, para hacer el test
 		//vamos a considerar una lista que supuestamente tiene roturas, asi podemos ir incrementandola en cada iteracion 
-
-		
-		Damero d = new Damero(3,3,1,7, 100);
+		Damero d = new Damero(3,3,1,7, 8000);
 		long ini = 0, fin = 0, suma = 0;
 		int n = Damero.WTT;
 		ArrayList<Contador> listaRoturasContador = new ArrayList<>();
@@ -225,31 +222,20 @@ public class DameroTest {
 		//aparecer puerto que surgian de forma aleatoria. Ahora vamos a estudiar problemas de nxn
 		
 		System.out.println(suma/10);
-		
 	}
 	
 	@Test
 	public void TestInterpretarSolucionMaximizarDineroDadoWTT() {
-		Damero d = new Damero(3,3,1,7, 150);
-		System.out.println(d.toString());
-		System.out.println(d.toStringMedias());
+		Damero d = new Damero(3,3,1,7, 9000);
 		ArrayList<Integer> listaRoturas = d.resolverConsumidoresGreedy();
 		d.establecerListaATRoturas(listaRoturas);
 		d.generarOP(listaRoturas);
 		
 		if(!listaRoturas.isEmpty()) {
-			double[][] table = d.maximizarDineroDadoWTT(d.resolverConsumidoresVersionContadores());
-			
-			for(int i=0; i<table.length;i++) {
-				for(int j=0; j<table[i].length; j++) {
-					System.out.printf(table[i][j] + "\t");
-				}
-				System.out.println();
-			}
-			
-			ArrayList<Integer> lista = d.interpretarSolucionMaximizarDineroDadoWTT();
-			
-			System.out.println(lista.toString());
+			//Hay que dejar esto para que se inicialize en la clase
+			d.maximizarDineroDadoWTT(d.resolverConsumidoresVersionContadores());
+			String lista = d.interpretarSolucionMaximizarDineroDadoWTT();
+			System.out.println(lista);
 		} else {
 			System.out.println("No hay roturas.");
 		}

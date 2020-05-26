@@ -728,14 +728,7 @@ public class Damero {
 		//Ordenamos la lista en funcion del peso  (AT)
 		listaContadores.sort(new ComparadorContadoresAT());
 		
-		System.out.println(Damero.WTT);
-		for(Contador c : listaContadores) {
-			System.out.println(c.getConsumo() + " PESO -> " + c.getAt() + " BENEFICIO -> " + c.getOp());
-		}
-		
 		this.beneficiosYPesos = listaContadores;
-		
-		System.out.println(this.beneficiosYPesos.toString());
 		
 		//Ahora podemos empezar a rellenar la tabla 
 		
@@ -771,14 +764,20 @@ public class Damero {
 		return table;		
 	}
 	
-	public ArrayList<Integer> interpretarSolucionMaximizarDineroDadoWTT() {
-		//tabla de programacion dinamica
-		//peso de la mochila
-	
+	public String interpretarSolucionMaximizarDineroDadoWTT() {
+		String objetos = "HAY QUE ENVIAR  LA OFERTA A: \n";
+		String[] coords;
 		int numContadores = this.resolverConsumidoresGreedy().size();
 		if(numContadores == 0) return null;
 		
-		return test(numContadores, Damero.WTT);
+		ArrayList<Integer> resultado = test(numContadores, Damero.WTT);
+		
+		for(Integer i : resultado) {
+			coords = this.obtenerCoordenadas(this.beneficiosYPesos.get(i));
+			objetos += "EL CONTADOR " + this.beneficiosYPesos.get(i) + " UBICADO EN " + "("+ coords[0] + "," + coords[1] + ") \n";
+		}
+		
+		return objetos;
 	}
 
 	private ArrayList<Integer> test(int j, double c){
