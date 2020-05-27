@@ -156,7 +156,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestMinimizarMI() {
-		Damero d = new Damero(3,3,1,7, 100);
+		Damero d = new Damero(3,3,1,7, 100, 2000);
 		
 		ArrayList<Contador> roturas = d.resolverConsumidoresVersionContadores();
 		d.generarOPTest(roturas);

@@ -57,7 +57,7 @@ public class Damero {
 		this.inicializarContadores(700,2000);
 	}
 	
-	public Damero(int columnas, int filas, double canMinima, double canMaxima, int WTT) {
+	public Damero(int columnas, int filas, double canMinima, double canMaxima, int WTT, int MI) {
 		Contador.reiniciarId();
 		this.filas = filas;
 		this.columnas = columnas;
@@ -78,6 +78,7 @@ public class Damero {
 		this.inicializarContadoresMedia(canMinima/7, canMaxima/7);
 		this.inicializarContadores(canMinima, canMaxima);
 		Damero.WTT = WTT;
+		Damero.MI = MI;
 	}
 
 	/**
@@ -707,16 +708,13 @@ public class Damero {
 		int[] s = new int[listaContadores.size()]; 
 		boolean retroceder = false;
 		
-		for(Contador c : listaContadores) {
-			System.out.println(c.getConsumo() + " -> " + c.getOp());
-		}
-		
 		for(int i=0; i<s.length; i++) {
 			s[i] = -1;
 		}
 		
 		//El nivel 0 es la raiz -> aux
 		
+		//La posicion 0 es la aux, la dejamos a -1
 		while(nivel != 0) {
 //			retroceder = false;
 			//Generar
@@ -729,32 +727,27 @@ public class Damero {
 				//Hemos llegado a la solucion, ya no queremos considerar mas en esta rama, vamos a retroceder
 				retroceder = true;
 			}
-			if(criterio(nivel, sumaOp, listaContadores) && nivel != s.length-1) { //Si estamos en el ultimo nivel hay que retroceder
+			if(!retroceder  && criterio(nivel, sumaOp, listaContadores) && nivel != s.length-1) { //Si estamos en el ultimo nivel hay que retroceder
 				nivel++;				
 			} else {
 				while(!masHermanos(nivel, s) && nivel > 0 || retroceder) {
 					//Retroceder
+					sumaOp -= listaContadores.get(nivel).getOp();
+					s[nivel] = -1;
+					nivel--;
+					
 					if(retroceder) { //Si hemos entrado por retroceder, retrocedemos una vez y ya esta
-						sumaOp -= listaContadores.get(nivel).getOp();
-						s[nivel] = -1;
-						nivel--;
 						break;
 					}
-					
 				}
 			}
 		}
 		
-		return listaContadores;
+		return resultado;
 	}
 	
 	
 	public boolean solucion(int nivel, double sumaOP, ArrayList<Contador> resolverConsumidoresVersionContadores) {
-//		System.out.println(nivel);
-//		System.out.println(resolverConsumidoresVersionContadores.size()-1);
-//		System.out.println(sumaOP);
-//		System.out.println(Damero.MI);
-//		System.out.println("-------------");
 		return nivel == resolverConsumidoresVersionContadores.size()-1 && sumaOP >= Damero.MI;
 	}
 	
