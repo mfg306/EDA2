@@ -165,4 +165,57 @@ public class DameroTest {
 		System.out.println(d.minimizarMI(roturas));
 	}
 	
+	@Test
+	public void TestMinimizarMIAvanzado() {
+		Damero d = new Damero(3,3,1,7, 100, 2000);
+		
+		ArrayList<Contador> roturas = new ArrayList<>();
+		
+		Contador c1 = new Contador();
+		c1.setOp(50.0);
+		c1.setMedia(new Contador());
+		Contador c2 = new Contador();
+		c2.setOp(3000.0);
+		c2.setMedia(new Contador());
+		Contador c3 = new Contador();
+		c3.setOp(1500.0);
+		c3.setMedia(new Contador());
+
+		roturas.add(c1);
+		roturas.add(c2);
+		roturas.add(c3);
+
+		System.out.println(d.minimizarMI(roturas));
+		
+	}
+	
+	@Test
+	public void TestMinimizarWTTDadosMI() {
+		
+		Damero d = new Damero(3,3,1,7, 100, 2000);
+		
+		ArrayList<Contador> roturas = new ArrayList<>();
+		
+		Contador c1 = new Contador();
+		c1.setOp(50.0);
+		c1.setAt(50.0);
+		c1.setMedia(new Contador());
+		Contador c2 = new Contador();
+		c2.setOp(3000.0);
+		c2.setAt(3000.0);
+		c2.setMedia(new Contador());
+		Contador c3 = new Contador();
+		c3.setOp(1500.0);
+		c3.setAt(1500.0);
+		c3.setMedia(new Contador());
+
+		roturas.add(c1);
+		roturas.add(c2);
+		roturas.add(c3);
+		
+		System.out.println(d.minimizarWTTDadosMI(d.minimizarMI(roturas)));
+	}
+	
+	
+	
 }

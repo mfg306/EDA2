@@ -687,16 +687,46 @@ public class Damero {
 	}
 	
 	
+	
+	
+	public TreeMap<String, ArrayList<Contador>> maximizarWTT(ArrayList<Contador> listaRoturas){
+		if(listaRoturas.isEmpty()) return null;
+		TreeMap<String, ArrayList<Contador>> solution = new TreeMap<>();
+		ArrayList<Contador> listaContadores = new ArrayList<>();
+		Contador aux = new Contador(0.0);
+		aux.setAt(0.0);
+		aux.setOp(0.0);
+		listaContadores.add(aux);
+		listaContadores.addAll(listaRoturas);
+		listaContadores.sort(new ComparadorContadoresAT());
+		
+		double sumaAt = 0;
+		int nivel = 1;
+		int[] s = new int[listaContadores.size()]; 
+		int numSolucion = 1;
+		boolean solucion = false;
+		
+		while(nivel != 0) {
+			
+		}
+		
+		
+		return solution;
+	}
+	
+	
 	/**
-	 * Este metodo consiste en buscar la suma maxima de dinero sin superar el tiempo
-	 * @return
+	 * Buscamos el conjunto de contadores cuya suma es igual o superior a MI
+	 * @return un TreeMap con clave el numero de solucion y valor el conjunto de contadores que cumplen la suma
 	 */
-	public ArrayList<Contador> minimizarMI(ArrayList<Contador> resolverConsumidoresVersionContadores) {
+	public TreeMap<String, ArrayList<Contador>> minimizarMI(ArrayList<Contador> resolverConsumidoresVersionContadores) {
 		
 		if(resolverConsumidoresVersionContadores.isEmpty()) return null;
 		
 		ArrayList<Contador> listaContadores = new ArrayList<>();
 		ArrayList<Contador> resultado = new ArrayList<>();
+		ArrayList<Contador> solucionParcial = new ArrayList<>();
+		TreeMap<String, ArrayList<Contador>> solution = new TreeMap<>();
 		Contador aux = new Contador(0.0);
 		aux.setAt(0.0);
 		aux.setOp(0.0);
@@ -706,7 +736,8 @@ public class Damero {
 		double sumaOp = 0;
 		int nivel = 1;
 		int[] s = new int[listaContadores.size()]; 
-		boolean retroceder = false;
+		int numSolucion = 1;
+		boolean solucion = false;
 		
 		for(int i=0; i<s.length; i++) {
 			s[i] = -1;
@@ -716,30 +747,58 @@ public class Damero {
 		
 		//La posicion 0 es la aux, la dejamos a -1
 		while(nivel != 0) {
-//			retroceder = false;
+			
+			if(solucion) {
+				//Si hemos encontrado una solucion, pasamos a la siguiente solucion
+				solution.put("Solucion" + numSolucion, resultado);
+				resultado = new ArrayList<>();
+				numSolucion++;
+				solucionParcial = new ArrayList<>();
+				solucion = false;
+			}
+
 			//Generar
 			s[nivel] = s[nivel] + 1;
 			if(s[nivel] == 1) {
 				sumaOp += listaContadores.get(nivel).getOp();
+				solucionParcial.add(listaContadores.get(nivel)); //Vamos guardando contador a contador
 			}			
-			if(solucion(nivel, sumaOp, listaContadores)) {
-				resultado.add(listaContadores.get(nivel));
+			if(solucionMinimizar(sumaOp)) {
+				//Si con el nodo actual hemos alcanzado la solucion, lo añadimos a la solucionParcial
+				resultado.addAll(solucionParcial);
 				//Hemos llegado a la solucion, ya no queremos considerar mas en esta rama, vamos a retroceder
-				retroceder = true;
+				solucion = true;
 			}
-			if(!retroceder  && criterio(nivel, sumaOp, listaContadores) && nivel != s.length-1) { //Si estamos en el ultimo nivel hay que retroceder
+			if(criterioMinimizar(sumaOp) && nivel != s.length-1) { //Si estamos en el ultimo nivel hay que retroceder
 				nivel++;				
 			} else {
-				while(!masHermanos(nivel, s) && nivel > 0 || retroceder) {
+				while(!masHermanos(nivel, s) && nivel > 0) {
 					//Retroceder
 					sumaOp -= listaContadores.get(nivel).getOp();
+					solucionParcial.remove(listaContadores.get(nivel));
 					s[nivel] = -1;
 					nivel--;
-					
-					if(retroceder) { //Si hemos entrado por retroceder, retrocedemos una vez y ya esta
-						break;
-					}
 				}
+			}
+		}
+		
+		return solution;
+	}
+	
+	
+	public ArrayList<Contador> minimizarWTTDadosMI(TreeMap<String, ArrayList<Contador>> listaContadores){
+		//Vamos a buscar el WTT minimo dada la lista de aquellos contadores que alcanzan el MI
+		double suma = 0;
+		double max = 0;
+		ArrayList<Contador> resultado = new ArrayList<>();
+		for(ArrayList<Contador> contadores : listaContadores.values()) {
+			for(Contador c : contadores) {
+				suma += c.getAt();
+			}
+			
+			if(suma > max) {
+				max = suma;
+				resultado = contadores;
 			}
 		}
 		
@@ -747,12 +806,13 @@ public class Damero {
 	}
 	
 	
-	public boolean solucion(int nivel, double sumaOP, ArrayList<Contador> resolverConsumidoresVersionContadores) {
-		return nivel == resolverConsumidoresVersionContadores.size()-1 && sumaOP >= Damero.MI;
+	
+	public boolean solucionMinimizar(double sumaOP) {
+		return sumaOP >= Damero.MI;
 	}
 	
-	public boolean criterio(int nivel, double sumaOP,  ArrayList<Contador> resolverConsumidoresVersionContadores) {
-		return nivel < resolverConsumidoresVersionContadores.size()-1 && sumaOP < Damero.MI;
+	public boolean criterioMinimizar(double sumaOP) {
+		return sumaOP < Damero.MI;
 	}
 	
 	public boolean masHermanos(int nivel, int[] s) {

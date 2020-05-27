@@ -42,6 +42,18 @@ public class DameroTest {
 		Assert.assertFalse(resultado);
 		Assert.assertEquals(contador, pE[0].length);
 	}
+	
+	@Test
+	public void TestInicializarContadoresDameroDemasiadoPequeno() { //La ciudad tiene que tener un tamaño minimo de 3x3
+		boolean ciudadCreada = false;
+		try {
+			Damero damero = new Damero(2,2);
+			ciudadCreada = true;
+		}catch(Exception e) {
+			ciudadCreada = false;
+		}
+		Assert.assertFalse(ciudadCreada);
+	}
 
 	@Test
 	public void TestSoloHayContadoresMoradosEnUltimaFila() {
@@ -317,22 +329,22 @@ public class DameroTest {
 	}
 
 	@Test
-	public void TestTiemposMaximizarDineroDadoWTTAmbosParametrosCrecen() {
+	public void TestTiemposMaximizarDineroDadoWTTCreceWTT() {
 
 		// En este problema tenemos dos parametros: el WTT y el numero de contadores con
 		// roturas, para hacer el test
 		// vamos a considerar una lista que supuestamente tiene roturas, asi podemos ir
 		// incrementandola en cada iteracion
-		Damero d = new Damero(3, 3, 1, 7, 100); //Si el WTT no es cte hay que cambiar el numero de aqui 
+		int n = 100;
+		
+		Damero d = new Damero(3, 3, 1, 7, n); //WTT se modifica aqui
 		long ini = 0, fin = 0, suma = 0;
-		int n = Damero.WTT;
 		ArrayList<Contador> listaRoturasContador = new ArrayList<>();
 		int contador = 0;
 
 		while (contador != 100){
-
 			// Creamos una lista de contadores que tenga el mismo tamaño que WTT
-			while (listaRoturasContador.size() != 15000) { //Si el numero de roturas no es cte hay que cambiar el numero de aqui 
+			while (listaRoturasContador.size() != 100) {  
 				Contador c = new Contador();
 				c.setMedia(new Contador());
 				listaRoturasContador.add(c);
@@ -355,7 +367,99 @@ public class DameroTest {
 
 		// De esta forma, tenemos un estudio teorico mas controlado de ambos parametros.
 		// Antes, no sabiamos cuantas roturas podian
-		// aparecer puerto que surgian de forma aleatoria. Ahora vamos a estudiar
+		// aparecer puesto que surgian de forma aleatoria. Ahora vamos a estudiar
+		// problemas de nxn
+
+		System.out.println(suma / 10);
+	}
+	
+	@Test
+	public void TestTiemposMaximizarDineroDadoWTTCreceN() {
+
+		// En este problema tenemos dos parametros: el WTT y el numero de contadores con
+		// roturas, para hacer el test
+		// vamos a considerar una lista que supuestamente tiene roturas, asi podemos ir
+		// incrementandola en cada iteracion
+		int n = 100;
+		
+		Damero d = new Damero(3, 3, 1, 7, 100); 
+		long ini = 0, fin = 0, suma = 0;
+		ArrayList<Contador> listaRoturasContador = new ArrayList<>();
+		int contador = 0;
+
+		while (contador != 100){
+
+			// Creamos una lista de contadores que tenga el mismo tamaño que WTT
+			while (listaRoturasContador.size() != n) { //El numero de roturas se cambia aquí 
+				Contador c = new Contador();
+				c.setMedia(new Contador());
+				listaRoturasContador.add(c);
+			}
+
+			// A esta lista le metemos los AT y OP
+			d.establecerListaATRoturasTest(listaRoturasContador);
+			d.generarOPTest(listaRoturasContador);
+
+			// Resolvemos el problema con esta lista
+			ini = System.nanoTime();
+			double[][] table = d.maximizarDineroDadoWTT(listaRoturasContador);
+			fin = System.nanoTime();
+
+			if (table != null) {
+				suma += (fin - ini);
+				contador++;
+			}
+		}
+
+		// De esta forma, tenemos un estudio teorico mas controlado de ambos parametros.
+		// Antes, no sabiamos cuantas roturas podian
+		// aparecer puesto que surgian de forma aleatoria. Ahora vamos a estudiar
+		// problemas de nxn
+
+		System.out.println(suma / 10);
+	}
+	
+	@Test
+	public void TestTiemposMaximizarDineroDadoWTTAmbosParametrosCrecen() {
+
+		// En este problema tenemos dos parametros: el WTT y el numero de contadores con
+		// roturas, para hacer el test
+		// vamos a considerar una lista que supuestamente tiene roturas, asi podemos ir
+		// incrementandola en cada iteracion
+		int n = 100;
+		
+		Damero d = new Damero(3, 3, 1, 7, n); //Si el WTT no es cte hay que cambiar el numero de aqui 
+		long ini = 0, fin = 0, suma = 0;
+		ArrayList<Contador> listaRoturasContador = new ArrayList<>();
+		int contador = 0;
+
+		while (contador != 100){
+
+			// Creamos una lista de contadores que tenga el mismo tamaño que WTT
+			while (listaRoturasContador.size() != n) { //Si el numero de roturas no es cte hay que cambiar el numero de aqui 
+				Contador c = new Contador();
+				c.setMedia(new Contador());
+				listaRoturasContador.add(c);
+			}
+
+			// A esta lista le metemos los AT y OP
+			d.establecerListaATRoturasTest(listaRoturasContador);
+			d.generarOPTest(listaRoturasContador);
+
+			// Resolvemos el problema con esta lista
+			ini = System.nanoTime();
+			double[][] table = d.maximizarDineroDadoWTT(listaRoturasContador);
+			fin = System.nanoTime();
+
+			if (table != null) {
+				suma += (fin - ini);
+				contador++;
+			}
+		}
+
+		// De esta forma, tenemos un estudio teorico mas controlado de ambos parametros.
+		// Antes, no sabiamos cuantas roturas podian
+		// aparecer puesto que surgian de forma aleatoria. Ahora vamos a estudiar
 		// problemas de nxn
 
 		System.out.println(suma / 10);
@@ -400,6 +504,56 @@ public class DameroTest {
 		}
 
 		System.out.println(sumaTiempos / 10);
+	}
+	
+	@Test
+	public void TestComparadorContadores() {
+		//public Contador(double consumo, Contador media, int i, int j, String tipo) {
+		ArrayList<Contador> solucion = new ArrayList<Contador>();
+		ArrayList<Contador> esperado = new ArrayList<Contador>();
+		
+		Contador c1 = new Contador(6.0,new Contador(3),0,0,"V"); //diferencia = 2
+		Contador c2 = new Contador(15.0,new Contador(5),0,0,"V"); //diferencia = 3
+		Contador c3 = new Contador(8.0,new Contador(2),0,0,"V"); //diferencia = 4
+		
+		solucion.add(c3);
+		solucion.add(c1);
+		solucion.add(c2);		
+		solucion.sort(new ComparadorContadores());
+		
+		esperado.add(c1);
+		esperado.add(c2);
+		esperado.add(c3);
+		
+		boolean resultado = solucion.equals(esperado);
+		Assert.assertTrue(resultado);
+	}
+	
+	@Test
+	public void TestComparadorContadoresAT() {
+		//public Contador(double consumo, Contador media, int i, int j, String tipo) {
+		ArrayList<Contador> solucion = new ArrayList<Contador>();
+		ArrayList<Contador> esperado = new ArrayList<Contador>();
+		
+		Contador c1 = new Contador(6.0);
+		Contador c2 = new Contador(15.0);
+		Contador c3 = new Contador(8.0);
+		
+		c1.setAt(1);
+		c2.setAt(2);
+		c3.setAt(3);
+		
+		solucion.add(c3);
+		solucion.add(c1);
+		solucion.add(c2);		
+		solucion.sort(new ComparadorContadoresAT());
+		
+		esperado.add(c1);
+		esperado.add(c2);
+		esperado.add(c3);
+		
+		boolean resultado = solucion.equals(esperado);
+		Assert.assertTrue(resultado);
 	}
 
 }
