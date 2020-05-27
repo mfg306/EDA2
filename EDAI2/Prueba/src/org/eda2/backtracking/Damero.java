@@ -1,6 +1,6 @@
 package org.eda2.backtracking;
 import java.util.ArrayList;
-import java.util.TreeMap;
+import java.util.HashMap;
 import java.util.Map.Entry;
 
 
@@ -458,12 +458,12 @@ public class Damero {
 	}
 	
 	//LISTADO CON LAS MANZANAS A LAS QUE HAY QUE ENVIARLE EL AVISO 
-	//Clave del TreeMap -> coordenadas de la rotura del contador (destino= 
+	//Clave del HashMap -> coordenadas de la rotura del contador (destino= 
 	//Valor -> TreeSet donde guardamos en el siguiente orden (conusmo medio,
 	 			//,consumoActual, division)
-	public TreeMap<Contador, ArrayList<Double>> manzanasConsumoExcesivo(ArrayList<Integer> cRoturas){
+	public HashMap<Contador, ArrayList<Double>> manzanasConsumoExcesivo(ArrayList<Integer> cRoturas){
 		ArrayList<Integer> contadoresRoturas = new ArrayList<>(cRoturas); //Queremos una copia no editar la otra
-		TreeMap<Contador, ArrayList<Double>> result = new TreeMap<>();
+		HashMap<Contador, ArrayList<Double>> result = new HashMap<>();
 		Contador c = null;
 		ArrayList<Double> datos;
 
@@ -487,9 +487,9 @@ public class Damero {
 	 * @param cRoturas
 	 * @return
 	 */
-	public TreeMap<Contador, ArrayList<Double>> manzanasConsumoExcesivoParaTest(ArrayList<Contador> cRoturas){
+	public HashMap<Contador, ArrayList<Double>> manzanasConsumoExcesivoParaTest(ArrayList<Contador> cRoturas){
 		ArrayList<Contador> contadoresRoturas = new ArrayList<>(cRoturas); //Queremos una copia no editar la otra
-		TreeMap<Contador, ArrayList<Double>> result = new TreeMap<>();
+		HashMap<Contador, ArrayList<Double>> result = new HashMap<>();
 		ArrayList<Double> datos = new ArrayList<>();
 
 		for(Contador cont: contadoresRoturas) {
@@ -612,13 +612,13 @@ public class Damero {
 	//HE BORRADO TODO LO DE LOS MANOMETROS PORQUE PARECE QUE NO SE USA
 	
 	/**
-	 * @return un treemap con cada contador con su rotura
+	 * @return un HashMap con cada contador con su rotura
 	 */
-	public TreeMap<Contador, Double> establecerListaATRoturas(ArrayList<Integer> listaRoturas){ 
+	public HashMap<Contador, Double> establecerListaATRoturas(ArrayList<Integer> listaRoturas){ 
 		if(listaRoturas.isEmpty()) return null;
 		double ip,bc,dt;
-		TreeMap<Contador, ArrayList<Double>> manzanasRoturas = this.manzanasConsumoExcesivo(listaRoturas);
-		TreeMap<Contador, Double> resultado = new TreeMap<>();
+		HashMap<Contador, ArrayList<Double>> manzanasRoturas = this.manzanasConsumoExcesivo(listaRoturas);
+		HashMap<Contador, Double> resultado = new HashMap<>();
 
 		//Ir recorriendo las manzanas con roturas e ir introduciendo en resultado el contador que produce la rotura con su rotura
 		for(Entry<Contador, ArrayList<Double>> c : manzanasRoturas.entrySet()) {
@@ -632,11 +632,11 @@ public class Damero {
 		return resultado;
 	}
 	
-	public TreeMap<Contador, Double> establecerListaATRoturasTest(ArrayList<Contador> listaRoturas){ 
+	public HashMap<Contador, Double> establecerListaATRoturasTest(ArrayList<Contador> listaRoturas){ 
 		if(listaRoturas.isEmpty()) return null;
 		double ip,bc,dt;
-		TreeMap<Contador, ArrayList<Double>> manzanasRoturas = this.manzanasConsumoExcesivoParaTest(listaRoturas);
-		TreeMap<Contador, Double> resultado = new TreeMap<>();
+		HashMap<Contador, ArrayList<Double>> manzanasRoturas = this.manzanasConsumoExcesivoParaTest(listaRoturas);
+		HashMap<Contador, Double> resultado = new HashMap<>();
 
 		//Ir recorriendo las manzanas con roturas e ir introduciendo en resultado el contador que produce la rotura con su rotura
 		for(Entry<Contador, ArrayList<Double>> c : manzanasRoturas.entrySet()) {
@@ -662,9 +662,9 @@ public class Damero {
 	/**
 	 * Genera un valor OP a cada manzana con fuga 
 	 */
-	public TreeMap<Contador, Double> generarOP(ArrayList<Integer> listaRoturas) {
-		TreeMap<Contador, ArrayList<Double>> manzanasFugas = this.manzanasConsumoExcesivo(listaRoturas);
-		TreeMap<Contador, Double> resultado = new TreeMap<>();
+	public HashMap<Contador, Double> generarOP(ArrayList<Integer> listaRoturas) {
+		HashMap<Contador, ArrayList<Double>> manzanasFugas = this.manzanasConsumoExcesivo(listaRoturas);
+		HashMap<Contador, Double> resultado = new HashMap<>();
 		double op;
 
 		for(Contador c : manzanasFugas.keySet()) {  
@@ -676,9 +676,9 @@ public class Damero {
 		return resultado;
 	}
 	
-	public TreeMap<Contador, Double> generarOPTest(ArrayList<Contador> listaRoturas) {
-		TreeMap<Contador, ArrayList<Double>> manzanasFugas = this.manzanasConsumoExcesivoParaTest(listaRoturas);
-		TreeMap<Contador, Double> resultado = new TreeMap<>();
+	public HashMap<Contador, Double> generarOPTest(ArrayList<Contador> listaRoturas) {
+		HashMap<Contador, ArrayList<Double>> manzanasFugas = this.manzanasConsumoExcesivoParaTest(listaRoturas);
+		HashMap<Contador, Double> resultado = new HashMap<>();
 		double op;
 
 		for(Contador c : manzanasFugas.keySet()) {  
@@ -693,9 +693,9 @@ public class Damero {
 	
 	
 	
-	public TreeMap<String, ArrayList<Contador>> maximizarWTT(ArrayList<Contador> listaRoturas){
+	public HashMap<String, ArrayList<Contador>> maximizarWTT(ArrayList<Contador> listaRoturas){
 		if(listaRoturas.isEmpty()) return null;
-		TreeMap<String, ArrayList<Contador>> solution = new TreeMap<>();
+		HashMap<String, ArrayList<Contador>> solution = new HashMap<>();
 		ArrayList<Contador> listaContadores = new ArrayList<>();
 		Contador aux = new Contador(0.0);
 		aux.setAt(0.0);
@@ -721,16 +721,16 @@ public class Damero {
 	
 	/**
 	 * Buscamos el conjunto de contadores cuya suma es igual o superior a MI
-	 * @return un TreeMap con clave el numero de solucion y valor el conjunto de contadores que cumplen la suma
+	 * @return un HashMap con clave el numero de solucion y valor el conjunto de contadores que cumplen la suma
 	 */
-	public TreeMap<String, ArrayList<Contador>> minimizarMI(ArrayList<Contador> resolverConsumidoresVersionContadores) {
+	public HashMap<String, ArrayList<Contador>> minimizarMI(ArrayList<Contador> resolverConsumidoresVersionContadores) {
 		
 		if(resolverConsumidoresVersionContadores.isEmpty()) return null;
 		
 		ArrayList<Contador> listaContadores = new ArrayList<>();
 		ArrayList<Contador> resultado = new ArrayList<>();
 		ArrayList<Contador> solucionParcial = new ArrayList<>();
-		TreeMap<String, ArrayList<Contador>> solution = new TreeMap<>();
+		HashMap<String, ArrayList<Contador>> solution = new HashMap<>();
 		Contador aux = new Contador(0.0);
 		aux.setAt(0.0);
 		aux.setOp(0.0);
@@ -790,7 +790,7 @@ public class Damero {
 	}
 	
 	
-	public ArrayList<Contador> minimizarWTTDadosMI(TreeMap<String, ArrayList<Contador>> listaContadores){
+	public ArrayList<Contador> minimizarWTTDadosMI(HashMap<String, ArrayList<Contador>> listaContadores){
 		//Vamos a buscar el WTT minimo dada la lista de aquellos contadores que alcanzan el MI
 		double suma = 0;
 		double max = 0;

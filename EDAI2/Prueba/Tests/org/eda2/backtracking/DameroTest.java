@@ -217,7 +217,7 @@ public class DameroTest {
 
 	@Test
 	public void TestTiemposMinimizarWTTDadosMI() {
-		int n = 5000;
+		int n = 100;
 		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
 		ArrayList<Contador> listaContadores = new ArrayList<>();
 		int contador = 0;
