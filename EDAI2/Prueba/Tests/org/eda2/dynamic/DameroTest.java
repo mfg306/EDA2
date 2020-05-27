@@ -399,6 +399,7 @@ public class DameroTest {
 			// A esta lista le metemos los AT y OP
 			d.establecerListaATRoturasTest(listaRoturasContador);
 			d.generarOPTest(listaRoturasContador);
+			
 
 			// Resolvemos el problema con esta lista
 			ini = System.nanoTime();
@@ -472,6 +473,7 @@ public class DameroTest {
 		ArrayList<Integer> listaRoturas = d.resolverConsumidoresGreedy();
 		d.establecerListaATRoturas(listaRoturas);
 		d.generarOP(listaRoturas);
+		
 
 		if (!listaRoturas.isEmpty()) {
 			// Hay que dejar esto para que se inicialize en la clase

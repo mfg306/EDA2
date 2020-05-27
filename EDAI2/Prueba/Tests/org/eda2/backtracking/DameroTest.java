@@ -91,10 +91,12 @@ public class DameroTest {
 		boolean resultado = true;
 
 		for (int i = 0; i < pE.length; i++) {
-			if (!resultado) break;
+			if (!resultado)
+				break;
 			for (int j = 1; j < pE[i].length; j++) {
 				if (j == 1) {
-					if (pE[i][j].getcVerde().getConsumo() != (pE[i][j].getcDerecha().getConsumo()
+					if (pE[i][j].getcVerde()
+							.getConsumo() != (pE[i][j].getcDerecha().getConsumo()
 									+ pE[i][j].getcIzquierda().getConsumo() + pE[i][j - 1].getcDerecha().getConsumo()
 									+ pE[i][j - 1].getcIzquierda().getConsumo())) {
 						resultado = false;
@@ -122,7 +124,6 @@ public class DameroTest {
 		Assert.assertTrue(consumoCasillaGeneral >= resultadoSuma);
 	}
 
-
 	@Test
 	public void TestListaATRoturas() {
 		TreeMap<Contador, Double> expected = new TreeMap<>();
@@ -137,7 +138,7 @@ public class DameroTest {
 		d.setParEdificioContador(0, 2, new Contador(20, 0, 2, "D"));
 		d.setParEdificioContador(0, 2, new Contador(5000, 0, 2, "M"));
 
-		d.setParEdificioContador(1, 0, c); //Rotura 
+		d.setParEdificioContador(1, 0, c); // Rotura
 		d.setParEdificioContador(1, 0, new Contador(0, 1, 0, "D"));
 
 		d.setParEdificioContador(1, 1, new Contador(0, 1, 1, "I"));
@@ -146,31 +147,29 @@ public class DameroTest {
 
 		d.setParEdificioContador(1, 2, new Contador(0, 1, 2, "I"));
 		d.setParEdificioContador(1, 2, new Contador(0, 1, 2, "D"));
-		
-		expected.put(c, (5*c.getConsumo() + 12*((c.getConsumo()/c.getMedia().getConsumo())-7))+ Damero.BA);
-		
-		
+
+		expected.put(c, (5 * c.getConsumo() + 12 * ((c.getConsumo() / c.getMedia().getConsumo()) - 7)) + Damero.BA);
+
 		Assert.assertEquals(expected, d.establecerListaATRoturas(d.resolverConsumidoresGreedy()));
 	}
-	
-	
+
 	@Test
 	public void TestMinimizarMI() {
-		Damero d = new Damero(3,3,1,7, 100, 2000);
-		
+		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
+
 		ArrayList<Contador> roturas = d.resolverConsumidoresVersionContadores();
 		d.generarOPTest(roturas);
 		d.establecerListaATRoturasTest(roturas);
 
 		System.out.println(d.minimizarMI(roturas));
 	}
-	
+
 	@Test
 	public void TestMinimizarMIAvanzado() {
-		Damero d = new Damero(3,3,1,7, 100, 2000);
-		
+		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
+
 		ArrayList<Contador> roturas = new ArrayList<>();
-		
+
 		Contador c1 = new Contador();
 		c1.setOp(50.0);
 		c1.setMedia(new Contador());
@@ -186,16 +185,16 @@ public class DameroTest {
 		roturas.add(c3);
 
 		System.out.println(d.minimizarMI(roturas));
-		
+
 	}
-	
+
 	@Test
 	public void TestMinimizarWTTDadosMI() {
-		
-		Damero d = new Damero(3,3,1,7, 100, 2000);
-		
+
+		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
+
 		ArrayList<Contador> roturas = new ArrayList<>();
-		
+
 		Contador c1 = new Contador();
 		c1.setOp(50.0);
 		c1.setAt(50.0);
@@ -212,10 +211,41 @@ public class DameroTest {
 		roturas.add(c1);
 		roturas.add(c2);
 		roturas.add(c3);
-		
+
 		System.out.println(d.minimizarWTTDadosMI(d.minimizarMI(roturas)));
 	}
-	
-	
-	
+
+	@Test
+	public void TestTiemposMinimizarWTTDadosMI() {
+		int n = 5000;
+		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
+		ArrayList<Contador> listaContadores = new ArrayList<>();
+		int contador = 0;
+		long ini = 0, fin = 0, sum = 0;
+
+		// Tamaño del problema -> numero de roturas
+
+		while (contador != 10) {
+
+			while (listaContadores.size() != n) {
+				Contador c = new Contador();
+				c.setMedia(new Contador());
+				listaContadores.add(c);
+			}
+
+			d.establecerListaATRoturasTest(listaContadores);
+			d.generarOPTest(listaContadores);
+
+			ini = System.nanoTime();
+			d.minimizarWTTDadosMI(d.minimizarMI(listaContadores));
+			fin = System.nanoTime();
+
+			sum += (fin - ini);
+			contador++;
+		}
+		
+		System.out.println(sum/10);
+
+	}
+
 }

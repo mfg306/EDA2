@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+
 public class Damero {
 
 	private int filas;
@@ -492,6 +493,7 @@ public class Damero {
 		ArrayList<Double> datos = new ArrayList<>();
 
 		for(Contador cont: contadoresRoturas) {
+			datos = new ArrayList<>();
 			datos.add(cont.getConsumo());
 			datos.add(cont.getMedia().getConsumo());
 			datos.add(cont.getConsumo()/cont.getMedia().getConsumo());
@@ -501,6 +503,8 @@ public class Damero {
 		
 		return result;
 	}
+	
+	
 
 	/**
 	 * @return todos los contadores finales del damero
