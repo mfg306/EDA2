@@ -795,6 +795,7 @@ public class Damero {
 		double suma = 0;
 		double max = 0;
 		ArrayList<Contador> resultado = new ArrayList<>();
+		if(listaContadores == null) return null;
 		for(ArrayList<Contador> contadores : listaContadores.values()) {
 			for(Contador c : contadores) {
 				suma += c.getAt();
@@ -809,6 +810,16 @@ public class Damero {
 		return resultado;
 	}
 	
+	public String interpretarSolucionMinimizarWTTDadosMI(ArrayList<Contador> contadores) {
+		if(contadores == null) return null;
+		String resultado = "";
+		String[] coords;
+		for(Contador c : contadores) {
+			coords = this.obtenerCoordenadas(c);
+			resultado += "Contador localizado en : (" + coords[0] + ", " + coords[1] + ")" ;
+		}
+		return resultado;
+	}
 	
 	
 	public boolean solucionMinimizar(double sumaOP) {
@@ -822,8 +833,6 @@ public class Damero {
 	public boolean masHermanos(int nivel, int[] s) {
 		return s[nivel] < 1;		
 	}
-	
-
 	
 	public String interpretarSolucionMaximizarDineroDadoWTT() {
 		String objetos = "HAY QUE ENVIAR  LA OFERTA A: \n";
