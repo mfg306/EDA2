@@ -691,12 +691,16 @@ public class Damero {
 	}
 	
 	
-	
-	
+	/**
+	 * @param listaRoturas contadores que presentan roturas
+	 * @return contadores cuyo AT no supera WTT 
+	 */
 	public HashMap<String, ArrayList<Contador>> maximizarWTT(ArrayList<Contador> listaRoturas){
 		if(listaRoturas.isEmpty()) return null;
 		HashMap<String, ArrayList<Contador>> solution = new HashMap<>();
 		ArrayList<Contador> listaContadores = new ArrayList<>();
+		ArrayList<Contador> solucionParcial = new ArrayList<>();
+		ArrayList<Contador> resultado = new ArrayList<>();
 		Contador aux = new Contador(0.0);
 		aux.setAt(0.0);
 		aux.setOp(0.0);
@@ -710,7 +714,47 @@ public class Damero {
 		int numSolucion = 1;
 		boolean solucion = false;
 		
+		for(int i=0; i<s.length; i++) {
+			s[i] = -1;
+		}
+		
+		//Que no se supere un tiempo de trabajo dado WTT de forma que 
+		//el dinero ingresado sea maximo si se aceptan las ofertas
+		
+		for(Contador c : listaContadores) {
+			System.out.println(c.getConsumo() + " -> " + c.getAt());
+		}
+		
 		while(nivel != 0) {
+			
+			if(solucion) {
+				solution.put("Solucion" + numSolucion, resultado);
+				resultado = new ArrayList<>();
+				solucionParcial = new ArrayList<>();
+				numSolucion++;
+				solucion = false;
+			}
+			
+			//Generar
+			s[nivel] = s[nivel] +1;
+			if(s[nivel] == 1) {
+				sumaAt += listaContadores.get(nivel).getAt();
+				solucionParcial.add(listaContadores.get(nivel));
+			}
+			
+			if(solucionMaximizar(sumaAt)) {
+				resultado.addAll(solucionParcial);
+				solucion = true;
+			}
+			if(criterioMaximizar(sumaAt) && nivel != s.length-1 ) {
+				nivel++;
+			} else {
+				while(!masHermanos(nivel, s) && nivel > 0) {
+					sumaAt -= listaContadores.get(nivel).getAt();
+					s[nivel] = -1;
+					nivel--;
+				}
+			}
 			
 		}
 		
@@ -826,8 +870,20 @@ public class Damero {
 		return sumaOP >= Damero.MI;
 	}
 	
+	/**
+	 * @param sumaAT suma que queremos comprobar si es >= WTT
+	 * @return
+	 */
+	public boolean solucionMaximizar(double sumaAT) {
+		return sumaAT >= Damero.WTT; // Entonces ya hemos encontrado la solucion
+	}
+	
 	public boolean criterioMinimizar(double sumaOP) {
 		return sumaOP < Damero.MI;
+	}
+	
+	public boolean criterioMaximizar(double sumaAT) {
+		return sumaAT < Damero.WTT; //Mientras no hayamos superado la cantidad podemos seguir bajando
 	}
 	
 	public boolean masHermanos(int nivel, int[] s) {

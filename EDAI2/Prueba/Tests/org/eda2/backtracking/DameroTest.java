@@ -152,6 +152,18 @@ public class DameroTest {
 
 		Assert.assertEquals(expected, d.establecerListaATRoturas(d.resolverConsumidoresGreedy()));
 	}
+	
+	@Test
+	public void TestMaximizarWTT() {
+		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
+
+		ArrayList<Contador> roturas = d.resolverConsumidoresVersionContadores();
+		System.out.println(roturas.toString());
+		d.generarOPTest(roturas);
+		d.establecerListaATRoturasTest(roturas);
+		System.out.println(d.maximizarWTT(roturas));
+		
+	}
 
 	@Test
 	public void TestMinimizarMI() {
@@ -187,6 +199,7 @@ public class DameroTest {
 		System.out.println(d.minimizarMI(roturas));
 
 	}
+	
 
 	@Test
 	public void TestMinimizarWTTDadosMI() {
@@ -318,5 +331,6 @@ public class DameroTest {
 		System.out.println(sum/10);
 
 	}
-
+	
+	
 }
