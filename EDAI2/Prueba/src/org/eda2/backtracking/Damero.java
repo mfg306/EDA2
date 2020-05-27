@@ -542,6 +542,10 @@ public class Damero {
 		}
 		return false;
 	}
+	/**
+	 * @param con contador que queremos ubicar
+	 * @return las coordenadas (i,j, tipo)
+	 */
 	public String[] obtenerCoordenadas(Contador con) {
 		String[] coordenadas = new String[3];
 		boolean encontrado = false;
@@ -632,6 +636,10 @@ public class Damero {
 		return resultado;
 	}
 	
+	/**
+	 * @param listaRoturas lista de contadores con roturas
+	 * @return un hashmap con cada contador y su at
+	 */
 	public HashMap<Contador, Double> establecerListaATRoturasTest(ArrayList<Contador> listaRoturas){ 
 		if(listaRoturas.isEmpty()) return null;
 		double ip,bc,dt;
@@ -676,6 +684,10 @@ public class Damero {
 		return resultado;
 	}
 	
+	/**
+	 * @param listaRoturas lista de contadores
+	 * @return le asignamos un OP a cada contador
+	 */
 	public HashMap<Contador, Double> generarOPTest(ArrayList<Contador> listaRoturas) {
 		HashMap<Contador, ArrayList<Double>> manzanasFugas = this.manzanasConsumoExcesivoParaTest(listaRoturas);
 		HashMap<Contador, Double> resultado = new HashMap<>();
@@ -758,7 +770,6 @@ public class Damero {
 			
 		}
 		
-		
 		return solution;
 	}
 	
@@ -834,7 +845,35 @@ public class Damero {
 	}
 	
 	
+	/**
+	 * @param listaContadores lista de contadores con roturas que queremos minimizar su WTT
+	 * @return lista de contadores
+	 */
 	public ArrayList<Contador> minimizarWTTDadosMI(HashMap<String, ArrayList<Contador>> listaContadores){
+		//Vamos a buscar el WTT minimo dada la lista de aquellos contadores que alcanzan el MI
+		double suma = 0;
+		double min = Double.POSITIVE_INFINITY;
+		ArrayList<Contador> resultado = new ArrayList<>();
+		if(listaContadores == null) return null;
+		for(ArrayList<Contador> contadores : listaContadores.values()) {
+			for(Contador c : contadores) {
+				suma += c.getAt();
+			}
+			
+			if(suma < min) {
+				min = suma;
+				resultado = contadores;
+			}
+		}
+		
+		return resultado;
+	}
+	
+	/**
+	 * @param listaContadores contadores con roturas que queremos maximizar su OP
+	 * @return una lista de contadores
+	 */
+	public ArrayList<Contador> maximizarOPDadosAT(HashMap<String, ArrayList<Contador>> listaContadores){
 		//Vamos a buscar el WTT minimo dada la lista de aquellos contadores que alcanzan el MI
 		double suma = 0;
 		double max = 0;
@@ -842,7 +881,7 @@ public class Damero {
 		if(listaContadores == null) return null;
 		for(ArrayList<Contador> contadores : listaContadores.values()) {
 			for(Contador c : contadores) {
-				suma += c.getAt();
+				suma += c.getOp();
 			}
 			
 			if(suma > max) {
@@ -854,7 +893,11 @@ public class Damero {
 		return resultado;
 	}
 	
-	public String interpretarSolucionMinimizarWTTDadosMI(ArrayList<Contador> contadores) {
+	/**
+	 * @param contadores que queremos ubicar
+	 * @return la lista con los contadores a los que hay que enviarle la carta
+	 */
+	public String interpretarSolucion(ArrayList<Contador> contadores) {
 		if(contadores == null) return null;
 		String resultado = "";
 		String[] coords;
@@ -866,6 +909,10 @@ public class Damero {
 	}
 	
 	
+	/**
+	 * @param sumaOP cantidad a comprobar
+	 * @return true si hemos encontrado la solucion
+	 */
 	public boolean solucionMinimizar(double sumaOP) {
 		return sumaOP >= Damero.MI;
 	}
@@ -878,56 +925,29 @@ public class Damero {
 		return sumaAT >= Damero.WTT; // Entonces ya hemos encontrado la solucion
 	}
 	
+	/**
+	 * @param sumaOP cantidad que queremos comprobar
+	 * @return true si podemos seguir descendiendo en el arbol
+	 */
 	public boolean criterioMinimizar(double sumaOP) {
 		return sumaOP < Damero.MI;
 	}
 	
+	/**
+	 * @param sumaAT cantidad que queremos comprobar
+	 * @return true si podemos seguir descendiendo en el arbol
+	 */
 	public boolean criterioMaximizar(double sumaAT) {
 		return sumaAT < Damero.WTT; //Mientras no hayamos superado la cantidad podemos seguir bajando
 	}
 	
+	/**
+	 * @param nivel del arbol en el que nos encontramos
+	 * @param s lista de si se toma o no un objeto
+	 * @return true si hay mas hermano
+	 */
 	public boolean masHermanos(int nivel, int[] s) {
 		return s[nivel] < 1;		
 	}
 	
-	public String interpretarSolucionMaximizarDineroDadoWTT() {
-		String objetos = "HAY QUE ENVIAR  LA OFERTA A: \n";
-		String[] coords;
-		int numContadores = this.resolverConsumidoresGreedy().size();
-		if(numContadores == 0) return null;
-		
-		ArrayList<Integer> resultado = test(numContadores, Damero.WTT);
-		
-		for(Integer i : resultado) {
-			coords = this.obtenerCoordenadas(this.beneficiosYPesos.get(i));
-			objetos += "EL CONTADOR " + this.beneficiosYPesos.get(i) + " UBICADO EN " + "("+ coords[0] + "," + coords[1] + ") \n";
-		}
-		
-		return objetos;
-	}
-
-	private ArrayList<Integer> test(int j, double c){
-		
-		if(j<0) throw new RuntimeException("Debe introducir un indice valido.");
-		
-		if(j>0) {
-			if(c<this.beneficiosYPesos.get(j).getAt()) { //Si el objeto j no cabe en la mochila
-				test(j-1, c); //Probamos con un objeto de peso menor
-			} else {
-				//Esto esta saliendo mal porque al hacer el casting no es el indice al que queremos acceder. Mañana intento arreglarlo. 
-				//Intentare que todos nuestros datos sean enteros
-				if(this.table[j-1][(int)(c-this.beneficiosYPesos.get(j).getAt())] + this.beneficiosYPesos.get(j).getOp() > this.table[j-1][(int)c]) {
-					//Si hay beneficio con este objeto, entonces es solucion
-					//Llamamos a un objeto mas pequeño y al añadir el objeto a la mochila ahora tenemos menos capacidad
-					this.listaClientesA.add(j);
-					test(j-1, c-this.beneficiosYPesos.get(j).getAt());
-				} else {
-					//Si no hay beneficio, no lo metemos y probamos con uno mas pequeño tambien
-					test(j-1,c);
-				}
-			}
-		}
-
-		return this.listaClientesA; 
-	}
 }

@@ -114,6 +114,30 @@ public class DameroTest {
 		}
 		Assert.assertTrue(resultado);
 	}
+	
+	
+	@Test
+	public void TestComparadorContadores() {
+		//public Contador(double consumo, Contador media, int i, int j, String tipo) {
+		ArrayList<Contador> solucion = new ArrayList<Contador>();
+		ArrayList<Contador> esperado = new ArrayList<Contador>();
+		
+		Contador c1 = new Contador(6.0,new Contador(3),0,0,"V"); //diferencia = 2
+		Contador c2 = new Contador(15.0,new Contador(5),0,0,"V"); //diferencia = 3
+		Contador c3 = new Contador(8.0,new Contador(2),0,0,"V"); //diferencia = 4
+		
+		solucion.add(c3);
+		solucion.add(c1);
+		solucion.add(c2);		
+		solucion.sort(new ComparadorContadores());
+		
+		esperado.add(c1);
+		esperado.add(c2);
+		esperado.add(c3);
+		
+		boolean resultado = solucion.equals(esperado);
+		Assert.assertTrue(resultado);
+	}
 
 	@Test
 	public void TestComprobarCasillaGeneral() {
@@ -162,6 +186,76 @@ public class DameroTest {
 		d.generarOPTest(roturas);
 		d.establecerListaATRoturasTest(roturas);
 		System.out.println(d.maximizarWTT(roturas));
+		
+	}
+	
+	@Test
+	public void TestEjemploEjecucionMaximizar() {
+		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
+		
+		Contador c1 = new Contador(800000, 1, 0, "I");
+		c1.setAt(50);
+		c1.setOp(1500);
+		Contador c2 = new Contador(0, 0, 0, "D");
+		c2.setAt(60);
+		c2.setOp(2500);
+		Contador c3 = new Contador(0, 0, 1, "D");
+		c3.setAt(70);
+		c3.setOp(500);
+		Contador c4 = new Contador(20, 0, 1, "V");
+		c4.setAt(40);
+		c4.setOp(2500);
+		Contador c5 = new Contador(20, 0, 2, "D");
+		c5.setAt(50);
+		c5.setOp(3500);
+		Contador c6 = new Contador(5000, 0, 2, "M");
+		c6.setAt(100);
+		c6.setOp(1500);
+		Contador c7 = new Contador(0, 1, 0, "D");
+		c7.setAt(60);
+		c7.setOp(2200);
+		Contador c8 = new Contador(0, 1, 1, "I");
+		c8.setAt(40);
+		c8.setOp(1500);
+		Contador c9 = new Contador(0, 1, 1, "D");
+		c9.setAt(70);
+		c9.setOp(7700);
+		Contador c10 = new Contador(0, 1, 1, "V");
+		c10.setAt(45);
+		c10.setOp(100);
+		Contador c11 = new Contador(0, 1, 2, "I");
+		c11.setAt(32);
+		c11.setOp(1500);
+		Contador c12 = new Contador(0, 1, 2, "D");
+		c12.setAt(10);
+		c1.setOp(50);
+		
+		// columna, fila
+		d.setParEdificioContador(0, 0, c2);
+
+		d.setParEdificioContador(0, 1, c3);
+		d.setParEdificioContador(0, 1, c4);
+
+		d.setParEdificioContador(0, 2, c5); // Rotura
+		d.setParEdificioContador(0, 2, c6);
+
+		d.setParEdificioContador(1, 0, c1); // Rotura
+		d.setParEdificioContador(1, 0, c7);
+
+		d.setParEdificioContador(1, 1, c8);
+		d.setParEdificioContador(1, 1, c9);
+		d.setParEdificioContador(1, 1, c10);
+
+		d.setParEdificioContador(1, 2, c11);
+		d.setParEdificioContador(1, 2, c12);
+		
+		ArrayList<Contador> roturas = d.resolverConsumidoresVersionContadores();
+		
+
+		d.generarOPTest(roturas);
+		d.establecerListaATRoturasTest(roturas);
+		
+		System.out.println(d.interpretarSolucion(d.maximizarOPDadosAT(d.maximizarWTT(roturas))));
 		
 	}
 
@@ -229,7 +323,7 @@ public class DameroTest {
 	}
 	
 	@Test
-	public void TestEjemploEjecucion() {
+	public void TestEjemploEjecucionMinimizar() {
 		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
 		
 		Contador c1 = new Contador(800000, 1, 0, "I");
@@ -294,7 +388,7 @@ public class DameroTest {
 		d.generarOPTest(roturas);
 		d.establecerListaATRoturasTest(roturas);
 		
-		System.out.println(d.interpretarSolucionMinimizarWTTDadosMI(d.minimizarWTTDadosMI(d.minimizarMI(roturas))));
+		System.out.println(d.interpretarSolucion(d.minimizarWTTDadosMI(d.minimizarMI(roturas))));
 
 		
 	}
