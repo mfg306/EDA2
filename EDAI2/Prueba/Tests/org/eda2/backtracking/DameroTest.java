@@ -153,94 +153,16 @@ public class DameroTest {
 		Assert.assertEquals(expected, d.establecerListaATRoturas(d.resolverConsumidoresGreedy()));
 	}
 	
+	
+	@Test
+	public void TestMinimizarMI() {
+		Damero d = new Damero(3,3,1,7, 100);
+		
+		ArrayList<Contador> roturas = d.resolverConsumidoresVersionContadores();
+		d.generarOPTest(roturas);
+		d.establecerListaATRoturasTest(roturas);
 
-	
-	@Test
-	public void TestMaximizarDineroDadoWTT() {
-		
-		Damero d = new Damero(3,3,1,7, 150);
-		double max = 0;
-		ArrayList<Integer> listaRoturas = d.resolverConsumidoresGreedy();
-		d.establecerListaATRoturas(listaRoturas);
-		d.generarOP(listaRoturas);
-		
-		
-		double[][] table = d.maximizarDineroDadoWTT(d.resolverConsumidoresVersionContadores());
-		int filas = d.resolverConsumidoresGreedy().size();
-		int columnas = Damero.WTT;
-		
-		//vamos a buscar el valor maximo
-		if (table!=null) { //Si hay solucion
-			for(int i=0; i<table.length; i++) {
-				for(int j=0; j<table[i].length; j++) {
-					if(table[i][j] > max) {
-						max = table[i][j];
-					}
-				}
-			}
-			Assert.assertTrue(table[filas][columnas] == max);
-		}
+		System.out.println(d.minimizarMI(roturas));
 	}
-	
-	
-	@Test
-	public void TestTiemposMaximizarDineroDadoWTT() {
-		
-		//En este problema tenemos dos parametros: el WTT y el numero de contadores con roturas, para hacer el test
-		//vamos a considerar una lista que supuestamente tiene roturas, asi podemos ir incrementandola en cada iteracion 
-		Damero d = new Damero(3,3,1,7, 8000);
-		long ini = 0, fin = 0, suma = 0;
-		int n = Damero.WTT;
-		ArrayList<Contador> listaRoturasContador = new ArrayList<>();
-		int contador = 0;
-		
-		while(contador != 10) {
-			
-			//Creamos una lista de contadores que tenga el mismo tamaño que WTT
-			while(listaRoturasContador.size() != n) {
-				Contador c = new Contador();
-				c.setMedia(new Contador());
-				listaRoturasContador.add(c);
-			}
-			
-			//A esta lista le metemos los AT y OP			
-			d.establecerListaATRoturasTest(listaRoturasContador);
-			d.generarOPTest(listaRoturasContador);
-			
-			//Resolvemos el problema con esta lista
-			ini = System.nanoTime();
-			double[][] table = d.maximizarDineroDadoWTT(listaRoturasContador);
-			fin = System.nanoTime();
-			
-			if(table != null) {
-				suma += (fin - ini);
-				contador++;
-			}
-		}
-		
-		//De esta forma, tenemos un estudio teorico mas controlado de ambos parametros. Antes, no sabiamos cuantas roturas podian 
-		//aparecer puerto que surgian de forma aleatoria. Ahora vamos a estudiar problemas de nxn
-		
-		System.out.println(suma/10);
-	}
-	
-	@Test
-	public void TestInterpretarSolucionMaximizarDineroDadoWTT() {
-		Damero d = new Damero(3,3,1,7, 9000);
-		ArrayList<Integer> listaRoturas = d.resolverConsumidoresGreedy();
-		d.establecerListaATRoturas(listaRoturas);
-		d.generarOP(listaRoturas);
-		
-		if(!listaRoturas.isEmpty()) {
-			//Hay que dejar esto para que se inicialize en la clase
-			d.maximizarDineroDadoWTT(d.resolverConsumidoresVersionContadores());
-			String lista = d.interpretarSolucionMaximizarDineroDadoWTT();
-			System.out.println(lista);
-		} else {
-			System.out.println("No hay roturas.");
-		}
-
-	}
-	
 	
 }

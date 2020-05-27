@@ -21,7 +21,7 @@ public class Damero {
 	public final static double PRESION_MINIMA = 110;
 	public final static double BA = 1; //hora;
 	public static int WTT = 146; //hora;
-	
+	public static int MI = 2000; //hora;
 	private double[][] table;
 	private ArrayList<Contador> beneficiosYPesos;
 	
@@ -690,79 +690,83 @@ public class Damero {
 	 * Este metodo consiste en buscar la suma maxima de dinero sin superar el tiempo
 	 * @return
 	 */
-	public double[][]  maximizarDineroDadoWTT(ArrayList<Contador> resolverConsumidoresVersionContadores) {
+	public ArrayList<Contador> minimizarMI(ArrayList<Contador> resolverConsumidoresVersionContadores) {
 		
-		//Parece un problema similar al de la mochila
-		//Tenemos una cantidad maxima WTT que son las horas de trabajo
-		//Tenemos que ir cogiendo contadores e ir viendo que no se supere WTT y obtener el beneficio (dinero) maximo 
-		//El beneficio es OP que es lo que se cobra por cada rotura
-		//Las horas de cada contador son el AT. 
-		
-		
-		//Mochila de tamaño WTT 
-		//Numero de objetos == numero de contadores con roturas 
-		// Beneficio del contador == OP 
-		// Peso del contador = AT
-		
-		
-		//PASO 1. Hay que ordenar en funcion del peso
-		//PASO 2. Rellenar la tabla d
+		if(resolverConsumidoresVersionContadores.isEmpty()) return null;
 		
 		ArrayList<Contador> listaContadores = new ArrayList<>();
-		
-		//Este contador es un contador auxiliar. Empezamos a considerar los contadores a partir de la posicion 1
+		ArrayList<Contador> resultado = new ArrayList<>();
 		Contador aux = new Contador(0.0);
 		aux.setAt(0.0);
-
+		aux.setOp(0.0);
 		listaContadores.add(aux);
 		listaContadores.addAll(resolverConsumidoresVersionContadores);
+		listaContadores.sort(new ComparadorContadoresOP());
+		double sumaOp = 0;
+		int nivel = 1;
+		int[] s = new int[listaContadores.size()]; 
+		boolean retroceder = false;
 		
-		if(listaContadores.size() == 1) return null;
-		
-		int numContadores = listaContadores.size();
-		int cota = WTT+1; //Puesto que consideramos el 0
-		double[][] table = new double[numContadores][cota];
-		
-		
-		//En esta misma lista tenemos los beneficios y los pesos (estan en las propiedades del contador) 
-		//Ordenamos la lista en funcion del peso  (AT)
-		listaContadores.sort(new ComparadorContadoresAT());
-		
-		this.beneficiosYPesos = listaContadores;
-		
-		//Ahora podemos empezar a rellenar la tabla 
-		
-		//Primera fila de 0
-		for(int i=0; i<cota; i++) {
-			table[0][i] = 0;
+		for(Contador c : listaContadores) {
+			System.out.println(c.getConsumo() + " -> " + c.getOp());
 		}
-				
-		for(int i=1; i<numContadores; i++) {
-			//En el momento en el que encontremos un peso que sea mayor que el tamaño de la mochila lo descartamos
-			
-			//Si nuestro objeto no cabe en la mochila, tenemos que hacer una copia de la fila de arriba 
-			if(listaContadores.get(i).getAt() > cota) { //ESTO NO VIENE EN LOS APUNTES, LO HE INTRODUCIDO YO, SI NO, DA FALLO
-				for(int j = 0; j<cota; j++) {
-					table[i][j] = table[i-1][j];
+		
+		for(int i=0; i<s.length; i++) {
+			s[i] = -1;
+		}
+		
+		//El nivel 0 es la raiz -> aux
+		
+		while(nivel != 0) {
+//			retroceder = false;
+			//Generar
+			s[nivel] = s[nivel] + 1;
+			if(s[nivel] == 1) {
+				sumaOp += listaContadores.get(nivel).getOp();
+			}			
+			if(solucion(nivel, sumaOp, listaContadores)) {
+				resultado.add(listaContadores.get(nivel));
+				//Hemos llegado a la solucion, ya no queremos considerar mas en esta rama, vamos a retroceder
+				retroceder = true;
+			}
+			if(criterio(nivel, sumaOp, listaContadores) && nivel != s.length-1) { //Si estamos en el ultimo nivel hay que retroceder
+				nivel++;				
+			} else {
+				while(!masHermanos(nivel, s) && nivel > 0 || retroceder) {
+					//Retroceder
+					if(retroceder) { //Si hemos entrado por retroceder, retrocedemos una vez y ya esta
+						sumaOp -= listaContadores.get(nivel).getOp();
+						s[nivel] = -1;
+						nivel--;
+						break;
+					}
+					
 				}
-				continue;
-			}
-			
-			//Si tenemos un objeto de peso 5, desde j = 0 hasta j = 4 no podemos meterlo, por lo que cogemos lo que ya teniamos metido antes
-			for(int j=0; j<listaContadores.get(i).getAt(); j++) {
-				table[i][j] = table[i-1][j]; //El de arriba
-			}
-						
-			for(int k = (int)listaContadores.get(i).getAt(); k<cota; k++) {
-				//El beneficio de lo que ya teniamos añadiendo el objeto vs sin añadirlo
-				double prev = table[i-1][k-(int)listaContadores.get(i).getAt()]+ (int)listaContadores.get(i).getOp();
-				table[i][k] = Math.max(prev, table[i-1][k]);
 			}
 		}
 		
-		this.table = table;
-		return table;		
+		return listaContadores;
 	}
+	
+	
+	public boolean solucion(int nivel, double sumaOP, ArrayList<Contador> resolverConsumidoresVersionContadores) {
+//		System.out.println(nivel);
+//		System.out.println(resolverConsumidoresVersionContadores.size()-1);
+//		System.out.println(sumaOP);
+//		System.out.println(Damero.MI);
+//		System.out.println("-------------");
+		return nivel == resolverConsumidoresVersionContadores.size()-1 && sumaOP >= Damero.MI;
+	}
+	
+	public boolean criterio(int nivel, double sumaOP,  ArrayList<Contador> resolverConsumidoresVersionContadores) {
+		return nivel < resolverConsumidoresVersionContadores.size()-1 && sumaOP < Damero.MI;
+	}
+	
+	public boolean masHermanos(int nivel, int[] s) {
+		return s[nivel] < 1;		
+	}
+	
+
 	
 	public String interpretarSolucionMaximizarDineroDadoWTT() {
 		String objetos = "HAY QUE ENVIAR  LA OFERTA A: \n";
