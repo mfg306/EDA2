@@ -356,10 +356,10 @@ public class Damero {
 
 	/**
 	 * 
-	 * @param i
-	 * @param j
-	 * @param pEdificios
-	 * @param cont
+	 * @param i coordenada i donde se encuentra el contador
+	 * @param j coordenada j donde se encuentra el contador
+	 * @param pEdificios estructura donde queremos buscar el contador
+	 * @param cont tipo de contador (derecha, izquierda, verde, morado)
 	 * @return el consumo de un determinado edificio
 	 */
 	public double getLitrosEdificio(int i, int j, ParEdificios[][] pEdificios, String cont) { // columnas, filas
@@ -416,6 +416,9 @@ public class Damero {
 		return elegidos;
 	}
 	
+	/**
+	 * @return los contadores que presentan una rotura con la tecnica Greedy
+	 */
 	public ArrayList<Contador> resolverConsumidoresVersionContadores(){
 		ArrayList<Contador> candidatos = obtenerCandidatosConsumidores(); // todos los contadores derecha e izquierda
 		ArrayList<Contador> elegidos = new ArrayList<>();
@@ -434,6 +437,10 @@ public class Damero {
 	}
 	
 	
+	/**
+	 * @param id del contador que queremos ubicar en el damero
+	 * @return el contador con ese id
+	 */
 	public Contador obtenerContadorDadoId(Integer id) {
 		Contador c = null; 
 		

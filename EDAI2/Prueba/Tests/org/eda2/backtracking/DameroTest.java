@@ -383,20 +383,18 @@ public class DameroTest {
 		d.setParEdificioContador(1, 2, c12);
 		
 		ArrayList<Contador> roturas = d.resolverConsumidoresVersionContadores();
-		
 
 		d.generarOPTest(roturas);
 		d.establecerListaATRoturasTest(roturas);
 		
 		System.out.println(d.interpretarSolucion(d.minimizarWTTDadosMI(d.minimizarMI(roturas))));
-
 		
 	}
 
 	@Test
 	public void TestTiemposMinimizarWTTDadosMI() {
 		int n = 100;
-		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
+		Damero d = new Damero(3, 3, 1, 7, 100, 100);
 		ArrayList<Contador> listaContadores = new ArrayList<>();
 		int contador = 0;
 		long ini = 0, fin = 0, sum = 0;
