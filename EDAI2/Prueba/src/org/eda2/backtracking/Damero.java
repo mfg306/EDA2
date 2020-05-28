@@ -734,6 +734,16 @@ public class Damero {
 		boolean solucion = false;
 		boolean poda = false;
 		
+		
+		
+		if(listaContadores.size() == 2) { //si solo hay un elemento
+			if(listaContadores.get(1).getAt() < WTT) {	//Y su tiempo es menor que WTT
+				resultado.add(listaContadores.get(1));
+				solution.put("Solucion1", resultado);
+				return solution;
+			} else return null;
+		}
+		
 		for(int i=0; i<s.length; i++) {
 			s[i] = -1;
 		}
@@ -750,19 +760,24 @@ public class Damero {
 				solucion = false;
 			}
 			
+			poda = false;
+
 			//Generar
 			s[nivel] = s[nivel] +1;
 			if(s[nivel] == 1) {
 				//SI SU VALOR > WTT NO LO QUIERO -> LO PODO -> NO ME INTERESA SEGUIR POR ESTA RAMA, RETROCEDER
 				if(listaContadores.get(nivel).getAt()>Damero.WTT) {
+					System.out.println(listaContadores.get(nivel).getAt());
 					poda = true;
+				} else {
+					sumaAt += listaContadores.get(nivel).getAt();
+					solucionParcial.add(listaContadores.get(nivel));
 				}
-				sumaAt += listaContadores.get(nivel).getAt();
-				solucionParcial.add(listaContadores.get(nivel));
+
 			}
 			
 			//Si el tamaño de listaContadores es 2 es porque solo hay un contador, la unica solucion es considerar este 
-			if(!poda && solucionMaximizar(sumaAt) || (listaContadores.size() == 2 && sumaAt > 0 )) {
+			if(!poda && solucionMaximizar(sumaAt)) {
 				//Hemos llegado a la solucion, pero, ¿sobraba algo? 
 				resultado.addAll(solucionParcial);
 				solucion = true;
@@ -771,7 +786,9 @@ public class Damero {
 				nivel++;
 			} else {
 				while(!masHermanos(nivel, s) && nivel > 0) {
-					sumaAt -= listaContadores.get(nivel).getAt();
+					if(!poda) { //Si hemos entrado por la poda, no hay que restar nada
+						sumaAt -= listaContadores.get(nivel).getAt();
+					}
 					s[nivel] = -1;
 					nivel--;
 				}
