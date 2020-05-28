@@ -181,10 +181,25 @@ public class DameroTest {
 	@Test
 	public void TestMaximizarWTT() {
 		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
+		double suma = 0;
 
 		ArrayList<Contador> roturas = d.resolverConsumidoresVersionContadores();
 		d.generarOPTest(roturas);
 		d.establecerListaATRoturasTest(roturas);
+			
+		HashMap<String, ArrayList<Contador>> resultado = d.maximizarWTT(roturas);
+		
+		for(ArrayList<Contador> a : resultado.values()) {
+			for(Contador c : a) {
+				//Vamos a obtener la suma de entre todos los contadores que forman la solucion
+				suma += c.getAt();
+				System.out.println(suma);
+			}
+			
+			//Vamos a comprobar que la suma sea menor que WTT
+			
+			Assert.assertTrue(suma < d.WTT);
+		}
 		
 	}
 	

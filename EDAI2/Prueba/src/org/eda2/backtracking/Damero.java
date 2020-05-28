@@ -732,6 +732,7 @@ public class Damero {
 		int[] s = new int[listaContadores.size()]; 
 		int numSolucion = 1;
 		boolean solucion = false;
+		boolean poda = false;
 		
 		for(int i=0; i<s.length; i++) {
 			s[i] = -1;
@@ -741,7 +742,6 @@ public class Damero {
 		//el dinero ingresado sea maximo si se aceptan las ofertas
 		
 		while(nivel != 0) {
-			
 			if(solucion) {
 				solution.put("Solucion" + numSolucion, resultado);
 				resultado = new ArrayList<>();
@@ -753,15 +753,21 @@ public class Damero {
 			//Generar
 			s[nivel] = s[nivel] +1;
 			if(s[nivel] == 1) {
+				//SI SU VALOR > WTT NO LO QUIERO -> LO PODO -> NO ME INTERESA SEGUIR POR ESTA RAMA, RETROCEDER
+				if(listaContadores.get(nivel).getAt()>Damero.WTT) {
+					poda = true;
+				}
 				sumaAt += listaContadores.get(nivel).getAt();
 				solucionParcial.add(listaContadores.get(nivel));
 			}
 			
-			if(solucionMaximizar(sumaAt)) {
+			//Si el tamaño de listaContadores es 2 es porque solo hay un contador, la unica solucion es considerar este 
+			if(!poda && solucionMaximizar(sumaAt) || (listaContadores.size() == 2 && sumaAt > 0 )) {
+				//Hemos llegado a la solucion, pero, ¿sobraba algo? 
 				resultado.addAll(solucionParcial);
 				solucion = true;
 			}
-			if(criterioMaximizar(sumaAt) && nivel != s.length-1 ) {
+			if(!poda && criterioMaximizar(sumaAt) && nivel != s.length-1 ) {
 				nivel++;
 			} else {
 				while(!masHermanos(nivel, s) && nivel > 0) {
