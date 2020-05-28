@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import java.util.TreeMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DameroTest {
 
@@ -182,15 +183,14 @@ public class DameroTest {
 		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
 
 		ArrayList<Contador> roturas = d.resolverConsumidoresVersionContadores();
-		System.out.println(roturas.toString());
 		d.generarOPTest(roturas);
 		d.establecerListaATRoturasTest(roturas);
-		System.out.println(d.maximizarWTT(roturas));
 		
 	}
 	
 	@Test
 	public void TestEjemploEjecucionMaximizar() {
+		String expected = "Contador localizado en : (1, 0)";
 		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
 		
 		Contador c1 = new Contador(800000, 1, 0, "I");
@@ -230,6 +230,8 @@ public class DameroTest {
 		c12.setAt(10);
 		c1.setOp(50);
 		
+		//c1 vs c5 -> c1
+		
 		// columna, fila
 		d.setParEdificioContador(0, 0, c2);
 
@@ -250,12 +252,11 @@ public class DameroTest {
 		d.setParEdificioContador(1, 2, c12);
 		
 		ArrayList<Contador> roturas = d.resolverConsumidoresVersionContadores();
-		
 
 		d.generarOPTest(roturas);
 		d.establecerListaATRoturasTest(roturas);
 		
-		System.out.println(d.interpretarSolucion(d.maximizarOPDadosAT(d.maximizarWTT(roturas))));
+		Assert.assertEquals(d.interpretarSolucion(d.maximizarOPDadosAT(d.maximizarWTT(roturas))), expected);
 		
 	}
 
@@ -272,9 +273,10 @@ public class DameroTest {
 
 	@Test
 	public void TestMinimizarMIAvanzado() {
-		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
-
+		Damero d = new Damero(3, 3, 1, 7, 100, 1000);
 		ArrayList<Contador> roturas = new ArrayList<>();
+		HashMap<String, ArrayList<Contador>> expected = new HashMap<>();
+		ArrayList<Contador> values = new ArrayList<>();
 
 		Contador c1 = new Contador();
 		c1.setOp(50.0);
@@ -285,46 +287,36 @@ public class DameroTest {
 		Contador c3 = new Contador();
 		c3.setOp(1500.0);
 		c3.setMedia(new Contador());
-
+		
 		roturas.add(c1);
 		roturas.add(c2);
 		roturas.add(c3);
+		
+		//En cuanto se alcance MI (1000) damos la solucion
+		
+		values.add(c3);
+		
+		expected.put("Solucion2", values);
+		
+		values = new ArrayList<>();
+		values.add(c1);
+		values.add(c2);
+		
+		expected.put("Solucion3", values);
+		
+		values = new ArrayList<>();
+		values.add(c2);
 
-		System.out.println(d.minimizarMI(roturas));
-
+		expected.put("Solucion1", values);
+		
+		Assert.assertEquals(expected, d.minimizarMI(roturas));
 	}
 	
 
-	@Test
-	public void TestMinimizarWTTDadosMI() {
-
-		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
-
-		ArrayList<Contador> roturas = new ArrayList<>();
-
-		Contador c1 = new Contador();
-		c1.setOp(50.0);
-		c1.setAt(50.0);
-		c1.setMedia(new Contador());
-		Contador c2 = new Contador();
-		c2.setOp(3000.0);
-		c2.setAt(3000.0);
-		c2.setMedia(new Contador());
-		Contador c3 = new Contador();
-		c3.setOp(1500.0);
-		c3.setAt(1500.0);
-		c3.setMedia(new Contador());
-
-		roturas.add(c1);
-		roturas.add(c2);
-		roturas.add(c3);
-
-		System.out.println(d.minimizarWTTDadosMI(d.minimizarMI(roturas)));
-	}
-	
 	@Test
 	public void TestEjemploEjecucionMinimizar() {
 		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
+		String expected = "Contador localizado en : (0, 2)";
 		
 		Contador c1 = new Contador(800000, 1, 0, "I");
 		c1.setAt(50);
@@ -339,7 +331,7 @@ public class DameroTest {
 		c4.setAt(40);
 		c4.setOp(2500);
 		Contador c5 = new Contador(20, 0, 2, "D");
-		c5.setAt(50);
+		c5.setAt(40);
 		c5.setOp(3500);
 		Contador c6 = new Contador(5000, 0, 2, "M");
 		c6.setAt(100);
@@ -387,7 +379,9 @@ public class DameroTest {
 		d.generarOPTest(roturas);
 		d.establecerListaATRoturasTest(roturas);
 		
-		System.out.println(d.interpretarSolucion(d.minimizarWTTDadosMI(d.minimizarMI(roturas))));
+		//El c5 tiene menos horas de trabajo que el c1
+		
+		Assert.assertEquals(expected, d.interpretarSolucion(d.minimizarWTTDadosMI(d.minimizarMI(roturas))));
 		
 	}
 
@@ -414,6 +408,39 @@ public class DameroTest {
 
 			ini = System.nanoTime();
 			d.minimizarWTTDadosMI(d.minimizarMI(listaContadores));
+			fin = System.nanoTime();
+
+			sum += (fin - ini);
+			contador++;
+		}
+		
+		System.out.println(sum/10);
+
+	}
+	
+	@Test
+	public void TestTiemposMaximizarOPDadosAT() {
+		int n = 100;
+		Damero d = new Damero(3, 3, 1, 7, 100, 100);
+		ArrayList<Contador> listaContadores = new ArrayList<>();
+		int contador = 0;
+		long ini = 0, fin = 0, sum = 0;
+
+		// Tamaño del problema -> numero de roturas
+
+		while (contador != 10) {
+
+			while (listaContadores.size() != n) {
+				Contador c = new Contador();
+				c.setMedia(new Contador());
+				listaContadores.add(c);
+			}
+
+			d.generarOPTest(listaContadores);
+			d.establecerListaATRoturasTest(listaContadores);
+
+			ini = System.nanoTime();
+			d.maximizarOPDadosAT(d.maximizarWTT(listaContadores));
 			fin = System.nanoTime();
 
 			sum += (fin - ini);

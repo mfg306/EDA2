@@ -740,10 +740,6 @@ public class Damero {
 		//Que no se supere un tiempo de trabajo dado WTT de forma que 
 		//el dinero ingresado sea maximo si se aceptan las ofertas
 		
-		for(Contador c : listaContadores) {
-			System.out.println(c.getConsumo() + " -> " + c.getAt());
-		}
-		
 		while(nivel != 0) {
 			
 			if(solucion) {
@@ -853,6 +849,7 @@ public class Damero {
 	
 	
 	/**
+	 * Buscamos el WTT minimo de las soluciones
 	 * @param listaContadores lista de contadores con roturas que queremos minimizar su WTT
 	 * @return lista de contadores
 	 */
