@@ -734,11 +734,6 @@ public class Damero {
 		boolean solucion = false;
 		boolean poda = false;
 		
-		double voa = Double.NEGATIVE_INFINITY; //Valor optimo actual
-		Contador soa = null; //Solucion optima actual
-		
-		
-		
 		if(listaContadores.size() == 2) { //si solo hay un elemento
 			if(listaContadores.get(1).getAt() < WTT) {	//Y su tiempo es menor que WTT
 				resultado.add(listaContadores.get(1));
