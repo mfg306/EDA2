@@ -271,12 +271,8 @@ public class DameroTest {
 		d.setParEdificioContador(1, 2, c12);
 		
 		ArrayList<Contador> roturas = d.resolverConsumidoresVersionContadores();
-
-		d.generarOPTest(roturas);
-		d.establecerListaATRoturasTest(roturas);
 		
 		Assert.assertEquals(d.interpretarSolucion(d.maximizarOPDadosAT(d.maximizarWTT(roturas))), expected);
-		
 	}
 
 	@Test
@@ -395,8 +391,6 @@ public class DameroTest {
 		
 		ArrayList<Contador> roturas = d.resolverConsumidoresVersionContadores();
 
-		d.generarOPTest(roturas);
-		d.establecerListaATRoturasTest(roturas);
 		
 		//El c5 tiene menos horas de trabajo que el c1
 		

@@ -734,6 +734,9 @@ public class Damero {
 		boolean solucion = false;
 		boolean poda = false;
 		
+		double voa = Double.NEGATIVE_INFINITY; //Valor optimo actual
+		Contador soa = null; //Solucion optima actual
+		
 		
 		
 		if(listaContadores.size() == 2) { //si solo hay un elemento
@@ -755,7 +758,6 @@ public class Damero {
 			if(solucion) {
 				solution.put("Solucion" + numSolucion, resultado);
 				resultado = new ArrayList<>();
-				solucionParcial = new ArrayList<>();
 				numSolucion++;
 				solucion = false;
 			}
@@ -766,19 +768,15 @@ public class Damero {
 			s[nivel] = s[nivel] +1;
 			if(s[nivel] == 1) {
 				//SI SU VALOR > WTT NO LO QUIERO -> LO PODO -> NO ME INTERESA SEGUIR POR ESTA RAMA, RETROCEDER
-				if(listaContadores.get(nivel).getAt()>Damero.WTT) {
-					System.out.println(listaContadores.get(nivel).getAt());
+				if(sumaAt + listaContadores.get(nivel).getAt()>Damero.WTT) {
 					poda = true;
 				} else {
 					sumaAt += listaContadores.get(nivel).getAt();
 					solucionParcial.add(listaContadores.get(nivel));
 				}
-
 			}
 			
-			//Si el tamaño de listaContadores es 2 es porque solo hay un contador, la unica solucion es considerar este 
-			if(!poda && solucionMaximizar(sumaAt)) {
-				//Hemos llegado a la solucion, pero, ¿sobraba algo? 
+			if(!poda && solucionMaximizar(sumaAt,nivel, listaContadores)) {
 				resultado.addAll(solucionParcial);
 				solucion = true;
 			}
@@ -789,6 +787,7 @@ public class Damero {
 					if(!poda) { //Si hemos entrado por la poda, no hay que restar nada
 						sumaAt -= listaContadores.get(nivel).getAt();
 					}
+					solucionParcial.remove(listaContadores.get(nivel));
 					s[nivel] = -1;
 					nivel--;
 				}
@@ -948,8 +947,8 @@ public class Damero {
 	 * @param sumaAT suma que queremos comprobar si es >= WTT
 	 * @return
 	 */
-	public boolean solucionMaximizar(double sumaAT) {
-		return sumaAT >= Damero.WTT; // Entonces ya hemos encontrado la solucion
+	public boolean solucionMaximizar(double sumaAT, int nivel, ArrayList<Contador> lista) {
+		return sumaAT > 0 && sumaAT <= Damero.WTT && nivel == lista.size()-1; // Entonces ya hemos encontrado la solucion
 	}
 	
 	/**
