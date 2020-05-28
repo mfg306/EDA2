@@ -188,23 +188,29 @@ public class DameroTest {
 		d.establecerListaATRoturasTest(roturas);
 			
 		HashMap<String, ArrayList<Contador>> resultado = d.maximizarWTT(roturas);
-//		System.out.println(resultado.toString());
 		
 		if(resultado != null) {
 			for(ArrayList<Contador> a : resultado.values()) {
 				for(Contador c : a) {
 					//Vamos a obtener la suma de entre todos los contadores que forman la solucion
 					suma += c.getAt();
-//					System.out.println(suma);
 				}
-				
 				//Vamos a comprobar que la suma sea menor que WTT
-				
 				Assert.assertTrue(suma < Damero.WTT);
 			}
 		}
-
+	}
+	
+	@Test
+	public void TestMaximizarWTTConPesoMayorQueWTT() {
+		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
+		Contador c = new Contador();
+		ArrayList<Contador> roturas = new ArrayList<>();
 		
+		c.setAt(180);
+		roturas.add(c);
+		
+		Assert.assertTrue(d.maximizarWTT(roturas) == null);
 	}
 	
 	@Test
