@@ -439,7 +439,7 @@ public class DameroTest {
 	
 	@Test
 	public void TestTiemposMaximizarOPDadosAT() {
-		int n = 100;
+		int n = 512000;
 		Damero d = new Damero(3, 3, 1, 7, 100, 100);
 		ArrayList<Contador> listaContadores = new ArrayList<>();
 		int contador = 0;
@@ -467,8 +467,5 @@ public class DameroTest {
 		}
 		
 		System.out.println(sum/10);
-
 	}
-	
-	
 }

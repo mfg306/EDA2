@@ -2,6 +2,7 @@
 <<<<<<<=HEAD
 >>>>>>>=1d4b4021b062169bf1d925dcfe3af65e0bf84085
 eclipse.preferences.version=1
+encoding//Tests/org/eda2/backtracking/DameroTest.java=UTF-8
 encoding//Tests/org/eda2/greedy/DameroTest.java=UTF-8
 encoding//Tests/org/eda2/greedyAlternativa/DameroTest.java=UTF-8
 encoding//src/org/eda2/backtracking/Damero.java=UTF-8
