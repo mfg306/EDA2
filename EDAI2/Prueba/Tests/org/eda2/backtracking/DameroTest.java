@@ -439,8 +439,8 @@ public class DameroTest {
 	
 	@Test
 	public void TestTiemposMaximizarOPDadosAT() {
-		int n = 512000;
-		Damero d = new Damero(3, 3, 1, 7, 100, 100);
+		int n = 2;
+		Damero d = new Damero(3, 3, 1, 7, n*100, 100);
 		ArrayList<Contador> listaContadores = new ArrayList<>();
 		int contador = 0;
 		long ini = 0, fin = 0, sum = 0;
