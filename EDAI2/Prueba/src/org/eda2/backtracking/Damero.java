@@ -940,7 +940,7 @@ public class Damero {
 	
 	/**
 	 * @param sumaAT suma que queremos comprobar si es >= WTT
-	 * @return
+	 * @return true si hemos encontrado la solucion
 	 */
 	public boolean solucionMaximizar(double sumaAT, int nivel, ArrayList<Contador> lista) {
 		return sumaAT > 0 && sumaAT <= Damero.WTT && nivel == lista.size()-1; // Entonces ya hemos encontrado la solucion
