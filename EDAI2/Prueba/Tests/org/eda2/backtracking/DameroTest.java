@@ -148,6 +148,61 @@ public class DameroTest {
 
 		Assert.assertTrue(consumoCasillaGeneral >= resultadoSuma);
 	}
+	
+	@Test
+	public void TestResolverConsumidoresGreedy() {
+		Damero d = new Damero(3,3);
+		Contador c1 = new Contador(10000,1,0,"D");
+		Contador c2 = new Contador(140000,1,1,"I");
+		ArrayList<Integer> expectedResult = new ArrayList<>();
+		Integer id1 = c1.getId();
+		Integer id2 = c2.getId();
+		
+		expectedResult.add(id1);
+		expectedResult.add(id2);
+
+		
+		d.setParEdificioContador(0, 0, new Contador(0,0,0,"D"));
+		
+		d.setParEdificioContador(0, 1, new Contador(0,0,1,"D"));
+		d.setParEdificioContador(0, 1, new Contador(20,0,1,"V"));
+		
+		d.setParEdificioContador(0, 2, new Contador(20,0,2,"D"));
+		d.setParEdificioContador(0, 2, new Contador(20,0,2,"M"));
+		
+		d.setParEdificioContador(1, 0, new Contador(0,1,0,"I"));
+		d.setParEdificioContador(1, 0, c1);
+		
+		d.setParEdificioContador(1, 1, c2);
+		d.setParEdificioContador(1, 1, new Contador(0,1,1,"D"));
+		d.setParEdificioContador(1, 1, new Contador(20,1,1,"V")); //ROTURA
+		
+		d.setParEdificioContador(1, 2, new Contador(0,1,2,"I"));
+		d.setParEdificioContador(1, 2, new Contador(0,1,2,"D"));
+		d.resolverConsumidoresGreedy();
+		
+		Assert.assertTrue(expectedResult.equals(d.resolverConsumidoresGreedy()));
+	}
+	
+	@Test
+	public void TestCalcularDT() {
+		Damero d = new Damero(3, 3);
+		
+		Assert.assertTrue(d.calcularDT(10, 60) == 5*60+12*(10-7));
+	}
+	
+	@Test
+	public void TestGenerarOP() {
+		Damero d = new Damero(3,3);
+		
+		ArrayList<Contador> listaRoturas = d.resolverConsumidoresVersionContadores();
+		
+		d.generarOPTest(listaRoturas);
+		
+		for(Contador c : listaRoturas ) {
+			Assert.assertTrue(c.getOp() > 0);
+		}
+	}
 
 	@Test
 	public void TestListaATRoturas() {
@@ -177,6 +232,7 @@ public class DameroTest {
 
 		Assert.assertEquals(expected, d.establecerListaATRoturas(d.resolverConsumidoresGreedy()));
 	}
+	
 	
 	@Test
 	public void TestMaximizarWTT() {
@@ -213,73 +269,6 @@ public class DameroTest {
 		Assert.assertTrue(d.maximizarWTT(roturas) == null);
 	}
 	
-	@Test
-	public void TestEjemploEjecucionMaximizar() {
-		String expected = "Contador localizado en : (1, 0)";
-		Damero d = new Damero(3, 3, 1, 7, 100, 2000);
-		
-		Contador c1 = new Contador(800000, 1, 0, "I");
-		c1.setAt(50);
-		c1.setOp(1500);
-		Contador c2 = new Contador(0, 0, 0, "D");
-		c2.setAt(60);
-		c2.setOp(2500);
-		Contador c3 = new Contador(0, 0, 1, "D");
-		c3.setAt(70);
-		c3.setOp(500);
-		Contador c4 = new Contador(20, 0, 1, "V");
-		c4.setAt(40);
-		c4.setOp(2500);
-		Contador c5 = new Contador(20, 0, 2, "D");
-		c5.setAt(50);
-		c5.setOp(3500);
-		Contador c6 = new Contador(5000, 0, 2, "M");
-		c6.setAt(100);
-		c6.setOp(1500);
-		Contador c7 = new Contador(0, 1, 0, "D");
-		c7.setAt(60);
-		c7.setOp(2200);
-		Contador c8 = new Contador(0, 1, 1, "I");
-		c8.setAt(40);
-		c8.setOp(1500);
-		Contador c9 = new Contador(0, 1, 1, "D");
-		c9.setAt(70);
-		c9.setOp(7700);
-		Contador c10 = new Contador(0, 1, 1, "V");
-		c10.setAt(45);
-		c10.setOp(100);
-		Contador c11 = new Contador(0, 1, 2, "I");
-		c11.setAt(32);
-		c11.setOp(1500);
-		Contador c12 = new Contador(0, 1, 2, "D");
-		c12.setAt(10);
-		c1.setOp(50);
-		
-		//c1 vs c5 -> c1
-		
-		// columna, fila
-		d.setParEdificioContador(0, 0, c2);
-
-		d.setParEdificioContador(0, 1, c3);
-		d.setParEdificioContador(0, 1, c4);
-
-		d.setParEdificioContador(0, 2, c5); // Rotura
-		d.setParEdificioContador(0, 2, c6);
-
-		d.setParEdificioContador(1, 0, c1); // Rotura
-		d.setParEdificioContador(1, 0, c7);
-
-		d.setParEdificioContador(1, 1, c8);
-		d.setParEdificioContador(1, 1, c9);
-		d.setParEdificioContador(1, 1, c10);
-
-		d.setParEdificioContador(1, 2, c11);
-		d.setParEdificioContador(1, 2, c12);
-		
-		ArrayList<Contador> roturas = d.resolverConsumidoresVersionContadores();
-		
-		Assert.assertEquals(d.interpretarSolucion(d.maximizarOPDadosAT(d.maximizarWTT(roturas))), expected);
-	}
 
 	@Test
 	public void TestMinimizarMI() {
@@ -439,15 +428,15 @@ public class DameroTest {
 	
 	@Test
 	public void TestTiemposMaximizarOPDadosAT() {
-		int n = 2;
-		Damero d = new Damero(3, 3, 1, 7, n*100, 100);
+		int n = 100;
+		Damero d = new Damero(3, 3, 1, 7, n*(150), 100);
 		ArrayList<Contador> listaContadores = new ArrayList<>();
 		int contador = 0;
 		long ini = 0, fin = 0, sum = 0;
 
 		// Tamaño del problema -> numero de roturas
 
-		while (contador != 10) {
+		while (contador != 1) {
 
 			while (listaContadores.size() != n) {
 				Contador c = new Contador();
@@ -468,4 +457,29 @@ public class DameroTest {
 		
 		System.out.println(sum/10);
 	}
+	
+	@Test
+	public void TestTiemposResolverConsumidoresGreedy() {
+		int n=3;
+		long inicio = 0, fin = 0, sumaTiempos = 0; 
+		int contador = 0;
+		ArrayList<Integer> resultado = new ArrayList<>();
+		
+		while(contador != 10) {
+			Damero d = new Damero(n,n,n*1000, n*10000, 100,100);
+			inicio = System.nanoTime();
+			resultado = d.resolverConsumidoresGreedy();
+			fin = System.nanoTime();
+			if(!resultado.isEmpty()) { //Vamos a descartar aquellos casos en los que no haya roturas
+				sumaTiempos += (fin-inicio);
+				contador++;
+			}
+			
+		}
+		
+		System.out.println(sumaTiempos/10);
+	}
+	
+	
+	
 }

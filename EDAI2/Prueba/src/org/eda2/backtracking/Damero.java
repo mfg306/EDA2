@@ -58,6 +58,14 @@ public class Damero {
 		this.inicializarContadores(700,2000);
 	}
 	
+	/**
+	 * @param columnas numero de columnas
+	 * @param filas numero de filas
+	 * @param canMinima cantidad minima de cauce
+	 * @param canMaxima cantidad maxima de cauce
+	 * @param WTT horas maximas de trabajo
+	 * @param MI ingreso minimo
+	 */
 	public Damero(int columnas, int filas, double canMinima, double canMaxima, int WTT, int MI) {
 		Contador.reiniciarId();
 		this.filas = filas;
@@ -670,7 +678,7 @@ public class Damero {
 	 * @param bc consumo ultimo de la manzana
 	 * @return el dt
 	 */
-	private double calcularDT(double ip, double bc) {
+	public double calcularDT(double ip, double bc) {
 		return 5*bc + 12*(ip-7);
 	}
 	
@@ -771,7 +779,7 @@ public class Damero {
 				}
 			}
 			
-			if(!poda && solucionMaximizar(sumaAt,nivel, listaContadores)) {
+			if(poda && solucionMaximizar(sumaAt,nivel, listaContadores)) {
 				resultado.addAll(solucionParcial);
 				solucion = true;
 			}
@@ -782,6 +790,7 @@ public class Damero {
 					if(!poda) { //Si hemos entrado por la poda, no hay que restar nada
 						sumaAt -= listaContadores.get(nivel).getAt();
 					}
+					
 					solucionParcial.remove(listaContadores.get(nivel));
 					s[nivel] = -1;
 					nivel--;
